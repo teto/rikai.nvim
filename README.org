@@ -1,0 +1,16 @@
+Load env with 
+jamdict
+nix shell nixpkgs#python3Packages.pip
+source .venv/bin/activate
+
+import jamdict
+https://jamdict.readthedocs.io/en/latest/
+https://github.com/Top-Ranger/jmdict-to-sqlite3
+https://github.com/ant32bit/JMDict2JSON
+https://github.com/odrevet/edict_database (dart => a oublier)
+https://towardsdatascience.com/mecab-usage-and-add-user-dictionary-to-mecab-9ee58966fc6
+
+
+https://nixos.wiki/wiki/Python#Using_alternative_packages
+https://towardsdatascience.com/how-japanese-tokenizers-work-87ab6b256984
+python3 -m jamdict lookup 言語学
