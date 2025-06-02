@@ -83,7 +83,9 @@ M.create_popup = function (content)
     --     ...nwrapped-26cc946/share/nvim/runtime/lua/vim/lsp/util.lua:1682: in function 'open_floating_preview'
     local width = 100
     local height = 30
-    local opts = {border = "single"}
+    local opts = {
+        -- border = "single"
+    }
     local popupOptions = util.make_floating_popup_options(width, height, opts)
     local _floating_bufnr, _floating_winnr = util.open_floating_preview(content, "text", popupOptions)
 end

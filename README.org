@@ -3,6 +3,10 @@ jamdict
 nix shell nixpkgs#python3Packages.pip
 source .venv/bin/activate
 
+Dependencies:
+- jiten 
+- sudachi
+
 import jamdict
 https://jamdict.readthedocs.io/en/latest/
 https://github.com/Top-Ranger/jmdict-to-sqlite3

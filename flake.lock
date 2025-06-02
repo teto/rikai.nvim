@@ -1,16 +1,29 @@
 {
   "nodes": {
+    "jitindex": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1748789050,
+        "narHash": "sha256-CaMadkUphxq4bJBXuESABo5ffN5K+qsHEK59COP72mY=",
+        "type": "tarball",
+        "url": "https://github.com/stephenmk/stephenmk.github.io/releases/latest/download/jitendex-yomitan.zip"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/stephenmk/stephenmk.github.io/releases/latest/download/jitendex-yomitan.zip"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1682954385,
-        "narHash": "sha256-Q1EpOrDeBJMH32ZnlgyRkznRKbUQBUjHQNeHStiY3Cg=",
-        "owner": "teto",
+        "lastModified": 1748693115,
+        "narHash": "sha256-StSrWhklmDuXT93yc3GrTlb0cKSS0agTAxMGjLKAsY8=",
+        "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "a891447f747060b06b890816bf393d97152dedf4",
+        "rev": "910796cabe436259a29a72e8d3f5e180fc6dfacc",
         "type": "github"
       },
       "original": {
-        "owner": "teto",
+        "owner": "nixos",
         "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
@@ -18,6 +31,7 @@
     },
     "root": {
       "inputs": {
+        "jitindex": "jitindex",
         "nixpkgs": "nixpkgs"
       }
     }
