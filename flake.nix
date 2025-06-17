@@ -20,6 +20,8 @@
   outputs = { self, nixpkgs, jitindex }:
     let
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
+
+      lua = pkgs.luajit;
     in
     {
 
@@ -28,10 +30,14 @@
             name = "jap.nvim";
 
             # dict = jmdict ;
-            buildInputs = [ ];
+            buildInputs = [ 
+              lua.pkgs.busted 
+              lua.pkgs.nlua
+            ];
 
             shellHook = ''
 
+              export LUA_PATH="$LUA_PATH;lua/?.lua"
               ln -s ${jitindex} ./yomitan.jitindex
               '';
 
