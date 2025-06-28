@@ -12,20 +12,6 @@ vim.api.nvim_create_user_command('JapRo2Hi', require'jap-nvim'.ro2hi, commandOpt
 -- get current word translations
 vim.api.nvim_create_user_command('JapLookup', require'jap-nvim'.lookup, commandOpts)
 
--- local function register_git_buffer_completion()
---     vim.api.nvim_create_autocmd({"CursorHold"}, {
---         pattern = {"*.git/*"},
---         callback = function(args) 
---             vim.api.nvim_buf_set_option(args.buf, 'ofu', 'v:lua.GH_completion')
---         end
---     })
---     vim.api.nvim_create_autocmd({"CursorHold"}, {
---         pattern = {"*.git/*"},
---         callback = issues.preview_issue_under_cursor
---     })
--- end
-
-
 
 -- should depend on filetype and underlying character ?
 vim.api.nvim_create_autocmd({"CursorHold"}, {
@@ -34,17 +20,9 @@ vim.api.nvim_create_autocmd({"CursorHold"}, {
    -- inspired by "hover"
 	callback = function(args)
        -- :xa
-       --
        local params = vim.lsp.util.make_position_params()
        print(params)
-		-- if not (args.data and args.data.client_id) then
-		-- 	return
-		-- end
-		-- local client = vim.lsp.get_client_by_id(args.data.client_id)
-		-- local bufnr = args.buf
-		-- local on_attach = require 'on_attach'
-		-- on_attach.on_attach(client, bufnr)
-		-- require'lsp_signature'.on_attach(client, bufnr)
+        require'jap-nvim.popup'.create_popup()
 	end
 })
 
