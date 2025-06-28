@@ -6,13 +6,18 @@ source .venv/bin/activate
 Dependencies:
 - jiten 
 - sudachi
-
+- wordbase 
+using CLI   "wordbase-cli --output json lookup 出る"
 import jamdict
 https://jamdict.readthedocs.io/en/latest/
 https://github.com/Top-Ranger/jmdict-to-sqlite3
 https://github.com/ant32bit/JMDict2JSON
 https://github.com/odrevet/edict_database (dart => a oublier)
 https://towardsdatascience.com/mecab-usage-and-add-user-dictionary-to-mecab-9ee58966fc6
+
+Lua dependencies:
+- https://github.com/uga-rosa/utf8.nvim (last commit 2 years ago)
+- 
 
 
 https://nixos.wiki/wiki/Python#Using_alternative_packages
