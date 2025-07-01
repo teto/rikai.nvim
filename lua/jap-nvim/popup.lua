@@ -1,23 +1,32 @@
 local config = require 'jap-nvim.config'
-local provider = require 'jap-nvim.wordbase'
 
 local M = {}
 
 local util = vim.lsp.util
 
-function M.create_popup()
+-- M.create_popup = function (content)
+--     vim.validate{
+--         content={content,'table' }
+--     }
+--     local params = vim.lsp.util.make_position_params()
+--     vim.pretty_print(params)
+--     local popupOptions = util.make_floating_popup_options(width, height, opts)
+--     local _floating_bufnr, _floating_winnr = util.open_floating_preview(content, "text", popupOptions)
+-- end
+--
+
+---@param {string} lines toto
+function M.create_popup(lines)
        -- JapConfig
        local width = config.width
        local height = config.height
-       local opts = {}
-       util.make_floating_popup_options(width, height, opts)
+       local opts = {
+           title = "jap.nvim"
+       }
+       local popupOptions = util.make_floating_popup_options(width, height, opts)
 
-       -- get text under cursor
-       local word = vim.fn.expand("<cword>")
+       util.open_floating_preview(lines, "json", popupOptions)
 
-       local results = provider.lookup(word)
-       local floating_bufnr, floating_winnr = util.open_floating_preview({"THIS IS THE CONTENT"}, "text", opts)
-
-end
+       end
 
 return M

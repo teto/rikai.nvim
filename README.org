@@ -1,12 +1,20 @@
-Load env with 
-jamdict
-nix shell nixpkgs#python3Packages.pip
-source .venv/bin/activate
+Goal: the [rikaitan][rikaitan] of neovim.
+
+The plugin 
+
+
+create a top-level Rikai command with subcommands:
+ "lookup"
+
 
 Dependencies:
+- edict_database right now
+- https://luarocks.org/modules/javierguerragiraldez/lsqlite3
 - jiten 
 - sudachi
 - wordbase 
+
+See wiki for more reference
 using CLI   "wordbase-cli --output json lookup 出る"
 import jamdict
 https://jamdict.readthedocs.io/en/latest/
@@ -16,10 +24,17 @@ https://github.com/odrevet/edict_database (dart => a oublier)
 https://towardsdatascience.com/mecab-usage-and-add-user-dictionary-to-mecab-9ee58966fc6
 
 Lua dependencies:
+- [lsqlite3](https://luarocks.org/modules/javierguerragiraldez/lsqlite3) ?
 - https://github.com/uga-rosa/utf8.nvim (last commit 2 years ago)
-- 
 
 
 https://nixos.wiki/wiki/Python#Using_alternative_packages
 https://towardsdatascience.com/how-japanese-tokenizers-work-87ab6b256984
 python3 -m jamdict lookup 言語学
+
+
+* How to generate DB ?
+
+nix shell nixpkgs#dart
+clone https://github.com/odrevet/edict_database.git (fetch)
+rikaitan: https://addons.mozilla.org/en-US/firefox/addon/rikaitan/

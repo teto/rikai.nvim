@@ -1,5 +1,5 @@
 -- Import the module containing the is_japanese function
-local utils = require('jap-nvim.utils')
+local utils = require('jap-nvim.classifier')
 
 describe("is_japanese function", function()
     it("should return true for a Hiragana character", function()
