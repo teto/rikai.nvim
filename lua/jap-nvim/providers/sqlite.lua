@@ -25,20 +25,36 @@ WHERE character.id="]]..kanji..[[";
 ]]
 end
 
+--- how to j
+---@return table
 function M.lookup_kanji(kanji)
     print("Opening " .. config.kanjidb)
     local con = sqlite3.open(config.kanjidb)
     local res = {}
 
-    local req = kanji.kanji_sql(kanji)
+    local req = M.kanji_sql(kanji)
 
+    -- print(req)
+    print("Looking up kanji ".. tostring(kanji))
     for a in con:nrows(req) do
-        kanji.format_kanji(res)
-        res [#res] = a
+        -- vim.print(a)
+        -- print("adding kanji")
+        -- vim.print(a)
+        res [#res + 1] = a
     end
 
     con:close()
     return res
+end
+
+-- lookup several kanjis
+-- 押す works for the "simple" db if you need to test
+function M.lookup_expression(word)
+    print("Opening " .. config.jmdictdb)
+    local con = sqlite3.open(config.jmdictdb)
+    local res = {}
+    -- TODO look wiki for expression
+
 end
 
 return M

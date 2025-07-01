@@ -1,7 +1,15 @@
 local M = {}
 
--- 多
+---@class KanjiDesc
+---@field id string
+---@field jlpt number
+---@field freq number frequency
+---@field kun_reading string
+---@field on_reading string
+---@field meanings string
 
+---@param res KanjiDesc 
+---@return table (as expected by 'open_floating_preview')
 function M.format_kanji(res)
 -- {
 --   freq = 139,
@@ -13,13 +21,15 @@ function M.format_kanji(res)
 --   radicals = "夕",
 --   stroke_count = 6
 -- }
-    local str =
-        res["id"] .. [[ (jlpt ]]..res["jlpt"] ..[[
-        kun reading: ]].. res["kun_reading"] .. [[
-        on reading: ]].. res["on_reading"] .. [[
-        meanings: ]] .. res["meanings"]..[[
-        ]]
-    return str
+    local lines = {
+        res["id"] .. " (jlpt "..res["jlpt"] .. ")",
+        "kun reading: ".. res["kun_reading"],
+        "on reading: ".. res["on_reading"],
+        "",
+        res["meanings"],
+    }
+
+    return lines
 end
 
 return M

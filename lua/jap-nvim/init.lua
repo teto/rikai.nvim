@@ -23,26 +23,40 @@ end
 
 -- we should tokenize and based on what we find lookup kanji or not ?
 -- でる
+-- 
+-- How to translate "日高" from our sqlite dbs ?
+-- 1. first we tokenize
+-- 2. For the first tokenized item
+--    a. we detect if it's one kanji (one character) or an expression (several characters)
+--    b.
 M.popup_lookup = function(args)
        -- :xa
        local params = vim.lsp.util.make_position_params()
        -- print(params)
        local word = vim.fn.expand("<cword>")
-       if classifier.is_common_kanji(word) then
-          local results = provider.lookup_kanji(word)
+       local code = vim.fn.char2nr(word)
+
+       if classifier.is_common_kanji(code) then
+           -- we need to pass one character only
+          local results = provider.lookup_kanji(vim.fn.nr2char(code))
           local formatted_results = {}
-          for r in results do
-              formatted_results[#formatted_results] = kanji.format_kanji(r)
+          -- vim.print("RESULTS:")
+          -- vim.print(results)
+
+          if vim.tbl_isempty(results) then
+              return
+          end
+
+          for _, r in ipairs(results) do
+                -- vim.print(r)
+                formatted_results[#formatted_results + 1] = kanji.format_kanji(r)
           end
 
           -- {"First line:", }
-          require'jap-nvim.popup'.create_popup(formatted_results)
+          -- vim.print("Once formatted")
+          -- vim.print(formatted_results)
+          require'jap-nvim.popup'.create_popup( formatted_results[1] )
        end
-       -- TODO create a class
-       -- vim.print(results[1])
-       -- vim.print(results[1]["record_id"])
-       -- local record = results[1]["record"]["content"][1]
-       -- print("results", results)
 
 end
 

@@ -1,6 +1,6 @@
 Goal: the [rikaitan][rikaitan] of neovim.
 
-The plugin 
+The plugin aims at providing (mostly offline) translations as popups when hovering asian (japanese for now) characters for now.
 
 
 create a top-level Rikai command with subcommands:
@@ -9,6 +9,7 @@ create a top-level Rikai command with subcommands:
 
 Dependencies:
 - edict_database right now
+- sudachi_rs
 - https://luarocks.org/modules/javierguerragiraldez/lsqlite3
 - jiten 
 - sudachi
