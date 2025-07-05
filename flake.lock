@@ -1,5 +1,18 @@
 {
   "nodes": {
+    "expression-db": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1661970495,
+        "narHash": "sha256-kATPO01awNHbqS0LWAdnwWw2WWYKn+J+UH9lKlicpeY=",
+        "type": "tarball",
+        "url": "https://github.com/odrevet/edict_database/releases/download/v0.0.2/expression.zip"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/odrevet/edict_database/releases/download/v0.0.2/expression.zip"
+      }
+    },
     "kanji-db": {
       "flake": false,
       "locked": {
@@ -31,6 +44,7 @@
     },
     "root": {
       "inputs": {
+        "expression-db": "expression-db",
         "kanji-db": "kanji-db",
         "nixpkgs": "nixpkgs"
       }

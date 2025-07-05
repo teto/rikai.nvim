@@ -28,19 +28,21 @@ end
 --- how to j
 ---@return table
 function M.lookup_kanji(kanji)
+
     print("Opening " .. config.kanjidb)
-    local con = sqlite3.open(config.kanjidb)
+    local con, errmsg, _errcode = sqlite3.open(config.kanjidb, sqlite3.OPEN_READWRITE)
     local res = {}
 
     local req = M.kanji_sql(kanji)
 
-    -- print(req)
-    print("Looking up kanji ".. tostring(kanji))
-    for a in con:nrows(req) do
-        -- vim.print(a)
-        -- print("adding kanji")
-        -- vim.print(a)
-        res [#res + 1] = a
+    if not con then
+        vim.notify(string.format("rikai: could not open %s:\n%s", config.kanjidb, errmsg))
+    else
+        print("Looking up kanji ".. tostring(kanji))
+        for a in con:nrows(req) do
+            -- vim.print(a)
+            res [#res + 1] = a
+        end
     end
 
     con:close()

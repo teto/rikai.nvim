@@ -5,9 +5,18 @@ local kanji = require'jap-nvim.kanji'
 local tokenizer = require'jap-nvim.tokenizers.sudachi'
 local util = vim.lsp.util
 local lual = require("lual")
-local logger = lual.logger()
+logger = lual.logger()
 
 local M = {}
+
+-- Centralized configuration
+-- lual.config({
+--     level = lual.debug,
+--     pipelines = {
+--         { level = lual.warn, outputs = { lual.console }, presenter = lual.color },
+--         { level = lual.debug, outputs = { lual.file, path = "app.log" }, presenter = lual.json() }
+--     }
+-- })
 
 
 -- romaji to katakana
@@ -39,7 +48,8 @@ M.popup_lookup = function(args)
        local code = vim.fn.char2nr(word)
 
         -- Use format strings
-       logger:info("popup_lookup looking into %s", word)
+        print(logger)
+       logger:info("popup_lookup looking into ") -- %s", "PLACEHOLDER")
 
        if classifier.is_common_kanji(code) then
 
@@ -75,14 +85,5 @@ M.popup_lookup = function(args)
 
 end
 
-
--- Centralized configuration
-lual.config({
-    level = lual.debug,
-    pipelines = {
-        { level = lual.warn, outputs = { lual.console }, presenter = lual.color },
-        { level = lual.debug, outputs = { lual.file, path = "app.log" }, presenter = lual.json() }
-    }
-})
 
 return M

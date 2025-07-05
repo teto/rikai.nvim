@@ -16,7 +16,7 @@ Dependencies:
 - [sudachi_rs][sudachi-rs] as a tokenizer (ie., split words)
 - [edict_database][edict-as-sqlite] as sqlite databases
 - [lual for logging][lual-luarocks]
-- official bindings for lua 'sqlite'
+- [official sqlite bindings][lsqlite-luarocks] for lua 'sqlite'
 
 # Roadmap 
 
@@ -54,3 +54,4 @@ jisho-rikai: https://jisho.org/search/%E7%90%86%E8%A7%A3
 sudachi-rs: https://github.com/WorksApplications/sudachi.rs
 edict-as-sqlite: https://github.com/odrevet/edict_database
 lual-luarocks: https://luarocks.org/modules/arthur-debert/lual
+lsqlite-luarocks: https://luarocks.org/modules/javierguerragiraldez/lsqlite3

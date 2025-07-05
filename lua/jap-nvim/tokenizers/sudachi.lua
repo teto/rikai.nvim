@@ -24,11 +24,12 @@ M.tokenize = function (content)
     end
 
 
-    vim.fn.jobstart({'sudachi'}, {
+    local chan = vim.fn.jobstart({'sudachi'}, {
         on_stdout = handle_line,
         on_stderr = handle_line,
-        stdin = content,
     })
+
+    vim.fn.chansend(chan, "出る")
 
     return tokens
 end
