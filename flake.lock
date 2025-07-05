@@ -1,16 +1,16 @@
 {
   "nodes": {
-    "jitindex": {
+    "kanji-db": {
       "flake": false,
       "locked": {
-        "lastModified": 1748789050,
-        "narHash": "sha256-CaMadkUphxq4bJBXuESABo5ffN5K+qsHEK59COP72mY=",
+        "lastModified": 1661970513,
+        "narHash": "sha256-vwe8hMOk6ShnmDq+Y/1EecZOfCXsBGNYCOZzTh6Jvuc=",
         "type": "tarball",
-        "url": "https://github.com/stephenmk/stephenmk.github.io/releases/latest/download/jitendex-yomitan.zip"
+        "url": "https://github.com/odrevet/edict_database/releases/download/v0.0.2/kanji.zip"
       },
       "original": {
         "type": "tarball",
-        "url": "https://github.com/stephenmk/stephenmk.github.io/releases/latest/download/jitendex-yomitan.zip"
+        "url": "https://github.com/odrevet/edict_database/releases/download/v0.0.2/kanji.zip"
       }
     },
     "nixpkgs": {
@@ -31,7 +31,7 @@
     },
     "root": {
       "inputs": {
-        "jitindex": "jitindex",
+        "kanji-db": "kanji-db",
         "nixpkgs": "nixpkgs"
       }
     }

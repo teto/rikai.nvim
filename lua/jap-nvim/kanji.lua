@@ -27,9 +27,16 @@ function M.format_kanji(res)
         "on reading: ".. res["on_reading"],
         "",
         res["meanings"],
+        M.jisho_link(res)
     }
 
     return lines
+end
+
+---@return string (link towards jisho.org)
+function M.jisho_link(expr)
+    local url = "https://jisho.org/search/"..expr
+    return url
 end
 
 return M

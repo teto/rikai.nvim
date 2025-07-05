@@ -2,7 +2,10 @@
 local provider = require'jap-nvim.providers.sqlite'
 local classifier = require'jap-nvim.classifier'
 local kanji = require'jap-nvim.kanji'
+local tokenizer = require'jap-nvim.tokenizers.sudachi'
 local util = vim.lsp.util
+local lual = require("lual")
+local logger = lual.logger()
 
 local M = {}
 
@@ -32,11 +35,20 @@ end
 M.popup_lookup = function(args)
        -- :xa
        local params = vim.lsp.util.make_position_params()
-       -- print(params)
        local word = vim.fn.expand("<cword>")
        local code = vim.fn.char2nr(word)
 
+        -- Use format strings
+       logger:info("popup_lookup looking into %s", word)
+
        if classifier.is_common_kanji(code) then
+
+        -- Use format strings
+        logger:info("Tokenizer")
+
+        -- find the firest
+        tokenizer.tokenize(word)
+
            -- we need to pass one character only
           local results = provider.lookup_kanji(vim.fn.nr2char(code))
           local formatted_results = {}
@@ -52,6 +64,9 @@ M.popup_lookup = function(args)
                 formatted_results[#formatted_results + 1] = kanji.format_kanji(r)
           end
 
+          -- add a link to jisho
+          -- formatted_results[#formatted_results + 1] = "
+
           -- {"First line:", }
           -- vim.print("Once formatted")
           -- vim.print(formatted_results)
@@ -59,5 +74,15 @@ M.popup_lookup = function(args)
        end
 
 end
+
+
+-- Centralized configuration
+lual.config({
+    level = lual.debug,
+    pipelines = {
+        { level = lual.warn, outputs = { lual.console }, presenter = lual.color },
+        { level = lual.debug, outputs = { lual.file, path = "app.log" }, presenter = lual.json() }
+    }
+})
 
 return M
