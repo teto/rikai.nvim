@@ -1,4 +1,4 @@
-local util = vim.lsp.util
+-- local util = vim.lsp.util
 local main = require'jap-nvim'
 
 -- local JapConfig = require('jap-nvim.config')
@@ -10,9 +10,24 @@ local commandOpts = {bang= true, range = true}
 -- vim.api.nvim_create_user_command('JapRo2Hi', require'jap-nvim'.ro2hi, commandOpts)
 
 
+-- print("RIKAI init")
+-- vim.print( vim.g.rikai)
 -- get current word translations
 -- 
-vim.api.nvim_create_user_command('JapLookup', main.popup_lookup, commandOpts)
+vim.api.nvim_create_user_command('RikaiLookup', main.popup_lookup, commandOpts)
+
+vim.api.nvim_create_user_command('RikaiDownload', function()
+    print("downloading dicts...")
+    -- vim.curl
+    vim.system(
+    string.format(
+      "curl -sSL  https://github.com/odrevet/edict_database/releases/download/v0.0.2/kanji.zip -o "..vim.g.rikai.kanjidb
+    )
+  )
+  -- https://github.com/odrevet/edict_database/releases/download/v0.0.2/expression.zip
+  -- return vim.v.shell_error == 0
+
+end, { desc = 'Download required dicts' })
 
 
 -- should depend on filetype and underlying character ?

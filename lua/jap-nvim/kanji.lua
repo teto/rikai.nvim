@@ -27,7 +27,7 @@ function M.format_kanji(res)
         "on reading: ".. res["on_reading"],
         "",
         res["meanings"],
-        M.jisho_link(res)
+        M.jisho_link(res["id"])
     }
 
     return lines

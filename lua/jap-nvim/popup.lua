@@ -25,7 +25,7 @@ function M.create_popup(lines)
        }
        local popupOptions = util.make_floating_popup_options(width, height, opts)
 
-       util.open_floating_preview(lines, "json", popupOptions)
+       util.open_floating_preview(lines, "txt", popupOptions)
 
        end
 
