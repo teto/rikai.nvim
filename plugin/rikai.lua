@@ -1,13 +1,13 @@
 -- local util = vim.lsp.util
-local main = require'jap-nvim'
+local main = require'rikai'
 
--- local JapConfig = require('jap-nvim.config')
+-- local JapConfig = require('rikai.config')
 
 -- todo add a preview function
 local commandOpts = {bang= true, range = true}
 
--- vim.api.nvim_create_user_command('JapRo2Ka', require'jap-nvim'.ro2ka, commandOpts)
--- vim.api.nvim_create_user_command('JapRo2Hi', require'jap-nvim'.ro2hi, commandOpts)
+-- vim.api.nvim_create_user_command('JapRo2Ka', require'rikai'.ro2ka, commandOpts)
+-- vim.api.nvim_create_user_command('JapRo2Hi', require'rikai'.ro2hi, commandOpts)
 
 
 -- print("RIKAI init")

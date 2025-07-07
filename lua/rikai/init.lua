@@ -1,9 +1,9 @@
--- local provider = require'jap-nvim.providers.wordbase'
-local provider = require'jap-nvim.providers.sqlite'
-local classifier = require'jap-nvim.classifier'
-local kanji = require'jap-nvim.kanji'
-local tokenizer = require'jap-nvim.tokenizers.sudachi'
-local logger = require'jap-nvim.log'
+-- local provider = require'rikai.providers.wordbase'
+local provider = require'rikai.providers.sqlite'
+local classifier = require'rikai.classifier'
+local kanji = require'rikai.kanji'
+local tokenizer = require'rikai.tokenizers.sudachi'
+local logger = require'rikai.log'
 
 local M = {}
 
@@ -68,7 +68,7 @@ M.popup_lookup = function(args)
           -- {"First line:", }
           -- vim.print("Once formatted")
           -- vim.print(formatted_results)
-          require'jap-nvim.popup'.create_popup( formatted_results[1] )
+          require'rikai.popup'.create_popup( formatted_results[1] )
        end
 
 end

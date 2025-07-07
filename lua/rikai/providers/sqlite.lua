@@ -5,7 +5,7 @@ The db itself is generated via edict
 
 -- (or sqlite3 = require('lsqlite3complete')) 
 local sqlite3 = require('lsqlite3')
-local config = require('jap-nvim.config')
+local config = require('rikai.config')
 
 local M = {}
 

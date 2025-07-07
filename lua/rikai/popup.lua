@@ -1,4 +1,4 @@
-local config = require 'jap-nvim.config'
+local config = require 'rikai.config'
 
 local M = {}
 
