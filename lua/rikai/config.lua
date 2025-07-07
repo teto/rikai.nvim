@@ -5,6 +5,7 @@ local JapDefaultConfig = {
     height = 30,
     kanjidb = vim.fn.stdpath("data").."/rikai/kanji.db",
     jmdictdb = vim.fn.stdpath("data").."/rikai/expression.db",
+    log_level = vim.log.levels.WARN
 }
 
 ---@type JapConfig

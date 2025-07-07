@@ -32,20 +32,22 @@ end
 M.popup_lookup = function(args)
        -- :xa
        local params = vim.lsp.util.make_position_params()
-       local word = vim.fn.expand("<cword>")
+       local word = vim.fn.expand("<cWORD>")
        local code = vim.fn.char2nr(word)
 
         -- Use format strings
-       vim.print(logger)
+       -- vim.print(logger)
        logger:info("popup_lookup looking into ") -- %s", "PLACEHOLDER")
 
-       if classifier.is_common_kanji(code) then
 
         -- Use format strings
         logger:info("Tokenizer")
 
         -- find the firest
-        tokenizer.tokenize(word)
+        local tokens = tokenizer.tokenize(word)
+
+        -- TODO check for kanjis for now but later we can deal with romajis/kanas etc
+        -- if classifier.is_common_kanji(code) then
 
            -- we need to pass one character only
           local results = provider.lookup_kanji(vim.fn.nr2char(code))
@@ -69,7 +71,7 @@ M.popup_lookup = function(args)
           -- vim.print("Once formatted")
           -- vim.print(formatted_results)
           require'rikai.popup'.create_popup( formatted_results[1] )
-       end
+       -- end
 
 end
 

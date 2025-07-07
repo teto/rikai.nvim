@@ -6,6 +6,7 @@ The db itself is generated via edict
 -- (or sqlite3 = require('lsqlite3complete')) 
 local sqlite3 = require('lsqlite3')
 local config = require('rikai.config')
+local logger = require'rikai.log'
 
 local M = {}
 
@@ -29,7 +30,7 @@ end
 ---@return table
 function M.lookup_kanji(kanji)
 
-    print("Opening " .. config.kanjidb)
+    logger:info("Opening " .. config.kanjidb)
     local con, errmsg, _errcode = sqlite3.open(config.kanjidb, sqlite3.OPEN_READWRITE)
     local res = {}
 
@@ -38,7 +39,7 @@ function M.lookup_kanji(kanji)
     if not con then
         vim.notify(string.format("rikai: could not open %s:\n%s", config.kanjidb, errmsg))
     else
-        print("Looking up kanji ".. tostring(kanji))
+        logger:info("Looking up kanji ".. tostring(kanji))
         for a in con:nrows(req) do
             -- vim.print(a)
             res [#res + 1] = a
