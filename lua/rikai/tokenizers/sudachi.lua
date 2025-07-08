@@ -21,7 +21,8 @@ M.tokenize = function (content)
             if line ~= "" then
                 -- TODO keep only start, cut on first space
                 logger:print("Inserting new token ".. line)
-                table.insert(tokens, line)
+                local line_start = string.match(line, "%S+")
+                table.insert(tokens, line_start)
             end
         end
     end
@@ -30,9 +31,9 @@ M.tokenize = function (content)
     local chan = vim.fn.jobstart({'sudachi'}, {
         on_stdout = handle_line,
         on_stderr = handle_line,
-        on_exit = function () print("PROCESS FINISHED") end,
-        pty = true,
-        -- term = true
+        on_exit = function ()
+            -- print("PROCESS FINISHED") 
+        end,
     })
 
     if chan == 0 then
@@ -43,12 +44,13 @@ M.tokenize = function (content)
 
     end
 
-    -- "出る"
     local sendres = vim.fn.chansend(chan, {
         content,
         ""
     })
-    print("sendres: ", sendres)
+    -- print("sendres: ", sendres)
+    -- maybe we dont even need that ?
+    local res = vim.fn.chanclose(chan, "stdin")
 
     local timeout_ms = 2000
 
@@ -59,10 +61,10 @@ M.tokenize = function (content)
     if resarr[1] < 0 then
         print("An error happened for sudachi")
         -- resarr[1]
+        -- local reskill = vim.fn.jobstop( chan )
+        -- logger:print(reskill)
     end
 
-    -- local reskill = vim.fn.jobstop( chan )
-    -- logger:print(reskill)
 
     logger:print("Found "..tostring(#tokens).. " different tokens")
     return tokens

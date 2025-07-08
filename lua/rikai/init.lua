@@ -50,6 +50,7 @@ M.popup_lookup = function(args)
         -- if classifier.is_common_kanji(code) then
 
            -- we need to pass one character only
+        -- lookup expression for '引く'
           local results = provider.lookup_kanji(vim.fn.nr2char(code))
           local formatted_results = {}
           -- vim.print("RESULTS:")
