@@ -1,8 +1,11 @@
 -- 
 local M = {}
+local kanji = require 'rikai.kanji'
 
+M.katakana_range = {0x30A0, 0x30FF}
 
 function M.is_hiragana(code)
+    -- 12352 - 12447
     return code >= 0x3040 and code <= 0x309F
 end
 
@@ -10,14 +13,11 @@ function M.is_katakana(code)
     return code >= 0x30A0 and code <= 0x30FF
 end
 
-function M.is_common_kanji(code)
-    return code >= 0x4E00 and code <= 0x9FFF
-end
-
 function M.is_halfwidth_katakana(code)
     return code >= 0xFF66 and code <= 0xFF9F
 end
 
+---@return boolean
 function M.is_japanese(text)
     -- Check if the input is valid
     if type(text) ~= 'string' or #text == 0 then
@@ -34,7 +34,7 @@ function M.is_japanese(text)
     -- Check if the character is within the Japanese Unicode ranges
     if M.is_hiragana(code) or
        M.is_katakana(code) or
-       M.is_common_kanji(code) or
+       kanji.is_common_kanji(code) or
        M.is_halfwidth_katakana(code) then
         return true
     end

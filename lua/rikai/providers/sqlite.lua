@@ -38,6 +38,8 @@ function M.query_kanji_get_radicals(kanji)
 end
 
 -- リョクトウ
+-- look at the jmdict DTD  to understand the different value
+-- basically if we are dealing with a kanji somewhere in expression, we should match against keb, and reb otherwise ?
 function M.query_expr(expr)
     return [[SELECT
   k_ele.id k_ele_id,
@@ -73,7 +75,7 @@ FROM
   JOIN r_ele ON entry.id = r_ele.id_entry
   LEFT JOIN k_ele ON entry.id = k_ele.id_entry
 WHERE
-  reb = ']]..expr..[['
+  keb = ']]..expr..[['
 GROUP BY
   sense.id;
   ]];
@@ -83,7 +85,7 @@ end
 ---@return table
 function M.lookup_kanji(kanji)
 
-    logger:info("Opening " .. config.kanjidb)
+    logger.info("Opening " .. config.kanjidb)
     local con, errmsg, _errcode = sqlite3.open(config.kanjidb, sqlite3.OPEN_READWRITE)
     local res = {}
 
@@ -92,7 +94,7 @@ function M.lookup_kanji(kanji)
     if not con then
         vim.notify(string.format("rikai: could not open %s:\n%s", config.kanjidb, errmsg))
     else
-        logger:info("Looking up kanji ".. tostring(kanji))
+        logger.info("Looking up kanji: ".. tostring(kanji))
         for a in con:nrows(req) do
             -- vim.print(a)
             res [#res + 1] = a
@@ -116,7 +118,7 @@ end
 
 function M.lookup_expr(word)
 
-    logger:info("Opening " .. jmdictdb)
+    logger.info("Opening " .. jmdictdb)
     local db, errmsg, _errcode = sqlite3.open(jmdictdb, sqlite3.OPEN_READWRITE)
     local res = {}
 
@@ -125,7 +127,7 @@ function M.lookup_expr(word)
     if not db then
         vim.notify(string.format("rikai: could not open %s:\n%s", jmdictdb, errmsg))
     else
-        logger:info("Looking up expr ".. tostring(word))
+        logger.info("Looking up expr ".. tostring(word))
         for a in db:nrows(req) do
             vim.print(a)
             res [#res + 1] = a

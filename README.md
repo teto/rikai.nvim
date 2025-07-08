@@ -15,8 +15,10 @@ nix build along with a rockspec.
 Dependencies:
 - [sudachi_rs][sudachi-rs] as a tokenizer (ie., split words)
 - [edict_database][edict-as-sqlite] as sqlite databases
-- [lual for logging][lual-luarocks]
+<!-- - [lual for logging][lual-luarocks] -->
+- [alogger][alogger-luarocks] for logging
 - [official sqlite bindings][lsqlite-luarocks] for lua 'sqlite'
+- [utf8][luautf8-github] to get utf8
 
 # Roadmap 
 
@@ -26,8 +28,6 @@ Dependencies:
 <!-- - wordbase  -->
 
 <!-- Lua dependencies: -->
-<!-- - [lsqlite3](https://luarocks.org/modules/javierguerragiraldez/lsqlite3) ? -->
-<!-- - https://github.com/uga-rosa/utf8.nvim (last commit 2 years ago) -->
 
 See wiki for more reference
 using CLI   "wordbase-cli --output json lookup 出る"
@@ -38,9 +38,9 @@ https://github.com/ant32bit/JMDict2JSON
 
 https://towardsdatascience.com/mecab-usage-and-add-user-dictionary-to-mecab-9ee58966fc6
 
-TODO list 
-create a top-level Rikai command with subcommands:
- "lookup"
+# TODO 
+
+- create a top-level Rikai command with subcommands: "lookup", ...
 
 
 * How to generate DB ?
@@ -49,9 +49,13 @@ nix shell nixpkgs#dart
 clone https://github.com/odrevet/edict_database.git (fetch)
 
 
+rikai-wiki: https://github.com/teto/rikai.nvim/wiki
 rikaitan: https://addons.mozilla.org/en-US/firefox/addon/rikaitan/
 jisho-rikai: https://jisho.org/search/%E7%90%86%E8%A7%A3
 sudachi-rs: https://github.com/WorksApplications/sudachi.rs
 edict-as-sqlite: https://github.com/odrevet/edict_database
 lual-luarocks: https://luarocks.org/modules/arthur-debert/lual
 lsqlite-luarocks: https://luarocks.org/modules/javierguerragiraldez/lsqlite3
+luautf8-github: https://github.com/starwing/luautf8
+<!-- - [lsqlite3](https://luarocks.org/modules/javierguerragiraldez/lsqlite3) ? -->
+<!-- - https://github.com/uga-rosa/utf8.nvim (last commit 2 years ago) -->

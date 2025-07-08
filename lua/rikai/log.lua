@@ -1,58 +1,36 @@
-local lual = require("lual")
 local config = require('rikai.config')
+local log = require('alogger')
 
+-- configure work to save into file and print into stdout
+log.setup({
+  save = true,
+  level = log.levels.DEBUG,
+  appname = 'rikai',
+  log_dir = '.', -- defualt is "${HOME}/appname/"
+  log_file = 'rikai',
+  -- (build_log_message)
+  -- app_root = '.', -- used to make short source trace-lines from full-paths
+  -- do not print messages with DEBUG and TRACE level into StdOut (only to file)
+  -- silent_debug = true,
+})
 
--- TODO convert log level to lual's
--- config.log_level =
-
--- Centralized configuration
-
--- lual.config({
---
---     level = lual.debug,
---     pipelines = {
---         -- this prints on CLI so not great
---         -- { level = lual.warn, outputs = { lual.console }, presenter = lual.color },
---         -- {
---         --     outputs = {
---         --         { lual.file, path = "app.log" }
---         --     },
---         --     presenter = lual.text()
---         -- }
---
---         {
---             -- level = lual.debug,
---             outputs = { { lual.file, path = "rikai.log"} },
---             -- presenter = lual.text()
---         }
---     }
--- })
-
-logger = lual.logger("rikai"
---     ,{
---             outputs = {
---                 { lual.file, path = "app.log" }
---             },
---             presenter = lual.text
---
--- }
-)
-
--- logger:set_level(lual.debug)
---
--- logger:add_pipeline(
---         {
---             outputs = {
---                 { lual.file, path = "app.log" }
---             },
---             presenter = lual.text()
---         }
---
+-- lual was too buggy
+-- local lual = require("lual")
+-- logger = lual.logger("rikai"
+-- --     ,{
+-- --             outputs = {
+-- --                 { lual.file, path = "app.log" }
+-- --             },
+-- --             presenter = lual.text
+-- --
+-- -- }
 -- )
+-- -- logger:set_level(lual.debug)
+--
+-- logger:debug("Now this appears too!")
 
-logger:debug("Now this appears too!")
+-- function logger.print(self, msg)
+--     vim.print(msg)
+-- end
 
-function logger.print(self, msg)
-    vim.print(msg)
-end
-return logger
+return log

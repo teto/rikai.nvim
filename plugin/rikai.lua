@@ -2,6 +2,7 @@
 local main = require'rikai'
 
 -- local JapConfig = require('rikai.config')
+-- TODO add highlight for current token
 
 -- todo add a preview function
 local commandOpts = {bang= true, range = true}
@@ -19,6 +20,7 @@ vim.api.nvim_create_user_command('RikaiLookup', main.popup_lookup, commandOpts)
 vim.api.nvim_create_user_command('RikaiDownload', function()
     print("downloading dicts...")
     -- vim.curl
+    -- TODO use vim.net.request() instead ?
     vim.system(
     string.format(
       "curl -sSL  https://github.com/odrevet/edict_database/releases/download/v0.0.2/kanji.zip -o "..vim.g.rikai.kanjidb

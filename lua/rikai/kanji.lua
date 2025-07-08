@@ -39,4 +39,10 @@ function M.jisho_link(expr)
     return url
 end
 
+
+function M.is_common_kanji(char)
+    local code = vim.fn.char2nr(char)
+    return code >= 0x4E00 and code <= 0x9FFF
+end
+
 return M

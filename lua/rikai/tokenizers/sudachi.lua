@@ -4,6 +4,7 @@
 -- 屋	接尾辞,名詞的,一般,*,*,*	屋
 -- EOS
 local logger = require'rikai.log'
+local classifier = require 'rikai.classifier'
 
 local M = {}
 
@@ -12,17 +13,25 @@ local M = {}
 M.tokenize = function (content)
     local tokens = {}
     -- Use format strings
-    logger:print(string.format("Tokenizer called with content '%s'", content))
+    logger.info(string.format("Tokenizer called with content '%s'", content))
 
     local handle_line = function(_, data, name)
-        logger:print("Handle_line called for event "..name)
+        logger.debug("Handle_line called for event "..name)
         for _, line in ipairs(data) do
-            -- ignore EOS too ? can sudachi be configured differently
-            if line ~= "" then
+            -- sudachi prints 'EOS' too. can sudachi be configured differently ?
+            if line ~= "" and line ~= "EOS" then
                 -- TODO keep only start, cut on first space
-                logger:print("Inserting new token ".. line)
                 local line_start = string.match(line, "%S+")
-                table.insert(tokens, line_start)
+
+                -- iskeyword doesn't accept non-ascii ranges :'(
+                -- https://groups.google.com/g/vim_dev/c/XrRP7Gcb9uc
+                -- so till then we can't count on <cword> and have to classify stuff ourself
+                if not classifier.is_japanese(line_start) then
+                    logger.debug("Skipping non-japanese token", line_start)
+                else
+                    logger.debug("Inserting new token ".. line_start)
+                    table.insert(tokens, line_start)
+                end
             end
         end
     end
@@ -56,17 +65,15 @@ M.tokenize = function (content)
 
 
     local resarr = vim.fn.jobwait( { chan }, timeout_ms)
-    vim.print(resarr)
 
     if resarr[1] < 0 then
         print("An error happened for sudachi")
         -- resarr[1]
         -- local reskill = vim.fn.jobstop( chan )
-        -- logger:print(reskill)
     end
 
 
-    logger:print("Found "..tostring(#tokens).. " different tokens")
+    logger.debug("Found "..tostring(#tokens).. " different tokens")
     return tokens
 end
 
