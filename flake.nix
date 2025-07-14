@@ -73,9 +73,9 @@
 
         #
         overlays = {
-          luaOverlay = luaself: luaprev: {
+          luaOverlay = luafinal: luaprev: {
 
-          alogger = luaprev.luaPackages.callPackage ({ buildLuarocksPackage, fetchFromGitLab, fetchurl, luaOlder }:
+          alogger = luafinal.luaPackages.callPackage ({ buildLuarocksPackage, fetchFromGitLab, fetchurl, luaOlder }:
           buildLuarocksPackage {
             pname = "alogger";
             version = "0.6.0-1";
@@ -99,7 +99,7 @@
             };
           }) {};
 
-          utf8 = luaprev.luaPackages.callPackage ({ buildLuarocksPackage, fetchFromGitHub, fetchurl, luaOlder }:
+          utf8 = luafinal.luaPackages.callPackage ({ buildLuarocksPackage, fetchFromGitHub, fetchurl, luaOlder }:
             buildLuarocksPackage {
               pname = "utf8";
               version = "1.3-0";
@@ -125,7 +125,7 @@
             }) {};
 
 
-          lual = luaprev.luaPackages.callPackage ({ buildLuarocksPackage, fetchFromGitHub, fetchurl, luaOlder }:
+          lual = luafinal.luaPackages.callPackage ({ buildLuarocksPackage, fetchFromGitHub, fetchurl, luaOlder }:
             buildLuarocksPackage {
               pname = "lual";
               version = "1.0.15-1";
@@ -149,7 +149,7 @@
               };
             }) {};
 
-        lsqlite3 = luaprev.callPackage (
+        lsqlite3 = luafinal.callPackage (
           {
             buildLuarocksPackage,
             fetchurl,
