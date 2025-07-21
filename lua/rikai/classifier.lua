@@ -1,6 +1,7 @@
 -- 
 local M = {}
 local kanji = require 'rikai.kanji'
+local logger = require'rikai.log'
 
 M.katakana_range = {0x30A0, 0x30FF}
 
@@ -17,11 +18,13 @@ function M.is_halfwidth_katakana(code)
     return code >= 0xFF66 and code <= 0xFF9F
 end
 
+---@param text string
 ---@return boolean
 function M.is_japanese(text)
     -- Check if the input is valid
-    if type(text) ~= 'string' or #text == 0 then
-        print("first false")
+    -- assert(text, "Accept sonly string")
+    if  #text == 0 then
+        logger.debug("Empty string")
         return false
     end
 
@@ -30,6 +33,8 @@ function M.is_japanese(text)
     -- false/ check iconv
     local mb_char = M.get_first_multibyte_char(text)
     local code = vim.fn.char2nr(mb_char)
+
+    logger.debug("Checking if code "..tostring(code).." is japanese")
 
     -- Check if the character is within the Japanese Unicode ranges
     if M.is_hiragana(code) or
