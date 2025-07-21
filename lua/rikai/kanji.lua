@@ -40,8 +40,8 @@ function M.jisho_link(expr)
 end
 
 
-function M.is_common_kanji(char)
-    local code = vim.fn.char2nr(char)
+function M.is_common_kanji(code)
+    print("checking kanji")
     return code >= 0x4E00 and code <= 0x9FFF
 end
 
