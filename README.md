@@ -23,9 +23,15 @@ Dependencies:
 # Roadmap 
 
 - support more tokenizers
-- 
+- romaji to kana and vice-versa
+- let users customize display (support https://jpdb.io/)
+- create a top-level Rikai command with subcommands: "lookup", ...
+- ability to focus popup
+- translate visual selection
+
 <!-- - jiten  -->
 <!-- - wordbase  -->
+
 
 <!-- Lua dependencies: -->
 
@@ -40,13 +46,11 @@ https://towardsdatascience.com/mecab-usage-and-add-user-dictionary-to-mecab-9ee5
 
 # TODO 
 
-- create a top-level Rikai command with subcommands: "lookup", ...
-
-
 * How to generate DB ?
 
-nix shell nixpkgs#dart
+Until `:RikaiDownload` works, do:
 clone https://github.com/odrevet/edict_database.git (fetch)
+nix shell nixpkgs#dart
 
 
 rikai-wiki: https://github.com/teto/rikai.nvim/wiki

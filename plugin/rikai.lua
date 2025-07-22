@@ -1,5 +1,6 @@
 -- local util = vim.lsp.util
 local main = require'rikai'
+local log = require'rikai.log'
 
 -- local JapConfig = require('rikai.config')
 -- TODO add highlight for current token
@@ -11,22 +12,38 @@ local commandOpts = {bang= true, range = true}
 -- vim.api.nvim_create_user_command('JapRo2Hi', require'rikai'.ro2hi, commandOpts)
 
 
--- print("RIKAI init")
--- vim.print( vim.g.rikai)
 -- get current word translations
--- 
-vim.api.nvim_create_user_command('RikaiLookup', main.popup_lookup, commandOpts)
+vim.api.nvim_create_user_command('RikaiLookup', main.popup_lookup, {
+        bang= true, range = true, nargs= "?"
+    })
+vim.api.nvim_create_user_command('RikaiLog', 
+        function ()
+            print(tostring(log.get_outfile()))
+        end,
+        commandOpts)
 
+
+-- created just for convenience
 vim.api.nvim_create_user_command('RikaiDownload', function()
     print("downloading dicts...")
-    -- vim.curl
-    -- TODO use vim.net.request() instead ?
-    vim.system(
-    string.format(
-      "curl -sSL  https://github.com/odrevet/edict_database/releases/download/v0.0.2/kanji.zip -o "..vim.g.rikai.kanjidb
+    local kanji_url = "https://github.com/odrevet/edict_database/releases/download/v0.0.2/kanji.zip"
+    local expression_url = "https://github.com/odrevet/edict_database/releases/download/v0.0.2/expression.zip"
+    vim.net.request(kanji_url, {
+        outpath = vim.g.rikai.kanjidb,
+    },
+    function (err, _response)
+            if err then
+                -- set ERROR level
+                vim.notify("Downloading rikai DB failed:\n"..err)
+            end
+        end
     )
-  )
-  -- https://github.com/odrevet/edict_database/releases/download/v0.0.2/expression.zip
+    -- vim.system(
+    -- string.format(
+    --   "curl -sSL  "..kanji_url.." -o "..vim.g.rikai.kanjidb
+    -- )
+  -- )
+  -- 
   -- return vim.v.shell_error == 0
 
 end, { desc = 'Download required dicts' })

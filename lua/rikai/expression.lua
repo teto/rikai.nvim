@@ -1,4 +1,5 @@
 local M = {}
+local utils = require'rikai.utils'
 -- {
 -- ||   entry_id = 1169250,
 -- ||   gloss_group = "to lead (e.g. a horse),to pull,to tug",
@@ -15,16 +16,17 @@ local M = {}
 ---@field sense_id number
 ---@field keb_reb_group string
 
+---@param original_token string The original search
 ---@param res ExpressionDesc
 ---@return table (as expected by 'open_floating_preview')
-function M.format_expression(res)
+function M.format_expression(original_token, res)
     local lines = {
         res["keb_reb_group"] .. " (k_ele_id) ",
         -- "kun reading: ".. res["kun_reading"],
         -- "on reading: ".. res["on_reading"],
         "",
         res["gloss_group"],
-        -- M.jisho_link(res["id"])
+        utils.jisho_link(original_token)
     }
 
     return lines

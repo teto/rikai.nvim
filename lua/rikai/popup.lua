@@ -15,15 +15,18 @@ local util = vim.lsp.util
 -- end
 --
 
----@param {string} lines toto
-function M.create_popup(lines)
+---@param lines table toto
+---@param opts `vim.lsp.util.open_floating_preview.Opts?` forwarded to create popup
+function M.create_popup(lines, opts)
        -- JapConfig
        local width = config.width
-       local height = config.height
-       local opts = {
-           title = "jap.nvim"
+       local height = (#lines or config.max_height) + 1
+       local lopts = {
+           title = "jap.nvim",
+           wrap = true,
+           max_height = 20,
        }
-       local popupOptions = util.make_floating_popup_options(width, height, opts)
+       local popupOptions = util.make_floating_popup_options(width, height, lopts)
 
        util.open_floating_preview(lines, "txt", popupOptions)
 

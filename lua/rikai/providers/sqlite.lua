@@ -96,7 +96,6 @@ function M.lookup_kanji(kanji)
     else
         logger.info("Looking up kanji: ".. tostring(kanji))
         for a in con:nrows(req) do
-            -- vim.print(a)
             res [#res + 1] = a
         end
     end
@@ -129,7 +128,7 @@ function M.lookup_expr(word)
     else
         logger.info("Looking up expr ".. tostring(word))
         for a in db:nrows(req) do
-            vim.print(a)
+            -- vim.print(a)
             res [#res + 1] = a
         end
     end

@@ -27,7 +27,6 @@ log.setup({
 -- )
 -- -- logger:set_level(lual.debug)
 --
--- logger:debug("Now this appears too!")
 
 -- function logger.print(self, msg)
 --     vim.print(msg)

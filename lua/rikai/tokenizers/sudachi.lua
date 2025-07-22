@@ -41,7 +41,6 @@ M.tokenize = function (content)
         on_stdout = handle_line,
         on_stderr = handle_line,
         on_exit = function ()
-            -- print("PROCESS FINISHED") 
         end,
     })
 

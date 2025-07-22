@@ -1,4 +1,7 @@
+local utils = require 'rikai.utils'
+
 local M = {}
+
 
 ---@class KanjiDesc
 ---@field id string
@@ -21,28 +24,17 @@ function M.format_kanji(res)
 --   radicals = "夕",
 --   stroke_count = 6
 -- }
+
     local lines = {
         res["id"] .. " (jlpt "..res["jlpt"] .. ")",
         "kun reading: ".. res["kun_reading"],
         "on reading: ".. res["on_reading"],
         "",
         res["meanings"],
-        M.jisho_link(res["id"])
+        utils.jisho_link(res["id"])
     }
 
     return lines
-end
-
----@return string (link towards jisho.org)
-function M.jisho_link(expr)
-    local url = "https://jisho.org/search/"..expr
-    return url
-end
-
-
-function M.is_common_kanji(code)
-    print("checking kanji")
-    return code >= 0x4E00 and code <= 0x9FFF
 end
 
 return M

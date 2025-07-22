@@ -4,8 +4,6 @@ local M = {}
 ---@param word string
 function M.lookup(word)
 
-    print("looking up word", word)
-
     local args = {'wordbase-cli', '--output=json', 'lookup', word}
     -- local output = ""
     vim.notify(vim.fn.join(args))
