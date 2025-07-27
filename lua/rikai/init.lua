@@ -7,6 +7,7 @@ local expr = require'rikai.expression'
 local tokenizer = require'rikai.tokenizers.sudachi'
 local logger = require'rikai.log'
 local utf8 = require'utf8'
+local query = require 'rikai.providers.sqlite'
 
 local M = {}
 
@@ -40,9 +41,14 @@ M.popup_lookup = function(args)
     -- vim.print(args.fargs)
     -- local params = vim.lsp.util.make_position_params()
     local word
-    word = args.fargs[1] or vim.fn.expand("<cWORD>")
-    -- <cWORD>
-    -- cword implementation is based
+    -- splits between kanas and kanjis
+    -- if args.line1 then
+    
+    -- if args.bang then
+    --     -- use the character under the cursor
+    -- end
+    word = args.fargs[1] or vim.fn.expand("<cword>")
+    -- cword implementation is based on \k
 
        logger.info("Looking into word: "..word)
 
@@ -105,10 +111,14 @@ M.popup_lookup = function(args)
 
             if token_len == 1 and token_type == types.CharacterType.KANJI then
                 -- vim.print(r)
-                local new_result = kanji.format_kanji(r)
+                -- append radicals
+                local radicals = query.lookup_kanji_radicals(token)
+                -- vim.print(radicals)
+                local new_result = kanji.format_kanji(r, radicals)
                 for j = 1, #new_result do
                     table.insert(formatted_results, new_result[j])
                 end
+
 
             else
                 -- one could concat all results ?
@@ -130,7 +140,10 @@ M.popup_lookup = function(args)
         end
 
           -- add a link to jisho
-          require'rikai.popup'.create_popup( formatted_results, {} )
+          require'rikai.popup'.create_popup(token, formatted_results, {
+                -- focus existing popup with this id instead of creating one
+              focusable = true
+          } )
 
 end
 

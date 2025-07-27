@@ -1,10 +1,11 @@
 
----@class JapConfig jap.nvim plugin configuration.
+---@class RikaiConfig jap.nvim plugin configuration.
 ---
 ---@field kanjidb? string path towards a https://github.com/odrevet/edict_database's compatible db
 ---@field jmdictdb? string
 ---@field log_level? vim.log.levels logging level
 ---@field popup_options vim.lsp.util.open_floating_preview.Opts
+---@field _state table internal dont use
 local JapDefaultConfig = {
     width = 120,
     height = 30,
@@ -15,13 +16,17 @@ local JapDefaultConfig = {
 
     popup_options = {
         max_height = 20
-    }
+    },
 
+    -- internal usage
+    _state = {
+    }
 }
 
----@type JapConfig
-JapConfig = vim.tbl_deep_extend('keep', vim.g.rikai or {}, JapDefaultConfig)
+---@type RikaiConfig
+RikaiConfig = vim.tbl_deep_extend('keep', vim.g.rikai or {}, JapDefaultConfig)
 
-vim.g.rikai = JapConfig
+-- vim.g.rikai._internal / _state is used internally to save some state
+vim.g.rikai = RikaiConfig
 
-return JapConfig
+return RikaiConfig

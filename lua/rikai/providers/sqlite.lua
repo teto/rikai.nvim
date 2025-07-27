@@ -28,7 +28,9 @@ WHERE character.id="]]..kanji..[[";
 end
 
 
-function M.query_kanji_get_radicals(kanji)
+---@param kanji string the kanji to look for
+---@return string the SQL query
+function M.get_kanji_radicals_query(kanji)
     return [[
     SELECT radical.* 
     FROM radical 
@@ -81,26 +83,64 @@ GROUP BY
   ]];
 end
 
---- how to j
+---@param db_path string 
+function M.get_db_handle(db_path)
+
+    -- TODO check if a handle already exists
+    logger.info("Opening " .. db_path)
+    local con = config._state[db_path]
+    if con then
+        return con
+    else
+        -- open readonly
+        local errmsg, _errcode
+        con, errmsg, _errcode = sqlite3.open(db_path, sqlite3.OPEN_READONLY)
+        if not con then
+            vim.notify(string.format("rikai: could not open %s:\n%s", db_path, errmsg))
+            return false
+        end
+        config._state[db_path] = con
+    end
+
+    -- vim.g.rikai._state = con
+    return con
+end
+
+--- Lookup translation for a kanji
+---@param kanji string Kanji to search for
 ---@return table
 function M.lookup_kanji(kanji)
 
-    logger.info("Opening " .. config.kanjidb)
-    local con, errmsg, _errcode = sqlite3.open(config.kanjidb, sqlite3.OPEN_READWRITE)
     local res = {}
 
+    local con = M.get_db_handle(config.kanjidb)
+    assert (con, "could not open db")
     local req = M.kanji_sql(kanji)
 
-    if not con then
-        vim.notify(string.format("rikai: could not open %s:\n%s", config.kanjidb, errmsg))
-    else
-        logger.info("Looking up kanji: ".. tostring(kanji))
-        for a in con:nrows(req) do
-            res [#res + 1] = a
-        end
+    logger.info("Looking up kanji: ".. tostring(kanji))
+    for a in con:nrows(req) do
+        -- res [#res + 1] = a
+        table.insert(res, a)
     end
 
-    con:close()
+    return res
+end
+
+
+--- Find radicals of the kanji
+function M.lookup_kanji_radicals(kanji)
+
+    local res = {}
+
+    local con = M.get_db_handle(config.kanjidb)
+    assert (con, "could not open db")
+    local req = M.get_kanji_radicals_query(kanji)
+
+    logger.info("Looking up kanji radicals: ".. tostring(kanji))
+    for a in con:nrows(req) do
+        res [#res + 1] = a
+    end
+
     return res
 end
 
@@ -117,23 +157,19 @@ end
 
 function M.lookup_expr(word)
 
-    logger.info("Opening " .. jmdictdb)
-    local db, errmsg, _errcode = sqlite3.open(jmdictdb, sqlite3.OPEN_READWRITE)
+    -- logger.info("Opening " .. jmdictdb)
+    local db = M.get_db_handle(jmdictdb)
+    assert(db)
     local res = {}
 
     local req = M.query_expr(word)
 
-    if not db then
-        vim.notify(string.format("rikai: could not open %s:\n%s", jmdictdb, errmsg))
-    else
-        logger.info("Looking up expr ".. tostring(word))
-        for a in db:nrows(req) do
-            -- vim.print(a)
-            res [#res + 1] = a
-        end
+    logger.info("Looking up expr ".. tostring(word))
+    for a in db:nrows(req) do
+        -- vim.print(a)
+        res [#res + 1] = a
     end
 
-    db:close()
     return res
 end
 

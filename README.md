@@ -11,7 +11,6 @@ The name is inspired by the great browser [rikaitan][rikaitan] plugin.
 Right now it's in development so it's fully declarative but soon we should get a
 nix build along with a rockspec.
 
-
 Dependencies:
 - [sudachi_rs][sudachi-rs] as a tokenizer (ie., split words)
 - [edict_database][edict-as-sqlite] as sqlite databases
@@ -19,6 +18,23 @@ Dependencies:
 - [alogger][alogger-luarocks] for logging
 - [official sqlite bindings][lsqlite-luarocks] for lua 'sqlite'
 - [utf8][luautf8-github] to get utf8
+
+
+# How to use ?
+
+Run `:RikaiDownload` to fetch the dictionaries (just once).
+
+
+There are no default keymaps so you need to set one
+
+```
+vim.keymap.set('n', '<D-j>', function()
+	vim.cmd[[ RikaiLookup ]]
+end, { buffer = false, desc = "Japanese lookup" })
+```
+
+You can also 
+
 
 # Roadmap 
 
@@ -28,6 +44,11 @@ Dependencies:
 - create a top-level Rikai command with subcommands: "lookup", ...
 - ability to focus popup
 - translate visual selection
+- add examples
+- list radicals
+- open db on command (register handle in some state)
+- close it at the end of after some time ?
+- add rikai translate
 
 <!-- - jiten  -->
 <!-- - wordbase  -->

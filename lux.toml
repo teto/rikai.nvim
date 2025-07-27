@@ -1,0 +1,21 @@
+package = "rikai"
+version = "0.1.0"
+lua = ">=5.1"
+
+[description]
+summary = "Neovim plugin that helps with japanese translation"
+maintainer = "teto"
+labels = [ "neovim" ]
+license = "GPL-2.0"
+
+[dependencies]
+alogger = "0.6.0-1"
+utf8 = "1.3-0"
+# Add your dependencies here
+# `busted = ">=2.0"`
+
+[run]
+args = [ "src/main.lua" ]
+
+[build]
+type = "builtin"
