@@ -24,20 +24,20 @@ Dependencies:
 
 Run `:RikaiDownload` to fetch the dictionaries (just once).
 
-
 There are no default keymaps so you need to set one
 
-```
+```lua
 vim.keymap.set('n', '<D-j>', function()
 	vim.cmd[[ RikaiLookup ]]
 end, { buffer = false, desc = "Japanese lookup" })
 ```
 
-You can also 
+You can also call `:RikaiLookup 見`
 
 
 # Roadmap 
 
+- lux packaging
 - support more tokenizers
 - romaji to kana and vice-versa
 - let users customize display (support https://jpdb.io/)
@@ -50,37 +50,35 @@ You can also
 - close it at the end of after some time ?
 - add rikai translate
 
-<!-- - jiten  -->
-<!-- - wordbase  -->
 
 
 <!-- Lua dependencies: -->
 
-See wiki for more reference
-using CLI   "wordbase-cli --output json lookup 出る"
-import jamdict
-https://jamdict.readthedocs.io/en/latest/
-https://github.com/Top-Ranger/jmdict-to-sqlite3
-https://github.com/ant32bit/JMDict2JSON
+See wiki for more reference.
 
-https://towardsdatascience.com/mecab-usage-and-add-user-dictionary-to-mecab-9ee58966fc6
+- https://jamdict.readthedocs.io/en/latest/
+- https://github.com/Top-Ranger/jmdict-to-sqlite3
+- https://github.com/ant32bit/JMDict2JSON
+- https://towardsdatascience.com/mecab-usage-and-add-user-dictionary-to-mecab-9ee58966fc6
 
 # TODO 
 
 * How to generate DB ?
 
 Until `:RikaiDownload` works, do:
-clone https://github.com/odrevet/edict_database.git (fetch)
-nix shell nixpkgs#dart
+
+- clone https://github.com/odrevet/edict_database.git (fetch)
+- nix shell nixpkgs#dart
 
 
-rikai-wiki: https://github.com/teto/rikai.nvim/wiki
-rikaitan: https://addons.mozilla.org/en-US/firefox/addon/rikaitan/
-jisho-rikai: https://jisho.org/search/%E7%90%86%E8%A7%A3
-sudachi-rs: https://github.com/WorksApplications/sudachi.rs
-edict-as-sqlite: https://github.com/odrevet/edict_database
-lual-luarocks: https://luarocks.org/modules/arthur-debert/lual
-lsqlite-luarocks: https://luarocks.org/modules/javierguerragiraldez/lsqlite3
-luautf8-github: https://github.com/starwing/luautf8
+[alogger-luarocks]: https://luarocks.org/modules/swarg/alogger/
+[rikai-wiki]: https://github.com/teto/rikai.nvim/wiki
+[rikaitan]: https://addons.mozilla.org/en-US/firefox/addon/rikaitan/
+[jisho-rikai]: https://jisho.org/search/%E7%90%86%E8%A7%A3
+[sudachi-rs]: https://github.com/WorksApplications/sudachi.rs
+[edict-as-sqlite]: https://github.com/odrevet/edict_database
+[lual-luarocks]: https://luarocks.org/modules/arthur-debert/lual
+[lsqlite-luarocks]: https://luarocks.org/modules/javierguerragiraldez/lsqlite3
+[luautf8-github]: https://github.com/starwing/luautf8
 <!-- - [lsqlite3](https://luarocks.org/modules/javierguerragiraldez/lsqlite3) ? -->
 <!-- - https://github.com/uga-rosa/utf8.nvim (last commit 2 years ago) -->

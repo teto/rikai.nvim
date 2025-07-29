@@ -25,6 +25,16 @@ M.ro2hi = function (args)
     print("ro2hi not implemented yet, use jiten")
 end
 
+
+local function get_selection()
+   -- does not handle rectangular selection
+   local s_start = vim.fn.getpos "."
+   -- in visual mode returns the other end of the connections
+   local s_end = vim.fn.getpos "v"
+   local lines = vim.fn.getregion(s_start,s_end)
+   return lines
+end
+
 -- we should tokenize and based on what we find lookup kanji or not ?
 -- でる
 -- 
@@ -41,13 +51,21 @@ M.popup_lookup = function(args)
     -- vim.print(args.fargs)
     -- local params = vim.lsp.util.make_position_params()
     local word
-    -- splits between kanas and kanjis
-    -- if args.line1 then
-    
-    -- if args.bang then
-    --     -- use the character under the cursor
-    -- end
-    word = args.fargs[1] or vim.fn.expand("<cword>")
+    -- number of items in range
+    if args.range then
+        -- splits between kanas and kanjis
+        print("line1: ", args.line1)
+        print("line2: ", args.line2)
+        -- https://github.com/neovim/neovim/discussions/35081
+        -- TODO get selection
+        -- get_region
+        word = args.fargs[1] or vim.fn.expand("<cword>")
+    else
+        -- if args.bang then
+        --     -- use just the character under the cursor
+        -- end
+        word = args.fargs[1] or vim.fn.expand("<cword>")
+    end
     -- cword implementation is based on \k
 
        logger.info("Looking into word: "..word)
