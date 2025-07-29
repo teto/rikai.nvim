@@ -8,7 +8,7 @@ local function highlight_current_word()
 end
 
 -- Create an autocommand group for highlighting
-local highlight_group = vim.api.nvim_create_augroup("HighlightWordGroup", { clear = true })
+local highlight_group = vim.api.nvim_create_augroup("RikaiHighlightWordGroup", { clear = true })
 
 -- Autocommand to highlight the word under the cursor when the cursor moves
 vim.api.nvim_create_autocmd({"CursorMoved", "CursorMovedI"}, {

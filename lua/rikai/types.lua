@@ -1,7 +1,7 @@
 
 local M = {}
 
----@enum rikai.CharacterType
+---@enum rikai.types.CharacterType
 M.CharacterType = {
     OTHER    = 1;
     -- ASCII    = 2;
@@ -12,7 +12,7 @@ M.CharacterType = {
     -- TODO add __tostring ?
 }
 
----@param e rikai.CharacterType
+---@param e rikai.types.CharacterType
 ---@return string The name of CharacterType
 function M.as_str(e)
     local map = {
@@ -23,6 +23,16 @@ function M.as_str(e)
     }
     return map[e]
 end
+
+
+-- rename into lexicon type ?
+-- maps to sudachi's 'LexiconEntry' ?
+---@enum rikai.types.PosTokenType part of speech tag
+M.PosTokenType = {
+    NAME = 1,
+    PARTICLE = 2,
+    AUXILIARY = 3,
+}
 
 
 

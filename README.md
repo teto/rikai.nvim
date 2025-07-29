@@ -34,6 +34,10 @@ end, { buffer = false, desc = "Japanese lookup" })
 
 You can also call `:RikaiLookup 見`
 
+Highlights used are:
+- RikaiHighlightWordGroup
+- RikaiNames
+
 
 # Roadmap 
 
@@ -70,6 +74,13 @@ Until `:RikaiDownload` works, do:
 - clone https://github.com/odrevet/edict_database.git (fetch)
 - nix shell nixpkgs#dart
 
+
+# Related software
+
+- [rikaitan][rikaitan]
+- [tagainjisho](https://github.com/Gnurou/tagainijisho/)
+- On android, I love [Kanji
+  study](https://play.google.com/store/apps/details?id=com.mindtwisted.kanjistudy&pli=1)
 
 [alogger-luarocks]: https://luarocks.org/modules/swarg/alogger/
 [rikai-wiki]: https://github.com/teto/rikai.nvim/wiki

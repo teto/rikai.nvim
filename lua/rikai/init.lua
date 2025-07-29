@@ -52,9 +52,9 @@ M.popup_lookup = function(args)
     -- local params = vim.lsp.util.make_position_params()
     local word
     -- number of items in range
-    if args.range then
+    if args.range > 0 then
         -- splits between kanas and kanjis
-        print("line1: ", args.line1)
+        print("args.range line1: ", args.line1)
         print("line2: ", args.line2)
         -- https://github.com/neovim/neovim/discussions/35081
         -- TODO get selection
@@ -68,24 +68,27 @@ M.popup_lookup = function(args)
     end
     -- cword implementation is based on \k
 
+
        logger.info("Looking into word: "..word)
 
         -- find the firest
         -- TODO if length is one, no need to tokenize !
-        local tokens = { word }
+        local token = word
         if utf8.len(word) > 1 then
+            -- todo get first element
             tokens = tokenizer.tokenize(word)
+            if vim.tbl_isempty(tokens) then
+                logger.debug("No tokens found")
+                return
+            end
+            -- returns an array of TokenizationResult
+            token = tokens[1][1]
         else
             logger.debug("Word "..word.." is one character: skipping tokenization...")
         end
 
-        if vim.tbl_isempty(tokens) then
-            logger.debug("No tokens found")
-            return
-        end
 
         -- the chosen token
-        local token = tokens[1]
         local token_code = vim.fn.char2nr(token)
         local token_type = classifier.chartype(token_code)
         local token_len = utf8.len(token)

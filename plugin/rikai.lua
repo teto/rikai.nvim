@@ -12,6 +12,8 @@ local log = require'rikai.log'
 local commandOpts = {bang= true, range = true}
 
 
+-- TODO do this better
+
 
 -- get current word translations
 vim.api.nvim_create_user_command('RikaiLookup', main.popup_lookup, {
@@ -34,29 +36,38 @@ vim.api.nvim_create_user_command('RikaiTranslate', require'rikai.translation.ope
         bang= true, range = true, nargs= "?"
     })
 
+vim.api.nvim_create_user_command('RikaiFuri', require'rikai.furigana'.add_furigana, {
+        bang= true, range = true, nargs= "?"
+    })
 
 -- created just for convenience
 vim.api.nvim_create_user_command('RikaiDownload', function()
     print("downloading dicts...")
     local kanji_url = "https://github.com/odrevet/edict_database/releases/download/v0.0.2/kanji.zip"
     local expression_url = "https://github.com/odrevet/edict_database/releases/download/v0.0.2/expression.zip"
-    vim.net.request(kanji_url, {
-        outpath = vim.g.rikai.kanjidb,
-    },
-    function (err, _response)
+    local furigana_url = "https://github.com/Doublevil/JmdictFurigana/releases/download/2.3.1%2B2024-11-25/JmdictFurigana.json.tar.gz"
+    local cb = function (err, _response)
             if err then
                 -- set ERROR level
-                vim.notify("Downloading rikai DB failed:\n"..err)
+                -- vim.notify("Downloading rikai DB failed:\n"..err)
+                print("Downloading rikai DB failed:\n"..err)
+            else
+                -- vim.notify("Finished downloading rikai dictionary.")
+                print("Finished downloading rikai dictionary.")
             end
+
         end
-    )
-    -- vim.system(
-    -- string.format(
-    --   "curl -sSL  "..kanji_url.." -o "..vim.g.rikai.kanjidb
-    -- )
-  -- )
-  -- 
-  -- return vim.v.shell_error == 0
+
+    vim.net.request(kanji_url, {
+        outpath = vim.g.rikai.kanjidb,
+    }, cb)
+    vim.net.request(expression_url, {
+        outpath = vim.g.rikai.jmdictdb,
+    }, cb)
+    -- TODO uncompress ?
+    vim.net.request(expression_url, {
+        outpath = vim.fn.stdpath("data").."/rikai/furigana.json",
+    }, cb)
 
 end, { desc = 'Download required dicts' })
 
