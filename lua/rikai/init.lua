@@ -1,4 +1,8 @@
--- local provider = require'rikai.providers.wordbase'
+-- Get the content of the current line in the buffer
+local current_line_content = vim.api.nvim_get_current_line()
+print(current_line_content)  -- Print the current line content for verification
+
+
 local provider = require'rikai.providers.sqlite'
 local classifier = require'rikai.classifier'
 local types = require'rikai.types'
@@ -25,7 +29,6 @@ M.ro2hi = function (args)
     print("ro2hi not implemented yet, use jiten")
 end
 
-
 local function get_selection()
    -- does not handle rectangular selection
    local s_start = vim.fn.getpos "."
@@ -33,6 +36,23 @@ local function get_selection()
    local s_end = vim.fn.getpos "v"
    local lines = vim.fn.getregion(s_start,s_end)
    return lines
+end
+
+--- Add highlights for names
+--- ideally we would display furiganas as a virtual line see furigana.lua
+---@param args vim.api.keyset.create_user_command.command_args
+M.toggle_names = function(args)
+    -- for now just enable
+    -- tokenize the current line, searching for names and adding highlights for them
+    local pos = vim.fn.getpos(".")
+    vim.print(pos)
+    local line = pos[2] -1 -- nvim_buf_get_lines is 0-indexed
+    -- print("line:", line)
+    lines = vim.api.nvim_buf_get_lines(pos[1], line, pos[2], true)
+    assert(#lines)
+    local res = tokenizer.tokenize(lines[1])
+    vim.print(res)
+    for 
 end
 
 -- we should tokenize and based on what we find lookup kanji or not ?
@@ -55,10 +75,9 @@ M.popup_lookup = function(args)
     if args.range > 0 then
         -- splits between kanas and kanjis
         print("args.range line1: ", args.line1)
-        print("line2: ", args.line2)
+        -- print("line2: ", args.line2)
         -- https://github.com/neovim/neovim/discussions/35081
-        -- TODO get selection
-        -- get_region
+        -- todo use get_selection instead ? 
         word = args.fargs[1] or vim.fn.expand("<cword>")
     else
         -- if args.bang then

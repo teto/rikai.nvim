@@ -1,22 +1,24 @@
--- local util = vim.lsp.util
 local main = require'rikai'
 local log = require'rikai.log'
 
 -- local query = require'rikai.providers.sqlite'
 -- local config = require'rikai.config'
 
--- local RikaiConfig = require('rikai.config')
--- TODO add highlight for current token
-
 -- todo add a preview function
 local commandOpts = {bang= true, range = true}
 
 
--- TODO do this better
+-- Create a new highlight group linked to 'Comment'
+vim.api.nvim_set_hl(0, 'RikaiVirtualText', { link = 'Comment' })
+vim.api.nvim_set_hl(0, 'RikaiNames', { link = 'Search' })
+
 
 
 -- get current word translations
 vim.api.nvim_create_user_command('RikaiLookup', main.popup_lookup, {
+        bang= true, range = true, nargs= "?"
+    })
+vim.api.nvim_create_user_command('RikaiNames', main.toggle_names, {
         bang= true, range = true, nargs= "?"
     })
 vim.api.nvim_create_user_command('RikaiLog',

@@ -37,8 +37,9 @@ end
 
 --- Returns a table of TokenizationResult
 ---@param content string
+---@param enable_pos_processing boolean enable part of speech processing
 ---@return table of TokenizationResult
-M.tokenize = function (content)
+M.tokenize = function (content, enable_pos_processing)
     local tokens = {}
     -- Use format strings
     -- TODO dont log the whole thing, 
@@ -65,6 +66,11 @@ M.tokenize = function (content)
                 local line_start = pieces[1]
                 local pos = pieces[2]
 
+                if enable_pos_processing then
+                    print("Part of speech processing enabled")
+                    local res = vim.split(pos, ",")
+                    pos = res[1]
+                end
 
                 -- iskeyword doesn't accept non-ascii ranges :'(
                 -- https://groups.google.com/g/vim_dev/c/XrRP7Gcb9uc
@@ -73,7 +79,11 @@ M.tokenize = function (content)
                     logger.debug("Skipping non-japanese token", line_start)
                 else
                     logger.debug("Inserting description of token ".. line_start)
-                    table.insert(tokens, pieces)
+                    table.insert(tokens, {
+                        pieces[1],
+                        pos -- processed or not
+
+                    })
                 end
             end
         end

@@ -10,7 +10,7 @@ M.katakana_range = {0x30A0, 0x30FF}
 M.hiragana_range = {0x3040, 0x309F}
 
 ---@param code number
----@return rikai.CharacterType
+---@return rikai.types.CharacterType
 function M.chartype(code)
     local ctype = types.CharacterType;
     if M.is_hiragana(code) then
@@ -21,7 +21,7 @@ function M.chartype(code)
         return ctype.KANJI
     end
 
-    print("OTHER")
+    print("OTHER CharacterType")
     return types.CharacterType.OTHER
 end
 
