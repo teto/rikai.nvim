@@ -21,7 +21,7 @@ function M.chartype(code)
         return ctype.KANJI
     end
 
-    print("OTHER CharacterType")
+    -- todo distinguish between greek/numeral
     return types.CharacterType.OTHER
 end
 

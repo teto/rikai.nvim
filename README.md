@@ -58,18 +58,13 @@ Highlights used are:
 
 <!-- Lua dependencies: -->
 
-See wiki for more reference.
+See [wiki][rikai-nvim-wiki] for more reference.
 
-- https://jamdict.readthedocs.io/en/latest/
-- https://github.com/Top-Ranger/jmdict-to-sqlite3
-- https://github.com/ant32bit/JMDict2JSON
 - https://towardsdatascience.com/mecab-usage-and-add-user-dictionary-to-mecab-9ee58966fc6
 
-# TODO 
+# How to get the various dictionaries used by rikai.nvim ?
 
-* How to generate DB ?
-
-Until `:RikaiDownload` works, do:
+Run `:RikaiDownload`, else do:
 
 - clone https://github.com/odrevet/edict_database.git (fetch)
 - nix shell nixpkgs#dart
@@ -81,15 +76,18 @@ Until `:RikaiDownload` works, do:
 - [tagainjisho](https://github.com/Gnurou/tagainijisho/)
 - On android, I love [Kanji
   study](https://play.google.com/store/apps/details?id=com.mindtwisted.kanjistudy&pli=1)
+- [ichiran][ichiran-github]
 
 [alogger-luarocks]: https://luarocks.org/modules/swarg/alogger/
-[rikai-wiki]: https://github.com/teto/rikai.nvim/wiki
-[rikaitan]: https://addons.mozilla.org/en-US/firefox/addon/rikaitan/
-[jisho-rikai]: https://jisho.org/search/%E7%90%86%E8%A7%A3
-[sudachi-rs]: https://github.com/WorksApplications/sudachi.rs
 [edict-as-sqlite]: https://github.com/odrevet/edict_database
+[ichiran-github]: https://github.com/tshatrov/ichiran
+[jisho-rikai]: https://jisho.org/search/%E7%90%86%E8%A7%A3
 [lual-luarocks]: https://luarocks.org/modules/arthur-debert/lual
 [lsqlite-luarocks]: https://luarocks.org/modules/javierguerragiraldez/lsqlite3
 [luautf8-github]: https://github.com/starwing/luautf8
+[rikai-nvim-wiki]: https://github.com/teto/rikai.nvim/wiki/Home
+[rikai-wiki]: https://github.com/teto/rikai.nvim/wiki
+[rikaitan]: https://addons.mozilla.org/en-US/firefox/addon/rikaitan/
+[sudachi-rs]: https://github.com/WorksApplications/sudachi.rs
 <!-- - [lsqlite3](https://luarocks.org/modules/javierguerragiraldez/lsqlite3) ? -->
 <!-- - https://github.com/uga-rosa/utf8.nvim (last commit 2 years ago) -->

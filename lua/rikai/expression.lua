@@ -21,11 +21,13 @@ local utils = require'rikai.utils'
 ---@return table (as expected by 'open_floating_preview')
 function M.format_expression(original_token, res)
     local lines = {
-        res["keb_reb_group"] .. " (k_ele_id) ",
+        res["keb_reb_group"], -- .. " (k_ele_id) ",
         -- "kun reading: ".. res["kun_reading"],
         -- "on reading: ".. res["on_reading"],
+        -- "pos_group ?"..res["pos_group"],
         "",
         res["gloss_group"],
+        "",
         utils.jisho_link(original_token)
     }
 

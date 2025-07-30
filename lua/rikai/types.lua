@@ -27,11 +27,15 @@ end
 
 -- rename into lexicon type ?
 -- maps to sudachi's 'LexiconEntry' ?
----@enum rikai.types.PosTokenType part of speech tag
-M.PosTokenType = {
+---@enum rikai.types.LexiconType part of speech tag
+M.LexiconType = {
+    -- names
     NAME = 1,
-    PARTICLE = 2,
-    AUXILIARY = 3,
+    PROPER_NOUN = 2,
+
+
+    PARTICLE = 10,
+    AUXILIARY = 11,
 }
 
 

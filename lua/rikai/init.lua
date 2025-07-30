@@ -38,7 +38,7 @@ local function get_selection()
    return lines
 end
 
---- Add highlights for names
+--- Add highlights for names present in current line
 --- ideally we would display furiganas as a virtual line see furigana.lua
 ---@param args vim.api.keyset.create_user_command.command_args
 M.toggle_names = function(args)
@@ -50,9 +50,22 @@ M.toggle_names = function(args)
     -- print("line:", line)
     lines = vim.api.nvim_buf_get_lines(pos[1], line, pos[2], true)
     assert(#lines)
-    local res = tokenizer.tokenize(lines[1])
-    vim.print(res)
-    for 
+    local res = tokenizer.tokenize(lines[1], true)
+    -- vim.print(res)
+    vim.print("Looping over tokens ...")
+    for _i, j in ipairs(res) do
+        vim.print(j[2])
+        local lexicon_type = j[2]
+        if lexicon_type == types.LexiconType.PROPER_NOUN then
+            vim.fn.matchadd('RikaiNames', j[1])
+            -- TODO we could print in furigana as virtual text
+            -- res["keb_reb_group"]
+        end
+    end
+end
+
+--- Clear the names registered by toggle_names
+function M.clear_names()
 end
 
 -- we should tokenize and based on what we find lookup kanji or not ?
@@ -95,7 +108,7 @@ M.popup_lookup = function(args)
         local token = word
         if utf8.len(word) > 1 then
             -- todo get first element
-            tokens = tokenizer.tokenize(word)
+            tokens = tokenizer.tokenize(word, true)
             if vim.tbl_isempty(tokens) then
                 logger.debug("No tokens found")
                 return

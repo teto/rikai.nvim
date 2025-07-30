@@ -10,24 +10,29 @@ local classifier = require 'rikai.classifier'
 
 local M = {}
 
+local NUMERAL = "数詞"
+local PROPER_NOUN = "固有名詞"
 
+-- PART of SPEECH
+-- "固有名詞" lastname might appear as a subtype
+-- so we mix both together
+---@param pos table
+---@return rikai.types.LexiconType
+function M.lexicon_type(pos)
+    local token = pos[1]
+    -- TODO 地名 = > nom de lieu, utiliser un bitfield ?
 
---- maps to sudachi's 'LexiconEntry' ?
----@param token string
----@return rikai.types.PosTokenType
-function M.to_pos_type(token)
-
-
-    if token == "名詞" then -- last name
-        -- "固有名詞" lastname might appear as a subtype
-        return types.PosTokenType.NAME
+    if pos[2] == PROPER_NOUN then -- last name
+        return types.LexiconType.PROPER_NOUN
+    elseif pos[1] == "名詞" then -- last name
+        return types.LexiconType.NAME
     elseif token == "助詞" then
-        return types.PosTokenType.PARTICLE
+        return types.LexiconType.PARTICLE
     elseif token == "補助記号" then
-        return types.PosTokenType.AUXILIARY
+        return types.LexiconType.AUXILIARY
     end
-        return types.PosTokenType.UNKNOWN
 
+    return types.LexiconType.UNKNOWN
 end
 
 ---@class TokenizationResult
@@ -59,17 +64,16 @@ M.tokenize = function (content, enable_pos_processing)
         for _, line in ipairs(data) do
             -- sudachi prints 'EOS' too. can sudachi be configured differently ?
             if line ~= "" and line ~= "EOS" then
-                -- TODO keep only start, cut on first space
-                -- local line_start = string.match(line, "%S+")
                 -- tab separated results
                 local pieces = vim.split(line, "	")
                 local line_start = pieces[1]
                 local pos = pieces[2]
 
                 if enable_pos_processing then
-                    print("Part of speech processing enabled")
                     local res = vim.split(pos, ",")
-                    pos = res[1]
+
+                    pos = M.lexicon_type(res)
+                    -- print("type of token:", pos)
                 end
 
                 -- iskeyword doesn't accept non-ascii ranges :'(
