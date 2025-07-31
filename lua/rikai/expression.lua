@@ -21,6 +21,7 @@ local utils = require'rikai.utils'
 ---@return table (as expected by 'open_floating_preview')
 function M.format_expression(original_token, res)
     local lines = {
+        -- annoyingly it contains the prefix / request
         res["keb_reb_group"], -- .. " (k_ele_id) ",
         -- "kun reading: ".. res["kun_reading"],
         -- "on reading: ".. res["on_reading"],

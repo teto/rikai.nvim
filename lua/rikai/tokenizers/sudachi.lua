@@ -12,6 +12,7 @@ local M = {}
 
 local NUMERAL = "数詞"
 local PROPER_NOUN = "固有名詞"
+local PUNCTUATION = "補助記号"
 
 -- PART of SPEECH
 -- "固有名詞" lastname might appear as a subtype
@@ -19,20 +20,36 @@ local PROPER_NOUN = "固有名詞"
 ---@param pos table
 ---@return rikai.types.LexiconType
 function M.lexicon_type(pos)
-    local token = pos[1]
+    local pos1 = pos[1]
     -- TODO 地名 = > nom de lieu, utiliser un bitfield ?
 
     if pos[2] == PROPER_NOUN then -- last name
         return types.LexiconType.PROPER_NOUN
     elseif pos[1] == "名詞" then -- last name
         return types.LexiconType.NAME
-    elseif token == "助詞" then
+    elseif pos1 == "助詞" then
         return types.LexiconType.PARTICLE
-    elseif token == "補助記号" then
+    elseif pos1 == "補助記号" then
         return types.LexiconType.AUXILIARY
+    elseif pos1 == PUNCTUATION then
+        return types.LexiconType.PUNCTUATION
     end
 
     return types.LexiconType.UNKNOWN
+end
+
+
+---@param  lex_type rikai.types.LexiconType
+---@return string
+function M.lexicon_to_str(lex_type)
+    local map = {
+        [types.LexiconType.PUNCTUATION] = "punctuation",
+        [types.LexiconType.PROPER_NOUN] = "proper_noun",
+        [types.LexiconType.PARTICLE] = "particle",
+        [types.LexiconType.NAME] = "name"
+    }
+
+    return map[lex_type] or "unknown"
 end
 
 ---@class TokenizationResult
@@ -79,16 +96,14 @@ M.tokenize = function (content, enable_pos_processing)
                 -- iskeyword doesn't accept non-ascii ranges :'(
                 -- https://groups.google.com/g/vim_dev/c/XrRP7Gcb9uc
                 -- so till then we can't count on <cword> and have to classify stuff ourself
-                if not classifier.is_japanese(line_start) then
-                    logger.debug("Skipping non-japanese token", line_start)
-                else
-                    logger.debug("Inserting description of token ".. line_start)
-                    table.insert(tokens, {
-                        pieces[1],
-                        pos -- processed or not
-
-                    })
-                end
+                -- if not classifier.is_japanese(line_start) then
+                --     logger.debug("Skipping non-japanese token", line_start)
+                -- else
+                -- logger.debug("Inserting description of token ".. line_start)
+                table.insert(tokens, {
+                    pieces[1],
+                    pos -- processed or not
+                })
             end
         end
     end
@@ -109,11 +124,10 @@ M.tokenize = function (content, enable_pos_processing)
 
     end
 
-    local sendres = vim.fn.chansend(chan, {
+    local _sendres = vim.fn.chansend(chan, {
         content,
         ""
     })
-    -- print("sendres: ", sendres)
     -- maybe we dont even need that ?
     local res = vim.fn.chanclose(chan, "stdin")
 

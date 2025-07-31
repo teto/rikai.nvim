@@ -18,7 +18,7 @@ vim.api.nvim_set_hl(0, 'RikaiNames', { link = 'Search' })
 vim.api.nvim_create_user_command('RikaiLookup', main.popup_lookup, {
         bang= true, range = true, nargs= "?"
     })
-vim.api.nvim_create_user_command('RikaiNames', main.toggle_names, {
+vim.api.nvim_create_user_command('RikaiNames', require'rikai.highlighter'.toggle_names, {
         bang= true, range = true, nargs= "?"
     })
 vim.api.nvim_create_user_command('RikaiLog',
@@ -39,6 +39,10 @@ vim.api.nvim_create_user_command('RikaiTranslate', require'rikai.translation.ope
     })
 
 vim.api.nvim_create_user_command('RikaiFuri', require'rikai.furigana'.add_furigana, {
+        bang= true, range = true, nargs= "?"
+    })
+
+vim.api.nvim_create_user_command('RikaiToggle', require'rikai.highlighter'.toggle_names, {
         bang= true, range = true, nargs= "?"
     })
 

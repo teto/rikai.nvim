@@ -26,9 +26,8 @@ function M.chartype(code)
 end
 
 
-
-
-
+--- returns false for punctuation: 、and 。for instance
+---@param code number 
 function M.is_common_kanji(code)
     return code >= 0x4E00 and code <= 0x9FFF
 end

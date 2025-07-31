@@ -25,17 +25,16 @@ function M.as_str(e)
 end
 
 
--- rename into lexicon type ?
+-- add a tostring ?
 -- maps to sudachi's 'LexiconEntry' ?
 ---@enum rikai.types.LexiconType part of speech tag
 M.LexiconType = {
     -- names
     NAME = 1,
     PROPER_NOUN = 2,
-
-
     PARTICLE = 10,
     AUXILIARY = 11,
+    PUNCTUATION = 20,
 }
 
 

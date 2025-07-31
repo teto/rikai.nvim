@@ -1,0 +1,25 @@
+{
+    "diagnostics.globals": [
+        "vim",
+        "describe",
+        "it",
+        "before_each",
+        "after_each",
+        "pending",
+        "teardown",
+        "os_name",
+        "s",
+        "t",
+        "i",
+        "fmt",
+        "f",
+        "c",
+        "alsa_monitor",
+        "ya",
+        "ui",
+        "cx",
+        "Command",
+        "assert",
+        "classifer"
+    ]
+}

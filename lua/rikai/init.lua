@@ -12,6 +12,7 @@ local tokenizer = require'rikai.tokenizers.sudachi'
 local logger = require'rikai.log'
 local utf8 = require'utf8'
 local query = require 'rikai.providers.sqlite'
+local highlighter = require 'rikai.highlighter'
 
 local M = {}
 
@@ -36,36 +37,6 @@ local function get_selection()
    local s_end = vim.fn.getpos "v"
    local lines = vim.fn.getregion(s_start,s_end)
    return lines
-end
-
---- Add highlights for names present in current line
---- ideally we would display furiganas as a virtual line see furigana.lua
----@param args vim.api.keyset.create_user_command.command_args
-M.toggle_names = function(args)
-    -- for now just enable
-    -- tokenize the current line, searching for names and adding highlights for them
-    local pos = vim.fn.getpos(".")
-    vim.print(pos)
-    local line = pos[2] -1 -- nvim_buf_get_lines is 0-indexed
-    -- print("line:", line)
-    lines = vim.api.nvim_buf_get_lines(pos[1], line, pos[2], true)
-    assert(#lines)
-    local res = tokenizer.tokenize(lines[1], true)
-    -- vim.print(res)
-    vim.print("Looping over tokens ...")
-    for _i, j in ipairs(res) do
-        vim.print(j[2])
-        local lexicon_type = j[2]
-        if lexicon_type == types.LexiconType.PROPER_NOUN then
-            vim.fn.matchadd('RikaiNames', j[1])
-            -- TODO we could print in furigana as virtual text
-            -- res["keb_reb_group"]
-        end
-    end
-end
-
---- Clear the names registered by toggle_names
-function M.clear_names()
 end
 
 -- we should tokenize and based on what we find lookup kanji or not ?
@@ -163,29 +134,14 @@ M.popup_lookup = function(args)
             end
 
             if token_len == 1 and token_type == types.CharacterType.KANJI then
-                -- vim.print(r)
                 -- append radicals
                 local radicals = query.lookup_kanji_radicals(token)
-                -- vim.print(radicals)
                 local new_result = kanji.format_kanji(r, radicals)
                 for j = 1, #new_result do
                     table.insert(formatted_results, new_result[j])
                 end
-
-
             else
-                -- one could concat all results ?
-                -- vim.print(r)
-
                 local new_result = expr.format_expression(token, r)
-                -- 'unpack' was renamed 'table.unpack' in lua5.1 / 5.4
-                -- 
-                -- freaking unpack
-                -- https://stackoverflow.com/questions/37372182/what-is-happening-when-i-call-unpack-as-luas-function-arguments
-                -- formatted_results = {unpack( formatted_results),  unpack(new_result) }
-                -- vim.print(formatted_results)
-                -- table.insert(formatted_results, unpack(new_result))
-                -- TODO use table.unpack ?
                 for j = 1, #new_result do
                     table.insert(formatted_results, new_result[j])
                 end
