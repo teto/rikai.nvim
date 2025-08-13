@@ -7,6 +7,10 @@
       url = "github:nixos/nixpkgs/nixos-unstable";
     };
 
+    lux = {
+      url = "github:nvim-neorocks/lux";
+    };
+
     kanji-db = {
       url = "https://github.com/odrevet/edict_database/releases/download/v0.0.2/kanji.zip";
       flake = false;
@@ -30,9 +34,10 @@
 
   outputs = { self, nixpkgs, ... }:
     let
+      platform = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
 
-      # add utf8
+      # TODO install those via lux
       luaEnv = lua.withPackages(lp: [ 
         lp.alogger
         lp.lual
@@ -48,7 +53,7 @@
     in
     {
 
-      devShells.x86_64-linux.default =
+      devShells.${platform}.default =
           pkgs.mkShell {
             name = "rikai.nvim";
 
@@ -58,6 +63,9 @@
               lua.pkgs.nlua
               luaEnv
               pkgs.sudachi-rs
+              self.inputs.lux.packages.${platform}.lux-cli
+              self.inputs.lux.packages.${platform}.lux-lua51
+              pkgs.pkg-config # required by lux ?
             ];
 
             #               ln -s ${jitindex} ./yomitan.jitindex

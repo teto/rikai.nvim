@@ -42,7 +42,7 @@ end
 -- リョクトウ
 -- look at the jmdict DTD  to understand the different value
 -- basically if we are dealing with a kanji somewhere in expression, we should match against keb, and reb otherwise ?
--- TODO remove the concat
+-- TODO remove the concat keb_reb_group
 function M.query_expr(expr)
     return [[SELECT
   k_ele.id k_ele_id,
