@@ -37,21 +37,50 @@
       platform = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
 
-      # TODO install those via lux
+      # TODO I should be able to remove those as they get provided via lux
       luaEnv = lua.withPackages(lp: [ 
-        lp.alogger
-        lp.lual
-        lp.sqlite
-        lp.utf8
+        # lp.alogger
+        # lp.lual # unused logging library
+        lp.sqlite # lux can't build it
+        # lp.utf8 installed by nx
       ]);
 
       # lua = pkgs.luajit.override ;
       lua = pkgs.lua5_1.override {
         packageOverrides = self.overlays.luaOverlay;
       };
+      
+      # for text-to-speech, e.g., to read japanese out loud
+
+      # lacks mojimoji for now
+      pyEnv = let 
+        mojimoji = pkgs.callPackage ./default.nix {};
+        misaki-jp = p: p.toPythonModule (p.misaki.overridePythonAttrs(oa: {
+          dependencies = oa.dependencies 
+          ++ oa.passthru.optional-dependencies.ja 
+          ++ [
+              # needs mojimoji and pyopenjtalk, both marked as not packaged
+              # but pyopenjtalk is available from voicevox-engine
+              pkgs.voicevox-engine.passthru.pyopenjtalk
+              mojimoji
+            ];
+          }));
+
+        kokoro_jp = p: p.kokoro.override({
+          misaki = misaki-jp p;
+        });
+
+      in 
+      pkgs.python3.withPackages(p: [ 
+        (kokoro_jp p)
+        p.soundfile
+        p.pip
+        p.spacy-models.en_core_web_sm
+      ]);
 
     in
     {
+      packages.${platform}.default = pyEnv;
 
       devShells.${platform}.default =
           pkgs.mkShell {
@@ -59,22 +88,24 @@
 
             # dict = jmdict ;
             buildInputs = [ 
+              # pkgs.bashInteractive
               lua.pkgs.busted 
               lua.pkgs.nlua
               luaEnv
+              pyEnv
               pkgs.sudachi-rs
               self.inputs.lux.packages.${platform}.lux-cli
               self.inputs.lux.packages.${platform}.lux-lua51
               pkgs.pkg-config # required by lux ?
             ];
 
-            #               ln -s ${jitindex} ./yomitan.jitindex
+            # ln -s ${jitindex} ./yomitan.jitindex
+            # echo "${self.inputs.kanji-db}"
+            # echo "${self.inputs.expression-db}"
             shellHook = ''
-
-              echo "${self.inputs.kanji-db}"
-              echo "${self.inputs.expression-db}"
-
               export LUA_PATH="$LUA_PATH;lua/?.lua"
+              # this is used by `lx shell` but for some reason SHELL still points to the older one
+              export SHELL=${pkgs.bashInteractive}/bin/bash
               '';
 
         };
