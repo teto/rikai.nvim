@@ -1,5 +1,6 @@
 local main = require'rikai'
 local log = require'rikai.log'
+local cmdparser = require'rikai.commands'
 
 -- local query = require'rikai.providers.sqlite'
 -- local config = require'rikai.config'
@@ -15,9 +16,9 @@ vim.api.nvim_set_hl(0, 'RikaiNames', { link = 'Search' })
 
 
 -- get current word translations
-vim.api.nvim_create_user_command('RikaiLookup', main.popup_lookup, {
-        bang= true, range = true, nargs= "?"
-    })
+-- vim.api.nvim_create_user_command('RikaiLookup', main.popup_lookup, {
+--         bang= true, range = true, nargs= "?"
+--     })
 vim.api.nvim_create_user_command('RikaiNames', require'rikai.highlighter'.toggle_names, {
         bang= true, range = true, nargs= "?"
     })
@@ -27,20 +28,23 @@ vim.api.nvim_create_user_command('RikaiLog',
         end,
         commandOpts)
 
+cmdparser.create_command()
+
+
 -- vim.api.nvim_create_user_command('JapRo2Ka', , commandOpts)
 -- vim.api.nvim_create_user_command('JapRo2Hi', require'rikai'.ro2hi, commandOpts)
 -- convert romajis into katakana
-vim.api.nvim_create_user_command('RikaiRo2Ka', require'rikai.commands'.ro2ka, {
-        bang= true, range = true, nargs= "?"
-    })
-
-vim.api.nvim_create_user_command('RikaiTranslate', require'rikai.translation.openai'.translate, {
-        bang= true, range = true, nargs= "?"
-    })
-
-vim.api.nvim_create_user_command('RikaiFuri', require'rikai.furigana'.add_furigana, {
-        bang= true, range = true, nargs= "?"
-    })
+-- vim.api.nvim_create_user_command('RikaiRo2Ka', require'rikai.commands'.ro2ka, {
+--         bang= true, range = true, nargs= "?"
+--     })
+--
+-- vim.api.nvim_create_user_command('RikaiTranslate', require'rikai.translation.openai'.translate, {
+--         bang= true, range = true, nargs= "?"
+--     })
+--
+-- vim.api.nvim_create_user_command('RikaiFuri', require'rikai.furigana'.add_furigana, {
+--         bang= true, range = true, nargs= "?"
+--     })
 
 vim.api.nvim_create_user_command('RikaiToggle', require'rikai.highlighter'.toggle_names, {
         bang= true, range = true, nargs= "?"
