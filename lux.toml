@@ -1,6 +1,10 @@
-package = "rikai"
+package = "rikai.nvim"
 version = "0.1.0"
 lua = ">=5.1"
+
+[source]
+url = "https://github.com/teto/$(PACKAGE)/archive/refs/tags/$(REF).zip"
+dev = "git+https://github.com/teto/$(PACKAGE).git"
 
 [description]
 summary = "Neovim plugin that helps with japanese translation"
