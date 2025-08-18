@@ -1,8 +1,13 @@
 {
   lib,
-  python3,
+  python,
   fetchFromGitHub,
+  # buildPythonApplication,
 }:
+
+let 
+  python3 = python;
+in
 
 python3.pkgs.buildPythonApplication rec {
   pname = "mojimoji";

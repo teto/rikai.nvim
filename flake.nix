@@ -37,6 +37,12 @@
       platform = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
 
+      # python3.pkgs.python.pkgs exists and 
+      # p is probably python3.pkgs
+      mojimoji = p:  pkgs.callPackage ./default.nix {
+        python = builtins.trace p.pkgs.python.version p.pkgs.python3;
+      };
+
       # TODO I should be able to remove those as they get provided via lux
       luaEnv = lua.withPackages(lp: [ 
         # lp.alogger
@@ -54,17 +60,28 @@
 
       # lacks mojimoji for now
       pyEnv = let 
-        mojimoji = pkgs.callPackage ./default.nix {};
-        misaki-jp = p: p.toPythonModule (p.misaki.overridePythonAttrs(oa: {
+        # TODO use toPythonModule
+        # the default uses unidic-lite
+        fugashi-unidic = p: p.fugashi
+          # p: p.fugashi.overridePythonAttrs(oa: {
+        #
+        #   dependencies = oa.optional-dependencies.unidic
+        # })
+        ;
+
+        # TODO override fugashi to use a fugashi with optional-dependencies.unidic ?
+        misaki-jp = p: (p.misaki.override({
+          fugashi = fugashi-unidic p;
+        })).overridePythonAttrs(oa: {
           dependencies = oa.dependencies 
           ++ oa.passthru.optional-dependencies.ja 
           ++ [
               # needs mojimoji and pyopenjtalk, both marked as not packaged
               # but pyopenjtalk is available from voicevox-engine
               pkgs.voicevox-engine.passthru.pyopenjtalk
-              mojimoji
+              (p.toPythonModule (mojimoji p))
             ];
-          }));
+          });
 
         kokoro_jp = p: p.kokoro.override({
           misaki = misaki-jp p;
@@ -80,7 +97,11 @@
 
     in
     {
-      packages.${platform}.default = pyEnv;
+      packages.${platform} = {
+        default = pyEnv;
+        pyEnv = pyEnv;
+        mojimoji = mojimoji pkgs.python3.pkgs;
+      };
 
       devShells.${platform}.default =
           pkgs.mkShell {
