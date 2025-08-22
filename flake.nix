@@ -57,17 +57,20 @@
       };
       
       # for text-to-speech, e.g., to read japanese out loud
+      fugashi-unidic = p:
+          p.fugashi
+        #   p.toPythonModule (p.fugashi.overridePythonAttrs(oa: {
+        #
+        #   # tests succeed with unidic-lite but fail with unidic :/
+        #   nativeBuildInputs = oa.optional-dependencies.unidic ++ oa.nativeBuildInputs;
+        #   dependencies = (oa.dependencies or []) ++ oa.optional-dependencies.unidic;
+        # }))
+      ;
 
       # lacks mojimoji for now
       pyEnv = let 
         # TODO use toPythonModule
         # the default uses unidic-lite
-        fugashi-unidic = p: p.fugashi
-          # p: p.fugashi.overridePythonAttrs(oa: {
-        #
-        #   dependencies = oa.optional-dependencies.unidic
-        # })
-        ;
 
         # TODO override fugashi to use a fugashi with optional-dependencies.unidic ?
         misaki-jp = p: (p.misaki.override({
@@ -83,9 +86,17 @@
             ];
           });
 
-        kokoro_jp = p: p.kokoro.override({
+        kokoro_jp = p: p.toPythonModule ((p.kokoro.override({
           misaki = misaki-jp p;
-        });
+        })).overridePythonAttrs({
+
+          #  'pyopenjtalk' is apparently the newest version
+          patchPhase = ''
+            substituteInPlace kokoro/pipeline.py \
+              --replace-fail "ja.JAG2P()" "ja.JAG2P(version= 'pyopenjtalk')"
+            '';
+
+        }));
 
       in 
       pkgs.python3.withPackages(p: [ 
@@ -100,6 +111,7 @@
       packages.${platform} = {
         default = pyEnv;
         pyEnv = pyEnv;
+        fugashi = fugashi-unidic pkgs.python3.pkgs;
         mojimoji = mojimoji pkgs.python3.pkgs;
       };
 
@@ -112,6 +124,8 @@
               # pkgs.bashInteractive
               lua.pkgs.busted 
               lua.pkgs.nlua
+              pkgs.mecab # for fugashi
+
               luaEnv
               pyEnv
               pkgs.sudachi-rs

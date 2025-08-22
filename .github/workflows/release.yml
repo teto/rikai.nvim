@@ -19,10 +19,6 @@ jobs:
           fetch-depth: 0 # Required to count the commits
       - name: Get Version
         run: echo "LUAROCKS_VERSION=$(git describe --abbrev=0 --tags)" >> $GITHUB_ENV
-      - name: Install Rust toolchain
-        uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          rustflags: ""
       - name: LuaRocks Upload
         uses: nvim-neorocks/luarocks-tag-release@v5
         env:
@@ -30,9 +26,13 @@ jobs:
         with:
           version: ${{ env.LUAROCKS_VERSION }}
           test_interpreters: ""
+          # ideally this would be fetched from the lockfile/rockspec
           dependencies: |
-            # TODO these should be read from the rockspec/lux.toml
             lua == 5.1
+            sqlite
+            utf8
+            mega.cmdparse
+            alogger
           labels: |
             neovim
           detailed_description: |
