@@ -1,9 +1,13 @@
 local M = {}
 
 ---@param expr string Japanese expression to search in dico
+---@param as_kanji boolean true to link the kanji page
 ---@return string (link towards jisho.org)
-function M.jisho_link(expr)
+function M.jisho_link(expr, as_kanji)
     local url = "https://jisho.org/search/"..expr
+    if as_kanji then
+        url = url.. "%23kanji"
+    end
     return url
 end
 

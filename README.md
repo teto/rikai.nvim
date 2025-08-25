@@ -22,17 +22,17 @@ Dependencies:
 
 # How to use ?
 
-Run `:RikaiDownload` to fetch the dictionaries (just once).
+Run `:Rikai download` to fetch the dictionaries (needed just once).
 
 There are no default keymaps so you need to set one
 
 ```lua
 vim.keymap.set('n', '<D-j>', function()
-	vim.cmd[[ RikaiLookup ]]
+	vim.cmd[[ Rikai lookup ]]
 end, { buffer = false, desc = "Japanese lookup" })
 ```
 
-You can also call `:RikaiLookup 見`
+You can also call `:Rikai lookup 見`
 
 Highlights used are:
 - RikaiHighlightWordGroup

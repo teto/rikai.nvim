@@ -4,6 +4,9 @@
 test:
 	@busted --lua=nlua
 
+docgen:
+	mkdir -p doc
+	vimcats lua/rikai/{init,commands,config/init,meta,api/{init,hooks},log}.lua > doc/rikai.txt
 
 kokoro-test:
 	# pipe it into mpv ?

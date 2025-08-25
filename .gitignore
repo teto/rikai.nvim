@@ -2,3 +2,4 @@
 /yomitan.jitindex
 /jmdict-*.json
 /.nvimrc
+.lua.env

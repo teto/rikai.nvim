@@ -67,9 +67,8 @@ function M.format_kanji(res, radicals)
         end
     end
 
-
     table.insert(lines, "")
-    table.insert(lines, utils.jisho_link(res["id"]))
+    table.insert(lines, utils.jisho_link(res["id"], true))
     return lines
 end
 

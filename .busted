@@ -1,0 +1,17 @@
+return {
+    _all = {
+        coverage = false,
+        lpath = "lua/?.lua;lua/?/init.lua",
+        lua = "nlua",
+    },
+    default = {
+        verbose = true,
+    },
+    offline = {
+       -- pattern = "spec/*_spec.lua"
+       exclude_tags = {"online"},
+    },
+    tests = {
+        verbose = true,
+    },
+}

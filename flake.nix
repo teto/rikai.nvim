@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "Development shell for rikai.nvim";
 
   inputs = {
     nixpkgs = {
@@ -20,16 +20,6 @@
       url = "https://github.com/odrevet/edict_database/releases/download/v0.0.2/expression.zip";
       flake = false;
     };
-
-    # jitindex = {
-    #   flake = false; 
-    #   url = "https://github.com/stephenmk/stephenmk.github.io/releases/latest/download/jitendex-yomitan.zip";
-    # };
-    # jmdict = pkgs.fetchurl {
-    #   url = "http://ftp.edrdg.org/pub/Nihongo/JMdict.gz";
-    #   sha256 = "sha256-QK9z57i7MnzO7PUeqTadKAELODp3GEa57Xgv4peYnXk=";
-    # };
-
   };
 
   outputs = { self, nixpkgs, ... }:
@@ -121,10 +111,8 @@
 
             # dict = jmdict ;
             buildInputs = [ 
-              # pkgs.bashInteractive
               lua.pkgs.busted 
               lua.pkgs.nlua
-              pkgs.mecab # for fugashi
 
               luaEnv
               pyEnv
@@ -132,17 +120,17 @@
               self.inputs.lux.packages.${platform}.lux-cli
               self.inputs.lux.packages.${platform}.lux-lua51
               pkgs.pkg-config # required by lux ?
+              pkgs.vimcats
             ];
 
-            # ln -s ${jitindex} ./yomitan.jitindex
-            # echo "${self.inputs.kanji-db}"
-            # echo "${self.inputs.expression-db}"
             shellHook = ''
               export LUA_PATH="$LUA_PATH;lua/?.lua"
               # this is used by `lx shell` but for some reason SHELL still points to the older one
               export SHELL=${pkgs.bashInteractive}/bin/bash
+              echo "export LUA_PATH='$(lx path lua)'" > .lua.env
+              echo "export LUA_CPATH='$(lx path c)'" >> .lua.env
+              source .lua.env
               '';
-
         };
 
         #

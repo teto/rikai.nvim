@@ -1,14 +1,13 @@
--- inspired by rocks.nvim
--- https://github.com/neovim/neovim/issues/32263
--- see https://github.com/ColinKennedy/mega.cmdparse
--- local rocks_command_tbl = {
--- not found
+-- command parser generated https://github.com/ColinKennedy/mega.cmdparse
 local cmdparse = require("mega.cmdparse")
-local main = require'rikai'
+local lookup = require'rikai.commands.lookup'
 
 
 local M = {}
 
+-- parser:add_parameter({ name = "items", nargs="*", help="non-flag arguments." })
+-- parser:add_parameter({ name = "--fizz", help="A word." })
+-- parser:add_parameter({ name = "-d", action="store_true", help="Delta single-word." })
 function M.create_command()
     -- local parser = cmdparse.ParameterParser.new({ name = "Rikai", help = "Hello, World!"})
     -- parser:set_execute(function(data) print("Hello, World!") end)
@@ -17,9 +16,10 @@ function M.create_command()
     local parser = cmdparse.ParameterParser.new({ name = "Rikai", help = "Nested Subparsers" })
     local top_subparsers = parser:add_subparsers({ destination = "commands" })
 
-    local lookup = top_subparsers:add_parser({ name = "lookup", help = "Lookup the characters" })
-    lookup:set_execute(function(data)
-        main.popup_lookup()
+    local lookup_parser = top_subparsers:add_parser({ name = "lookup", help = "Lookup the characters" })
+    lookup_parser:add_parameter({ name="expression", required=false, help="Text to translate"})
+    lookup_parser:set_execute(function(data)
+        lookup.popup_lookup(data)
     end)
 
     local names = top_subparsers:add_parser({ name = "names", help = "Highlight stuff" })
@@ -31,7 +31,14 @@ function M.create_command()
 
     local download = top_subparsers:add_parser({ name = "download", help = "download the necessary dictionaries" })
     download:set_execute(function(data)
-        print(string.format('Opening "%s" log path.', "hello world"))
+        -- print(string.format('Opening "%s" log path.', "hello world"))
+        require'rikai.commands.download'()
+    end)
+
+    local speak = top_subparsers:add_parser({ name = "speak", help = "read selection out loud" })
+    speak:set_execute(function(data)
+        -- get_selection()
+        require'rikai.commands.speak'()
     end)
 
 
