@@ -15,9 +15,13 @@ license = "GPL-2.0"
 [dependencies]
 alogger = "0.6.0-1"
 utf8 = "1.3-0"
-"mega.cmdparse" = "1.0.4-1"
+"mega.cmdparse" = "1.2.0-1"
 # doesnt compile
 sqlite = "v1.0.0-1"
+
+# [dependencies."mega.cmdparse"]
+# version = "v1.1.0"
+# git = "github:ColinKennedy/mega.cmdparse"
 
 # Add your dependencies here
 # `busted = ">=2.0"`

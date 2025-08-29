@@ -1,5 +1,17 @@
 local M = {}
 
+--- aint it weird that nvim commands dont pass columns ?
+function M.get_visual_selection()
+   -- does not handle rectangular selection
+   local s_start = vim.fn.getpos "'<"
+   -- in visual mode returns the other end of the connections
+   local s_end = vim.fn.getpos "'>"
+   -- getregionpos({pos1},
+   local lines = vim.fn.getregion(s_start,s_end)
+   vim.print(lines)
+   return lines
+end
+
 ---@param expr string Japanese expression to search in dico
 ---@param as_kanji boolean true to link the kanji page
 ---@return string (link towards jisho.org)

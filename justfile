@@ -1,5 +1,14 @@
 # justfile to run Busted tests
 
+# format:
+# 	stylua -v --verify lua/rocks/ plugin/ installer.lua
+#
+# check:
+# 	luacheck lua/rocks plugin/ installer.lua
+
+lint:
+	lx lint
+
 # Target to run Busted tests
 test:
 	@busted --lua=nlua

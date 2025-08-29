@@ -116,6 +116,7 @@
 
               luaEnv
               pyEnv
+              pkgs.cmake   # needed for luv install ?
               pkgs.sudachi-rs
               self.inputs.lux.packages.${platform}.lux-cli
               self.inputs.lux.packages.${platform}.lux-lua51

@@ -1,3 +1,4 @@
+-- TODO replace with mega.logging ?
 local config = require('rikai.config')
 local log = require('alogger')
 

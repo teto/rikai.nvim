@@ -1,6 +1,7 @@
 -- command parser generated https://github.com/ColinKennedy/mega.cmdparse
 local cmdparse = require("mega.cmdparse")
 local lookup = require'rikai.commands.lookup'
+local utils = require 'rikai.utils'
 
 
 local M = {}
@@ -18,8 +19,26 @@ function M.create_command()
 
     local lookup_parser = top_subparsers:add_parser({ name = "lookup", help = "Lookup the characters" })
     lookup_parser:add_parameter({ name="expression", required=false, help="Text to translate"})
-    lookup_parser:set_execute(function(data)
-        lookup.popup_lookup(data)
+    lookup_parser:set_execute(function(args)
+        local megaargs = args.namespace
+        local word
+        -- number of items in range
+        if megaargs.expression then
+            word = megaargs.expression
+        elseif args.options.range ~= 0 then
+            -- splits between kanas and kanjis
+            -- https://github.com/neovim/neovim/discussions/35081
+            -- todo use get_selection instead ? 
+            local visual_selection = utils.get_visual_selection()
+            -- take first line of visual selection
+            word = visual_selection[1]
+        else
+            -- cword implementation is based on \k
+            word = vim.fn.expand("<cword>")
+        end
+
+
+        lookup.popup_lookup(word)
     end)
 
     local names = top_subparsers:add_parser({ name = "names", help = "Highlight stuff" })
@@ -37,22 +56,18 @@ function M.create_command()
 
     local speak = top_subparsers:add_parser({ name = "speak", help = "read selection out loud" })
     speak:set_execute(function(data)
-        -- get_selection()
         require'rikai.commands.speak'()
     end)
 
 
 
-    -- local view_subparsers = view:add_subparsers({ destination = "view_commands" })
-    --
     local log = top_subparsers:add_parser({ name = "log" })
-    log:add_parameter({ name = "path", help = "Open a log path file." })
-    -- log:add_parameter({ name = "--relative", action="store_true", help = "A relative log path." })
-    log:set_execute(function(data)
-        print(string.format('Opening "%s" log path.', data.namespace.path))
+    log:set_execute(function(_data)
+        -- TODO implement a log.get_logfile()
+        vim.cmd.e('rikai.log')
     end)
 
-    cmdparse.create_user_command(parser)
+    cmdparse.create_user_command(parser, nil, { range = true })
 end
 
 

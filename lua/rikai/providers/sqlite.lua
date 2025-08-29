@@ -88,11 +88,12 @@ end
 function M.get_db_handle(db_path)
 
     -- TODO check if a handle already exists
-    logger.info("Opening " .. db_path)
     local con = config._state[db_path]
     if con then
+        logger.debug("Returning existing handle to db: " .. db_path)
         return con
     else
+        logger.info("Opening " .. db_path)
         -- open readonly
         local errmsg, _errcode
         con, errmsg, _errcode = sqlite3.open(db_path, sqlite3.OPEN_READONLY)
@@ -103,7 +104,6 @@ function M.get_db_handle(db_path)
         config._state[db_path] = con
     end
 
-    -- vim.g.rikai._state = con
     return con
 end
 

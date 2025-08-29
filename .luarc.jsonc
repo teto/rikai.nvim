@@ -21,5 +21,6 @@
         "Command",
         "assert",
         "classifer"
-    ]
+    ],
+    "workspace.maxPreload": 1100
 }
