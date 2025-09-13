@@ -145,7 +145,7 @@ M.popup_lookup = function(token)
     }
 
     if nr_results > 1 then
-        popupOpts["title"] = popupOpts["title"] .. " (".. tostring(nr_results) .. " results )"
+        popupOpts["title"] = popupOpts["title"] .. " (".. tostring(nr_results) .. " results)"
     end
 
     local winid = require'rikai.popup'.create_popup(token, formatted_results, popupOpts)

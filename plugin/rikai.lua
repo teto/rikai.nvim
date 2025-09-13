@@ -6,20 +6,11 @@ local cmdparser = require'rikai.commands'
 
 -- Create a new highlight group linked to 'Comment'
 vim.api.nvim_set_hl(0, 'RikaiVirtualText', { link = 'Comment' })
-vim.api.nvim_set_hl(0, 'RikaiNames', { link = 'Search' })
+vim.api.nvim_set_hl(0, 'RikaiProperNoun', { link = 'Search' })
+-- Const / Character
+vim.api.nvim_set_hl(0, 'RikaiName', { link = 'Const' })
 
 
-
--- todo add a preview function
-local commandOpts = {bang= true, range = true}
-vim.api.nvim_create_user_command('RikaiNames', require'rikai.highlighter'.toggle_names, {
-        bang= true, range = true, nargs= "?"
-    })
-vim.api.nvim_create_user_command('RikaiLog',
-        function ()
-            print(tostring(log.get_outfile()))
-        end,
-        commandOpts)
 
 cmdparser.create_command()
 

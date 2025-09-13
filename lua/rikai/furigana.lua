@@ -54,7 +54,9 @@ function M.add_furigana(_args)
         local highlight = 'Comment'
         -- TODO highlight should depend on lexicon type
         if lexicon_type == types.LexiconType.PROPER_NOUN then
-            highlight = 'RikaiNames'
+            highlight = 'RikaiProperNoun'
+        elseif lexicon_type == types.LexiconType.NOUN then
+            highlight = 'RikaiName'
         end
 
         -- vim.print(token)

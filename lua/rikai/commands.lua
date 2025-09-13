@@ -41,25 +41,35 @@ function M.create_command()
         lookup.popup_lookup(word)
     end)
 
-    local names = top_subparsers:add_parser({ name = "names", help = "Highlight stuff" })
+    local hl_parser = top_subparsers:add_parser({ name = "hl", help = "Highlight differently words depending on their category (names, article, etc)" })
 
-    names:set_execute(function(data)
-        require'rikai.highlighter'.toggle_names(data)
+    -- maybe should be a subparser ?
+    -- local hl_subparsers = hl_parser:add_subparsers({ destination = "hl_command", help = "What todo ?" })
+    hl_parser:add_parameter({ name = "hl_command", choices={
+            "toggle", "clear", "enable", "disable" }, help="Test word."}
+        )
+    hl_parser:add_parameter({ name = "--name", help="highlight names ?"})
+    -- args vim.api.keyset.create_user_command.command_args
+    hl_parser:set_execute(function(_data)
+        local pos = vim.fn.getpos(".")
+        require'rikai.highlighter'.toggle_highlights(pos, true)
     end)
 
-
     local download = top_subparsers:add_parser({ name = "download", help = "download the necessary dictionaries" })
-    download:set_execute(function(data)
-        -- print(string.format('Opening "%s" log path.', "hello world"))
+    download:set_execute(function(_data)
         require'rikai.commands.download'()
     end)
 
     local speak = top_subparsers:add_parser({ name = "speak", help = "read selection out loud" })
-    speak:set_execute(function(data)
+    speak:set_execute(function(_data)
         require'rikai.commands.speak'()
     end)
 
-
+    local furigana = top_subparsers:add_parser({ name = "furigana", help = "Print furigana" })
+    furigana:set_execute(function(_data)
+        -- TODO
+        require'rikai.furigana'.add_furigana()
+    end)
 
     local log = top_subparsers:add_parser({ name = "log" })
     log:set_execute(function(_data)
