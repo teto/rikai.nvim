@@ -111,6 +111,7 @@ end
 ---@param kanji string Kanji to search for
 ---@return table
 function M.lookup_kanji(kanji)
+    local start = vim.uv.now()
 
     local res = {}
 
@@ -124,6 +125,9 @@ function M.lookup_kanji(kanji)
         table.insert(res, a)
     end
 
+    vim.uv.update_time()
+    local end_time = vim.uv.now()
+    logger.info("Kanji search took ".. tostring(end_time-start).. " ms")
     return res
 end
 

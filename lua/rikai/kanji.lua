@@ -50,6 +50,7 @@ function M.format_kanji(res, radicals)
 
     local lines = {
         res["id"] .. " (jlpt "..(res["jlpt"] or "unknown") .. ")",
+        "freq: ".. (res["freq"] or "None"),
         "kun reading: ".. (res["kun_reading"] or "None"),
         "on reading: ".. res["on_reading"],
         "Stroke count: ".. (res["stroke_count"] or "unknown"),

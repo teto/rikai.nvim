@@ -10,6 +10,7 @@ local kanji = require'rikai.kanji'
 local expr = require'rikai.expression'
 local tokenizer = require'rikai.tokenizers.sudachi'
 local logger = require'rikai.log'
+local utils = require'rikai.utils'
 local utf8 = require'utf8'
 local query = require 'rikai.providers.sqlite'
 local api = vim.api
@@ -89,7 +90,7 @@ M.popup_lookup = function(token)
     local results
     if token_len == 1 and token_type == types.CharacterType.KANJI then
         -- if the token is only a single kanji ask the kanji db
-        results = provider.lookup_kanji(token)
+        results = utils.timeit ("lookup_kanji", provider.lookup_kanji, token)
     else
         -- we need to pass one character only
         -- lookup expression for vim.fn.char2nr("引く")

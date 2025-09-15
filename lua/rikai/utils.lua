@@ -1,4 +1,16 @@
+local logger = require'rikai.log'
+
 local M = {}
+
+
+function M.timeit(name, op, ...)
+    local start = vim.uv.now()
+    res = op(...)
+    vim.uv.update_time()
+    local end_time = vim.uv.now()
+    logger.info("Kanji search took ".. tostring(end_time-start).. "ms")
+    return res
+end
 
 --- aint it weird that nvim commands dont pass columns ?
 function M.get_visual_selection()

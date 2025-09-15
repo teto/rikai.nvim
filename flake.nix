@@ -135,7 +135,7 @@
         };
 
         overlays = {
-          luaOverlay = pkgs.callPackage ./nix/lua-overlay.nix {};
+          luaOverlay = import ./nix/lua-overlay.nix { inherit pkgs; };
         };
     };
 }
