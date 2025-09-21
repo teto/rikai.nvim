@@ -64,7 +64,7 @@ See [wiki][rikai-nvim-wiki] for more reference.
 
 # How to get the various dictionaries used by rikai.nvim ?
 
-Run `:RikaiDownload`, else do:
+Run `:Rikai download`, else do:
 
 - clone https://github.com/odrevet/edict_database.git (fetch)
 - nix shell nixpkgs#dart

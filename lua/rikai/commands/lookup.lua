@@ -1,5 +1,5 @@
 -- Get the content of the current line in the buffer
-local current_line_content = vim.api.nvim_get_current_line()
+-- local current_line_content = vim.api.nvim_get_current_line()
 -- print(current_line_content)  -- Print the current line content for verification
 
 
@@ -8,7 +8,7 @@ local classifier = require'rikai.classifier'
 local types = require'rikai.types'
 local kanji = require'rikai.kanji'
 local expr = require'rikai.expression'
-local tokenizer = require'rikai.tokenizers.sudachi'
+local tokenizer = require'rikai.tokenizer'
 local logger = require'rikai.log'
 local utils = require'rikai.utils'
 local utf8 = require'utf8'
@@ -24,6 +24,19 @@ function M.find_window_by_var(name, value)
       return win
     end
   end
+end
+
+
+-- This function highlights the current token under cursor to help with comprehension
+M.live_lookup = function()
+    -- tokenize
+    local ok, token = tokenizer.get_current_token()
+    if not ok then
+        vim.notify("Could not find current token")
+    else
+        print("TODO live lookup of token: "..token)
+    end
+
 end
 
 -- we should tokenize and based on what we find lookup kanji or not ?
@@ -54,7 +67,6 @@ M.popup_lookup = function(token)
     local win = M.find_window_by_var(focus_id, bufnr)
 
     logger.debug("Looking for existing window with focus_id=%s", focus_id)
-    -- vim.print("WIN %s", win)
     if win and vim.api.nvim_win_is_valid(win) and vim.fn.pumvisible() == 0 then
 
         logger.debug("Found a window with focus_id=%s", focus_id)
@@ -64,13 +76,14 @@ M.popup_lookup = function(token)
         -- return api.nvim_win_get_buf(win), win
         return win
     else
-         logger.debug("Could not find any preexisting popup focus_id=%s", focus_id)   
+         logger.debug("Could not find any preexisting popup focus_id=%s", focus_id)
     end
 
 
     if utf8.len(word) > 1 then
         -- todo get first element
-        tokens = tokenizer.tokenize(word, true)
+        -- TODO tokenize should be called in caller instead
+        tokens = utils.timeit("tokenize", tokenizer.tokenize, word, true)
         if vim.tbl_isempty(tokens) then
             logger.debug("No tokens found")
             return
@@ -95,7 +108,7 @@ M.popup_lookup = function(token)
         -- we need to pass one character only
         -- lookup expression for vim.fn.char2nr("引く")
         -- vim.fn.nr2char(code)
-        results = provider.lookup_expr(token)
+        results = utils.timeit("lookup_expr", provider.lookup_expr, token)
     end
 
     logger.debug("Found "..tostring(#results).. " results")

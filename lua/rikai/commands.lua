@@ -2,7 +2,7 @@
 local cmdparse = require("mega.cmdparse")
 local lookup = require'rikai.commands.lookup'
 local utils = require 'rikai.utils'
-
+local logger = require'rikai.log'
 
 local M = {}
 
@@ -34,11 +34,38 @@ function M.create_command()
             word = visual_selection[1]
         else
             -- cword implementation is based on \k
+            -- TODO cword is bad, we should tokenize, get current word
             word = vim.fn.expand("<cword>")
+            -- TODO replace with get_current_token()
         end
 
-
         lookup.popup_lookup(word)
+    end)
+
+    local livehl_parser = top_subparsers:add_parser({ name = "live_hl", help = "Highlight current token" })
+    livehl_parser:add_parameter({ name = "hl_command", choices={
+            "toggle", "clear", "enable", "disable" }, help="Test word."}
+        )
+    livehl_parser:set_execute(function(args)
+        local megaargs = args.namespace
+
+        local pos = vim.fn.getpos(".")
+
+        vim.api.nvim_create_autocmd({"CursorHold"}, {
+            -- configurable ?
+            pattern = { "*.md", "*.txt", "*.org" },
+            desc = "Display translations on hover",
+            -- inspired by "hover"
+            callback = lookup.live_lookup
+        })
+
+        -- toto
+        -- if megaargs.hl_command == "clear" then
+        --     logger.info("clearing hl")
+        --     -- renvoye -1 ptet
+        --     vim.fn.matchdelete('RikaiProperNoun')
+        -- end
+        -- require'rikai.highlighter'.toggle_highlights(pos, true)
     end)
 
     local hl_parser = top_subparsers:add_parser({ name = "hl", help = "Highlight differently words depending on their category (names, article, etc)" })
@@ -50,8 +77,17 @@ function M.create_command()
         )
     hl_parser:add_parameter({ name = "--name", help="highlight names ?"})
     -- args vim.api.keyset.create_user_command.command_args
-    hl_parser:set_execute(function(_data)
+    hl_parser:set_execute(function(args)
+        local megaargs = args.namespace
+
         local pos = vim.fn.getpos(".")
+
+        -- toto
+        if megaargs.hl_command == "clear" then
+            logger.info("clearing hl")
+            -- renvoye -1 ptet
+            vim.fn.matchdelete('RikaiProperNoun')
+        end
         require'rikai.highlighter'.toggle_highlights(pos, true)
     end)
 

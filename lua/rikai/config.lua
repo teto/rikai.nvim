@@ -7,11 +7,12 @@
 ---@field popup_options vim.lsp.util.open_floating_preview.Opts
 ---@field _state table internal dont use
 local JapDefaultConfig = {
-    width = 120,
+    width = 100,
     height = 30,
     kanjidb = vim.fn.stdpath("data").."/rikai/kanji.db",
     jmdictdb = vim.fn.stdpath("data").."/rikai/expression.db",
     log_level = vim.log.levels.WARN,
+    tokenizer = 'sudachi',
     -- separator = " ------ ",
 
     popup_options = {

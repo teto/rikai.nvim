@@ -12,12 +12,12 @@
     };
 
     kanji-db = {
-      url = "https://github.com/odrevet/edict_database/releases/download/v0.0.2/kanji.zip";
+      url = "https://github.com/odrevet/edict_database/releases/download/v0.0.5/kanji.zip";
       flake = false;
     };
 
     expression-db = {
-      url = "https://github.com/odrevet/edict_database/releases/download/v0.0.2/expression.zip";
+      url = "https://github.com/odrevet/edict_database/releases/download/v0.0.5/expression.zip";
       flake = false;
     };
   };
@@ -30,7 +30,8 @@
       # python3.pkgs.python.pkgs exists and 
       # p is probably python3.pkgs
       mojimoji = p:  pkgs.callPackage ./default.nix {
-        python = builtins.trace p.pkgs.python.version p.pkgs.python3;
+        # builtins.trace p.pkgs.python.version 
+        python = p.pkgs.python3;
       };
 
       # TODO I should be able to remove those as they get provided via lux

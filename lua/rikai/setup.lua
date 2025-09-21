@@ -13,3 +13,4 @@ function M.enable_on_cursor()
     })
 end
 
+return M

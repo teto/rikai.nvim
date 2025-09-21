@@ -13,5 +13,3 @@ describe("Utils tests", function()
     end)
 end)
 
-        -- 
-

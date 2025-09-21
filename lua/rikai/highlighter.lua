@@ -33,10 +33,12 @@ M.toggle_highlights = function(pos, highlight_names)
         true)
     assert(#lines)
     local res = tokenizer.tokenize(lines[1], true)
-    -- vim.print(res)
+
+    logger.info("Setting vim.g.rikai._state")
+    vim.g.rikai._state = res
     -- vim.print("Looping over tokens ...")
     for _i, j in ipairs(res) do
-        vim.print(j[2])
+        -- vim.print(j[2])
         local lexicon_type = j[2]
         if lexicon_type == types.LexiconType.PROPER_NOUN and highlight_names then
             vim.fn.matchadd('RikaiProperNoun', j[1])

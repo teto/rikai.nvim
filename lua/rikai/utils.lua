@@ -3,12 +3,13 @@ local logger = require'rikai.log'
 local M = {}
 
 
+--- @param name string used in logger
 function M.timeit(name, op, ...)
     local start = vim.uv.now()
     res = op(...)
     vim.uv.update_time()
     local end_time = vim.uv.now()
-    logger.info("Kanji search took ".. tostring(end_time-start).. "ms")
+    logger.info(name.." operation took ".. tostring(end_time-start).. "ms")
     return res
 end
 
@@ -18,7 +19,6 @@ function M.get_visual_selection()
    local s_start = vim.fn.getpos "'<"
    -- in visual mode returns the other end of the connections
    local s_end = vim.fn.getpos "'>"
-   -- getregionpos({pos1},
    local lines = vim.fn.getregion(s_start,s_end)
    vim.print(lines)
    return lines
