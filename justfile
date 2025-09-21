@@ -9,9 +9,21 @@
 lint:
 	lx lint
 
+install-dictionaries:
+    nvim +'Rikai download'
+
 # Target to run Busted tests
 test:
-	@busted --lua=nlua
+    # we need to setup the environment so it can find the dictionaries
+	# @busted --lua=nlua
+    # can use impure
+    # cp 
+    lx test
+
+test-online:
+	# @busted --lua=nlua 
+	lx test
+
 
 docgen:
 	mkdir -p doc

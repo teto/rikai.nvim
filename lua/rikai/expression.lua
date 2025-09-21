@@ -29,7 +29,7 @@ function M.format_expression(original_token, res)
         "",
         res["gloss_group"],
         "",
-        utils.jisho_link(original_token)
+        utils.jisho_link(original_token, false)
     }
 
     return lines

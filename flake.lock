@@ -2,11 +2,11 @@
   "nodes": {
     "crane": {
       "locked": {
-        "lastModified": 1755993354,
-        "narHash": "sha256-FCRRAzSaL/+umLIm3RU3O/+fJ2ssaPHseI2SSFL8yZU=",
+        "lastModified": 1764903584,
+        "narHash": "sha256-RSkJtNtx0SEaQiYqsoFoRynwfZLo2OZ9z6rUq1DJR6g=",
         "owner": "ipetkov",
         "repo": "crane",
-        "rev": "25bd41b24426c7734278c2ff02e53258851db914",
+        "rev": "2b3a5a88d852575758e1eb6ac9ee677fcd633fc1",
         "type": "github"
       },
       "original": {
@@ -15,27 +15,40 @@
         "type": "github"
       }
     },
-    "expression-db": {
+    "edict-expression-db": {
       "flake": false,
       "locked": {
-        "lastModified": 1661970495,
-        "narHash": "sha256-kATPO01awNHbqS0LWAdnwWw2WWYKn+J+UH9lKlicpeY=",
+        "lastModified": 1759464277,
+        "narHash": "sha256-9o7QlV93mN6tHkDpcIncltNmgYzMnUzazwu46Bfbxow=",
         "type": "tarball",
-        "url": "https://github.com/odrevet/edict_database/releases/download/v0.0.2/expression.zip"
+        "url": "https://github.com/odrevet/edict_database/releases/download/v0.0.5/expression.zip"
       },
       "original": {
         "type": "tarball",
-        "url": "https://github.com/odrevet/edict_database/releases/download/v0.0.2/expression.zip"
+        "url": "https://github.com/odrevet/edict_database/releases/download/v0.0.5/expression.zip"
+      }
+    },
+    "edict-kanji-db": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1759464387,
+        "narHash": "sha256-UdGDn1EleiCOmn4YT9ZiYbNOg1IVid/DSGaBfszzE9Y=",
+        "type": "tarball",
+        "url": "https://github.com/odrevet/edict_database/releases/download/v0.0.5/kanji.zip"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/odrevet/edict_database/releases/download/v0.0.5/kanji.zip"
       }
     },
     "flake-compat": {
       "flake": false,
       "locked": {
-        "lastModified": 1747046372,
-        "narHash": "sha256-CIVLLkVgvHYbgI2UpXvIIBJ12HWgX+fjA8Xf8PUmqCY=",
+        "lastModified": 1761588595,
+        "narHash": "sha256-XKUZz9zewJNUj46b4AJdiRZJAvSZ0Dqj2BNfXvFlJC4=",
         "owner": "edolstra",
         "repo": "flake-compat",
-        "rev": "9100a0f413b0c601e0533d1d94ffd501ce2e7885",
+        "rev": "f387cd2afec9419c8ee37694406ca490c3f34ee5",
         "type": "github"
       },
       "original": {
@@ -49,11 +62,11 @@
         "nixpkgs-lib": "nixpkgs-lib"
       },
       "locked": {
-        "lastModified": 1754487366,
-        "narHash": "sha256-pHYj8gUBapuUzKV/kN/tR3Zvqc7o6gdFB9XKXIp1SQ8=",
+        "lastModified": 1763759067,
+        "narHash": "sha256-LlLt2Jo/gMNYAwOgdRQBrsRoOz7BPRkzvNaI/fzXi2Q=",
         "owner": "hercules-ci",
         "repo": "flake-parts",
-        "rev": "af66ad14b28a127c5c0f3bbb298218fc63528a18",
+        "rev": "2cccadc7357c0ba201788ae99c4dfa90728ef5e0",
         "type": "github"
       },
       "original": {
@@ -72,11 +85,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1755960406,
-        "narHash": "sha256-RF7j6C1TmSTK9tYWO6CdEMtg6XZaUKcvZwOCD2SICZs=",
+        "lastModified": 1765016596,
+        "narHash": "sha256-rhSqPNxDVow7OQKi4qS5H8Au0P4S3AYbawBSmJNUtBQ=",
         "owner": "cachix",
         "repo": "git-hooks.nix",
-        "rev": "e891a93b193fcaf2fc8012d890dc7f0befe86ec2",
+        "rev": "548fc44fca28a5e81c5d6b846e555e6b9c2a5a3c",
         "type": "github"
       },
       "original": {
@@ -107,32 +120,21 @@
         "type": "github"
       }
     },
-    "kanji-db": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1661970513,
-        "narHash": "sha256-vwe8hMOk6ShnmDq+Y/1EecZOfCXsBGNYCOZzTh6Jvuc=",
-        "type": "tarball",
-        "url": "https://github.com/odrevet/edict_database/releases/download/v0.0.2/kanji.zip"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://github.com/odrevet/edict_database/releases/download/v0.0.2/kanji.zip"
-      }
-    },
     "lux": {
       "inputs": {
         "crane": "crane",
         "flake-parts": "flake-parts",
         "git-hooks": "git-hooks",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
-        "lastModified": 1756489908,
-        "narHash": "sha256-RAVFnWLCAVTzmVAfnQwe2FGA0e1iU+LTdT8mSobRqIo=",
+        "lastModified": 1766135788,
+        "narHash": "sha256-wPeBL1x6P5puM5D08sFiSZMkrTguj4xLC1rqs+1yQr0=",
         "owner": "nvim-neorocks",
         "repo": "lux",
-        "rev": "ab8ac942ffec613b6a732e5a6f7ed979954a3742",
+        "rev": "8b479326696d2ae3dff2e0731ab2ba477eb23bb4",
         "type": "github"
       },
       "original": {
@@ -143,57 +145,41 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1755829505,
-        "narHash": "sha256-4/Jd+LkQ2ssw8luQVkqVs9spDBVE6h/u/hC/tzngsPo=",
-        "owner": "NixOS",
+        "lastModified": 1767571255,
+        "narHash": "sha256-qL+9rPlytzoYUIsiYzjKaPOgFwYE8Ogj0cHe9H00/V8=",
+        "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "f937f8ecd1c70efd7e9f90ba13dfb400cf559de4",
+        "rev": "454f2ab1e13c160db3192b1da6191a0b7fcf6f24",
         "type": "github"
       },
       "original": {
-        "owner": "NixOS",
-        "ref": "nixpkgs-unstable",
+        "owner": "nixos",
+        "ref": "master",
         "repo": "nixpkgs",
         "type": "github"
       }
     },
     "nixpkgs-lib": {
       "locked": {
-        "lastModified": 1753579242,
-        "narHash": "sha256-zvaMGVn14/Zz8hnp4VWT9xVnhc8vuL3TStRqwk22biA=",
+        "lastModified": 1761765539,
+        "narHash": "sha256-b0yj6kfvO8ApcSE+QmA6mUfu8IYG6/uU28OFn4PaC8M=",
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
-        "rev": "0f36c44e01a6129be94e3ade315a5883f0228a6e",
+        "rev": "719359f4562934ae99f5443f20aa06c2ffff91fc",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
-        "type": "github"
-      }
-    },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1756386758,
-        "narHash": "sha256-1wxxznpW2CKvI9VdniaUnTT2Os6rdRJcRUf65ZK9OtE=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "dfb2f12e899db4876308eba6d93455ab7da304cd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
         "type": "github"
       }
     },
     "root": {
       "inputs": {
-        "expression-db": "expression-db",
-        "kanji-db": "kanji-db",
+        "edict-expression-db": "edict-expression-db",
+        "edict-kanji-db": "edict-kanji-db",
         "lux": "lux",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs"
       }
     }
   },

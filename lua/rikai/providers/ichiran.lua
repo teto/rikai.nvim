@@ -1,6 +1,7 @@
 local M = {}
 
 -- translate cword
+---@return table
 M.lookup = function ()
     local bufnr = 0
     local r,_c = unpack(vim.api.nvim_win_get_cursor(0))
@@ -14,11 +15,14 @@ M.lookup = function ()
     local args = {'nix'}
 
     local output = {}
-    jobId = vim.fn.jobstart(args
+    local _jobId = vim.fn.jobstart(args
     -- options
     , {
         stdout_buffered = true,
         -- ({chan-id}, {data}, {name})
+        ---@param _chan_id number
+        ---@param data table
+        ---@param _stream_name string
         on_stdout = function(_chan_id, data, _stream_name) 
             print("callback args:", data)
             -- output = output .. vim.fn.join(data)

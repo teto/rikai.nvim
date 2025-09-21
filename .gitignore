@@ -3,3 +3,6 @@
 /jmdict-*.json
 /.nvimrc
 /.lua.env
+/luarocks
+/lua_modules
+/.luarocks

@@ -1,5 +1,3 @@
--- TODO replace with mega.logging ?
-local config = require('rikai.config')
 local log = require('alogger')
 
 -- configure work to save into file and print into stdout
@@ -29,8 +27,5 @@ log.setup({
 -- -- logger:set_level(lual.debug)
 --
 
--- function logger.print(self, msg)
---     vim.print(msg)
--- end
 
 return log

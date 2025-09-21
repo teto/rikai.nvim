@@ -1,7 +1,4 @@
-local main = require'rikai'
-local log = require'rikai.log'
 local cmdparser = require'rikai.commands'
-
 
 
 -- Create a new highlight group linked to 'Comment'
@@ -25,7 +22,7 @@ cmdparser.create_command()
 
 -- Function to execute on VimLeave
 local function on_vim_leave()
-    print("Exiting Neovim...")
+    -- print("Exiting Neovim...")
     -- TODO close db when opened
 end
 

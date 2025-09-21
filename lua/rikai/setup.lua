@@ -5,6 +5,7 @@ local M = {}
 
 local highlighter = require'rikai.highlighter'
 
+---@return nil
 function M.enable_on_cursor()
     vim.api.nvim_create_autocmd({"CursorMoved", "CursorMovedI"}, {
         group = highlighter.highlight_group,
@@ -13,3 +14,4 @@ function M.enable_on_cursor()
     })
 end
 
+return M

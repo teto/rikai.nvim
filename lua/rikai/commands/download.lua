@@ -1,34 +1,52 @@
+local logger = require'rikai.log'
+-- local config = require'rikai.config'
 
 -- created just for convenience
 -- vim.api.nvim_create_user_command('RikaiDownload', 
 
+local dict_version = "v0.0.5"
+
+local kanji_url = "https://github.com/odrevet/edict_database/releases/download/"..dict_version.."/kanji.zip"
+local expression_url = "https://github.com/odrevet/edict_database/releases/download/"..dict_version.."/expression.zip"
+
+
+---@param _args any
 function download(_args)
     -- print("downloading dicts...")
-    local kanji_url = "https://github.com/odrevet/edict_database/releases/download/v0.0.2/kanji.zip"
-    local expression_url = "https://github.com/odrevet/edict_database/releases/download/v0.0.2/expression.zip"
-    local furigana_url = "https://github.com/Doublevil/JmdictFurigana/releases/download/2.3.1%2B2024-11-25/JmdictFurigana.json.tar.gz"
-    local cb = function (err, _response)
-            if err then
-                -- set ERROR level
-                -- vim.notify("Downloading rikai DB failed:\n"..err)
-                print("Downloading rikai DB failed:\n"..err)
-            else
-                -- vim.notify("Finished downloading rikai dictionary.")
-                print("Finished downloading rikai dictionary.")
-            end
+    -- local furigana_url = "https://github.com/Doublevil/JmdictFurigana/releases/download/2.3.1%2B2024-11-25/JmdictFurigana.json.tar.gz"
 
+
+    -- runs in fast context
+    ---@param err string|nil
+    ---@param _response any
+    local on_reponse = function (err, _response)
+        local msg = "placeholder message"
+        if err then
+            -- set ERROR level
+            msg = "Downloading rikai DB failed:\n"..err
+            logger.error(msg)
+            print("Downloading rikai DB failed:\n"..err)
+        else
+            msg = "Finished downloading rikai dictionary."
+            logger.info(msg)
+            print(msg)
+            -- vim.notify("Finished downloading rikai dictionary.")
         end
+
+    end
 
     vim.net.request(kanji_url, {
         outpath = vim.g.rikai.kanjidb,
-    }, cb)
+        verbose = true,
+        -- retry = 3
+    }, on_reponse)
     vim.net.request(expression_url, {
         outpath = vim.g.rikai.jmdictdb,
-    }, cb)
+    }, on_reponse)
     -- TODO uncompress ?
     vim.net.request(expression_url, {
         outpath = vim.fn.stdpath("data").."/rikai/furigana.json",
-    }, cb)
+    }, on_reponse)
 
 end
 

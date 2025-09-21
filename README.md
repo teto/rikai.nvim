@@ -27,9 +27,8 @@ Run `:Rikai download` to fetch the dictionaries (needed just once).
 There are no default keymaps so you need to set one
 
 ```lua
-vim.keymap.set('n', '<D-j>', function()
-	vim.cmd[[ Rikai lookup ]]
-end, { buffer = false, desc = "Japanese lookup" })
+vim.keymap.set({'n', 'v'}, '<D-j>', function() vim.cmd([[ Rikai lookup ]]) end, { buffer = false, desc = 'Japanese lookup' })
+
 ```
 
 You can also call `:Rikai lookup 見`
@@ -64,7 +63,7 @@ See [wiki][rikai-nvim-wiki] for more reference.
 
 # How to get the various dictionaries used by rikai.nvim ?
 
-Run `:RikaiDownload`, else do:
+Run `:Rikai download`, else do:
 
 - clone https://github.com/odrevet/edict_database.git (fetch)
 - nix shell nixpkgs#dart
