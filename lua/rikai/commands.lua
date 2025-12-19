@@ -46,10 +46,9 @@ function M.create_command()
     livehl_parser:add_parameter({ name = "hl_command", choices={
             "toggle", "clear", "enable", "disable" }, help="Test word."}
         )
-    livehl_parser:set_execute(function(args)
-        local megaargs = args.namespace
-
-        local pos = vim.fn.getpos(".")
+    livehl_parser:set_execute(function(_args)
+        -- local megaargs = args.namespace
+        -- local pos = vim.fn.getpos(".")
 
         vim.api.nvim_create_autocmd({"CursorHold"}, {
             -- configurable ?

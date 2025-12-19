@@ -5,6 +5,13 @@ local utf8 = require'utf8'
 
 describe("is_japanese function", function()
 
+    -- copy the dicts to xdg
+    setup(
+        function()
+            -- error('failing a setup method')
+        end
+    )
+
     it("", function()
         -- check files were created
         -- assert.is_true(utils.is_hiragana(vim.fn.char2nr("あ")))
@@ -16,4 +23,12 @@ describe("is_japanese function", function()
             vim.cmd("Rikai lookup ")
     end)
 
+    it("lookup specified word", function()
+            vim.cmd("Rikai lookup 最初")
+    end)
+
+    -- lookup visual mode
+    it("lookup specified word", function()
+            vim.cmd("Rikai lookup 最初")
+    end)
 end)

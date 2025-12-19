@@ -3,7 +3,7 @@ local M = {}
 
 
 -- 
-function M.translate(args)
+function M.translate(_args)
 
     -- ideally do it locally
     -- will implement once I can make lx work

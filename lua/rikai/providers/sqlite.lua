@@ -8,10 +8,16 @@ The db itself is generated via edict
 local sqlite3 = require'lsqlite3'
 local config = require'rikai.config'
 local logger = require'rikai.log'
+local classifier = require'rikai.classifier'
+local types = require'rikai.types'
 
-local jmdictdb = config.jmdictdb
 local M = {}
 
+
+---@class KanjiResult
+
+---@param kanji string the kanji to look for
+---@return string
 function M.build_kanji_query(kanji)
     return [[
 SELECT character.*,
@@ -173,8 +179,9 @@ function M.get_db_handle(db_path)
 end
 
 --- Lookup translation for a kanji
+---@class KanjiLookup
 ---@param kanji string Kanji to search for
----@return table
+---@return KanjiLookup
 function M.lookup_kanji(kanji)
     local start = vim.uv.now()
 
@@ -225,6 +232,8 @@ end
 -- end
 
 
+--- Lookup several kanjis in database
+---@param word string
 function M.lookup_expr(word)
 
     -- logger.info("Opening " .. jmdictdb)
@@ -242,6 +251,28 @@ function M.lookup_expr(word)
     return res
 end
 
+--- smart lookup , can look for a kanji or an expression
+---@param token string
+---@return types.CharacterType
+---@return KanjiResult
+function M.lookup(token)
+    local token_code = vim.fn.char2nr(token)
+    local token_type = classifier.chartype(token_code)
+    local token_len = utf8.len(token)
+
+    local results
+    if token_len == 1 and token_type == types.CharacterType.KANJI then
+        -- if the token is only a single kanji ask the kanji db
+        results =  M.lookup_kanji(token)
+        return types.CharacterType.KANJI, results
+    else
+        -- we need to pass one character only
+        -- lookup expression for vim.fn.char2nr("引く")
+        -- vim.fn.nr2char(code)
+        results = M.lookup_expr(token)
+    end
+    return results
+end
 
 return M
 

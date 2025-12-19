@@ -13,6 +13,11 @@ lint:
 test:
 	@busted --lua=nlua
 
+test-online:
+	# @busted --lua=nlua 
+	lx test
+
+
 docgen:
 	mkdir -p doc
 	vimcats lua/rikai/{init,commands,config/init,meta,api/{init,hooks},log}.lua > doc/rikai.txt

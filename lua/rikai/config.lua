@@ -1,8 +1,8 @@
 
 ---@class RikaiConfig jap.nvim plugin configuration.
 ---
----@field kanjidb? string path towards a https://github.com/odrevet/edict_database's compatible db
----@field jmdictdb? string
+---@field kanjidb string path towards a https://github.com/odrevet/edict_database's compatible db
+---@field jmdictdb string
 ---@field log_level? vim.log.levels logging level
 ---@field popup_options vim.lsp.util.open_floating_preview.Opts
 ---@field _state table internal dont use

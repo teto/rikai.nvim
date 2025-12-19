@@ -47,12 +47,11 @@ function M.is_halfwidth_katakana(code)
     return code >= 0xFF66 and code <= 0xFF9F
 end
 
----@param text string
 ---@return boolean
 function M.is_japanese(text)
     -- Check if the input is valid
     -- logger.debug("Checking if code "..text)
-    assert(text, "Accept sonly string")
+    assert(text, "Accepts only string")
 
     if  #text == 0 then
         logger.debug("Empty string")

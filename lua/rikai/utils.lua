@@ -6,7 +6,7 @@ local M = {}
 --- @param name string used in logger
 function M.timeit(name, op, ...)
     local start = vim.uv.now()
-    res = op(...)
+    local res = op(...)
     vim.uv.update_time()
     local end_time = vim.uv.now()
     logger.info(name.." operation took ".. tostring(end_time-start).. "ms")
