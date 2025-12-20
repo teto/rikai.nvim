@@ -24,16 +24,17 @@ M.tokenize = function (content, ...)
     if not exists then
         vim.notify("Could not load the "..config.tokenizer)
     end
-    tokens = utils.timeit("tokenize", tokenizer.tokenize, content, ...)
+    local tokens = utils.timeit("tokenize", tokenizer.tokenize, content, ...)
     return tokens
 end
 
+---@return string
 function M.get_current_token()
     -- vim.fn.getcurpos (byte) vs getcursorcharpos (index)
     -- Get the content of the current line in the buffer
     -- local current_line_content = vim.api.nvim_get_current_line()
     -- print(current_line_content)  -- Print the current line content for verification
-    word = vim.fn.expand("<cword>")
+    local word = vim.fn.expand("<cword>")
 
     -- TODO use matchaddpos({group},
     -- [{lnum}, {col}, {off}, {curswant}]

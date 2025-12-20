@@ -2,7 +2,8 @@
 local M = {}
 
 
--- 
+--
+---@param _args any
 function M.translate(_args)
 
     -- ideally do it locally

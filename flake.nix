@@ -12,12 +12,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    kanji-db = {
+    edict-kanji-db = {
       url = "https://github.com/odrevet/edict_database/releases/download/v0.0.5/kanji.zip";
       flake = false;
     };
 
-    expression-db = {
+    edict-expression-db = {
       url = "https://github.com/odrevet/edict_database/releases/download/v0.0.5/expression.zip";
       flake = false;
     };
@@ -163,6 +163,9 @@
             in 
               ''
                 mkdir -p .luarocks
+                ln -s "${self.inputs.edict-kanji-db}/kanji.db" .
+                ln -s "${self.inputs.edict-expression-db}/expression.db" .
+
                 cat ${configFile} >> .luarocks/config-5.1.lua
                 ${lib.concatMapStringsSep "\n" (val: "export ${val}") (exposeLib { name = "SQLITE"; dep = pkgs.sqlite; }) }
                 export LUA_PATH="$LUA_PATH;lua/?.lua"

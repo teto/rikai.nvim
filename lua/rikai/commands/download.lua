@@ -10,12 +10,15 @@ local kanji_url = "https://github.com/odrevet/edict_database/releases/download/"
 local expression_url = "https://github.com/odrevet/edict_database/releases/download/"..dict_version.."/expression.zip"
 
 
+---@param _args any
 function download(_args)
     -- print("downloading dicts...")
     -- local furigana_url = "https://github.com/Doublevil/JmdictFurigana/releases/download/2.3.1%2B2024-11-25/JmdictFurigana.json.tar.gz"
 
 
     -- runs in fast context
+    ---@param err string|nil
+    ---@param _response any
     local on_reponse = function (err, _response)
         local msg = "placeholder message"
         if err then

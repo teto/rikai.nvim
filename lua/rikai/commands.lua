@@ -9,6 +9,7 @@ local M = {}
 -- parser:add_parameter({ name = "items", nargs="*", help="non-flag arguments." })
 -- parser:add_parameter({ name = "--fizz", help="A word." })
 -- parser:add_parameter({ name = "-d", action="store_true", help="Delta single-word." })
+---@return nil
 function M.create_command()
     -- local parser = cmdparse.ParameterParser.new({ name = "Rikai", help = "Hello, World!"})
     -- parser:set_execute(function(data) print("Hello, World!") end)

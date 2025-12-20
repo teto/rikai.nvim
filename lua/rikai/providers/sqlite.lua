@@ -17,7 +17,7 @@ local M = {}
 ---@class KanjiResult
 
 ---@param kanji string the kanji to look for
----@return string
+---@return string SQL query string
 function M.build_kanji_query(kanji)
     return [[
 SELECT character.*,
@@ -52,6 +52,8 @@ function M.get_radicals_from_kanji_query(kanji)
 end
 
 -- lang actually depends on dict
+---@param expr string
+---@return string SQL query string
 function M.query_native_expr(expr)
     local req = [[
 SELECT
@@ -104,6 +106,8 @@ end
 -- look at the jmdict DTD  to understand the different value
 -- basically if we are dealing with a kanji somewhere in expression, we should match against keb, and reb otherwise ?
 -- TODO remove the concat keb_reb_group
+---@param expr string
+---@return string SQL query string
 function M.query_jap_expr(expr)
 
     local req = [[
@@ -155,7 +159,8 @@ GROUP BY entry.id, sense.id;
   return req
 end
 
----@param db_path string 
+---@param db_path string
+---@return any|boolean database connection handle or false on error
 function M.get_db_handle(db_path)
 
     -- TODO check if a handle already exists
@@ -205,6 +210,8 @@ end
 
 
 --- Find radicals of the kanji
+---@param kanji string
+---@return table
 function M.lookup_kanji_radicals(kanji)
 
     local res = {}
@@ -234,6 +241,7 @@ end
 
 --- Lookup several kanjis in database
 ---@param word string
+---@return table
 function M.lookup_expr(word)
 
     -- logger.info("Opening " .. jmdictdb)

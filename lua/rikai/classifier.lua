@@ -27,26 +27,34 @@ end
 
 
 --- returns false for punctuation: 、and 。for instance
----@param code number 
+---@param code number
+---@return boolean
 function M.is_common_kanji(code)
     return code >= 0x4E00 and code <= 0x9FFF
 end
 
 
+---@param code number
+---@return boolean
 function M.is_hiragana(code)
     -- 12352 - 12447
     return code >= M.hiragana_range[1] and code <= M.hiragana_range[2]
 end
 
+---@param code number
+---@return boolean
 function M.is_katakana(code)
     return code >= M.katakana_range[1] and code <= M.katakana_range[2]
 
 end
 
+---@param code number
+---@return boolean
 function M.is_halfwidth_katakana(code)
     return code >= 0xFF66 and code <= 0xFF9F
 end
 
+---@param text string
 ---@return boolean
 function M.is_japanese(text)
     -- Check if the input is valid

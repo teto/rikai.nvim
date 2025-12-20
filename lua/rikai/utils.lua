@@ -4,6 +4,8 @@ local M = {}
 
 
 --- @param name string used in logger
+---@param op function
+---@return any
 function M.timeit(name, op, ...)
     local start = vim.uv.now()
     local res = op(...)
@@ -14,6 +16,7 @@ function M.timeit(name, op, ...)
 end
 
 --- aint it weird that nvim commands dont pass columns ?
+---@return table
 function M.get_visual_selection()
    -- does not handle rectangular selection
    local s_start = vim.fn.getpos "'<"
@@ -35,6 +38,9 @@ function M.jisho_link(expr, as_kanji)
     return url
 end
 
+---@param content string
+---@param font_size number
+---@return nil
 function M.print_variable_size(content, font_size)
     -- todo adapt the number of newlines
     return print("\\e]66;s="..tostring(font_size)..";"..content.."\a\n\n")

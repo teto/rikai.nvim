@@ -23,6 +23,7 @@ local furigana_ns = 'rikai-furigana'
 
 -- TODO add callback such that one can filter out kanjis
 -- for instance if it's jlpt5 or not
+---@param _args any
 function M.add_furigana(_args)
     -- Get the buffer number (0 refers to the current buffer)
     -- get buf from getpos
@@ -35,7 +36,7 @@ function M.add_furigana(_args)
     local namespace_id = vim.api.nvim_create_namespace(furigana_ns)
 
     -- exclusive
-    lines = vim.api.nvim_buf_get_lines(bufnr, line - 1, line, true)
+    local lines = vim.api.nvim_buf_get_lines(bufnr, line - 1, line, true)
     assert(#lines, "lines should not be empty")
 
     -- vim.print(lines)
@@ -66,8 +67,8 @@ function M.add_furigana(_args)
             -- table.insert(virtual_text, { j[1], highlight })
             -- print(string.format("line %d, Column: %d", line, column))
 
-            -- for now let's assume it's an expression 
-            results = provider.lookup_expr(token)
+            -- for now let's assume it's an expression
+            local results = provider.lookup_expr(token)
 
             local virtual_text = token
             if not vim.tbl_isempty(results) then
@@ -112,6 +113,7 @@ end
 function M.clear()
 end
 
+---@return nil
 function M.setup_autocommands()
         vim.api.nvim_create_autocmd('CursorMoved', {
             callback = function()

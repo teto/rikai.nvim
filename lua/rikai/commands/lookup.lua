@@ -11,6 +11,9 @@ local api = vim.api
 local M = {}
 
 -- pasted
+---@param name string
+---@param value any
+---@return number|nil
 function M.find_window_by_var(name, value)
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     if vim.w[win][name] == value then
@@ -23,8 +26,8 @@ end
 -- This function highlights the current token under cursor to help with comprehension
 M.live_lookup = function()
     -- tokenize
-    local ok, token = tokenizer.get_current_token()
-    if not ok then
+    local token = tokenizer.get_current_token()
+    if not token then
         vim.notify("Could not find current token")
     else
         print("TODO live lookup of token: "..token)
@@ -78,7 +81,7 @@ M.popup_lookup = function(token)
     if utf8.len(word) > 1 then
         -- todo get first element
         -- TODO tokenize should be called in caller instead
-        tokens = utils.timeit("tokenize", tokenizer.tokenize, word, true)
+        local tokens = utils.timeit("tokenize", tokenizer.tokenize, word, true)
         if vim.tbl_isempty(tokens) then
             logger.debug("No tokens found")
             return
@@ -91,7 +94,8 @@ M.popup_lookup = function(token)
 
 
     -- the chosen token
-    local results 
+    local results
+    local restype
     restype, results = utils.timeit("lookup_expr", query.lookup, token)
 
     logger.debug("Found "..tostring(#results).. " results")

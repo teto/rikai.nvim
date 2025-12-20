@@ -16,11 +16,11 @@ local util = vim.lsp.util
 --
 
 ---@param focus_id string Popup identifier to focus or create
----@param lines table toto
----@param opts `vim.lsp.util.open_floating_preview.Opts?` forwarded to create popup
+---@param lines table Content lines to display in popup
+---@param opts vim.lsp.util.open_floating_preview.Opts? forwarded to create popup
+---@return number window ID
 function M.create_popup(focus_id, lines,  opts)
 
-    -- RikaiConfig
     local width = config.width
     local height = (#lines or config.max_height) + 1
 

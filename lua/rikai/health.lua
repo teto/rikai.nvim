@@ -7,6 +7,7 @@ local M = {}
 local h = vim.health
 
 -- ideally we would return the version
+---@param dep string dependency name to check
 ---@return boolean is_installed
 ---@return string|nil version
 local check_installed = function(dep)
@@ -16,12 +17,21 @@ local check_installed = function(dep)
     return false
 end
 
+---@param name string
+---@param value any
+---@param validator string
+---@param optional? boolean
+---@param message? string
+---@return boolean
+---@return string
 local function validate(name, value, validator, optional, message)
     local ok, err = pcall(vim.validate, name, value, validator, optional, message)
     return ok or false, "Rocks: Invalid config" .. (err and ": " .. err or "")
 end
 
 -- expose bits of it to test validation
+---@return boolean|nil
+---@return string|nil
 local function check_config()
     h.start("Checking rocks.nvim config")
 

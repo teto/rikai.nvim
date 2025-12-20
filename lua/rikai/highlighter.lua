@@ -26,7 +26,7 @@ M.toggle_highlights = function(pos, highlight_names)
     logger.info("Toggling highlights ")
     local line = pos[2] -1 -- nvim_buf_get_lines is 0-indexed
 
-    lines = vim.api.nvim_buf_get_lines(
+    local lines = vim.api.nvim_buf_get_lines(
         pos[1],
         line,
         pos[2], -- last line index
@@ -50,6 +50,7 @@ M.toggle_highlights = function(pos, highlight_names)
 end
 
 --- Clear the names registered by toggle_names
+---@return nil
 function M.clear_names()
 end
 
