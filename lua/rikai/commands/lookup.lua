@@ -98,18 +98,18 @@ M.popup_lookup = function(token)
     local restype
     restype, results = utils.timeit("lookup_expr", query.lookup, token)
 
-    logger.debug("Found "..tostring(#results).. " results")
-
     -- assert(results, "There must be a result")
     if vim.tbl_isempty(results) then
         print("No results matching token"..token)
         return
     end
 
+
     -- TODO check for kanjis for now but later we can deal with romajis/kanas etc
     -- if it's numeral, ask expression db
     local nr_results = #results
     local formatted_results = {}
+    logger.debug("Found "..tostring(nr_results).. " results")
 
     -- TODO limit loop according to max_results
     -- local max_results = 5
@@ -139,7 +139,7 @@ M.popup_lookup = function(token)
     end
 
     -- add a link to jisho
-    -- vim.lsp.util.open_floating_preview.Opts?
+    ---@type vim.lsp.util.open_floating_preview.Opts?
     local popupOpts = {
         -- focus existing popup with this id instead of creating one
         focusable = true,

@@ -117,7 +117,6 @@
           pkgs.mkShell {
             name = "rikai.nvim";
 
-            # dict = jmdict ;
             buildInputs = [ 
               luaEnv
               # lx can autoinstall busted
@@ -129,8 +128,8 @@
               pkgs.cmake   # needed for luv install ?
               pkgs.sqlite.dev # for sqlite3.h
               pkgs.sudachi-rs
-              self.inputs.lux.packages.${platform}.lux-cli
-              self.inputs.lux.packages.${platform}.lux-lua51
+              # self.inputs.lux.packages.${platform}.lux-cli
+              # self.inputs.lux.packages.${platform}.lux-lua51
               pkgs.pkg-config # required by lux ?
               pkgs.vimcats
             ];
@@ -161,10 +160,15 @@
             ];
 
             in 
+
+            # /home/teto/neovim/rikai.nvim/.lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/kanji.db
               ''
                 mkdir -p .luarocks
-                ln -s "${self.inputs.edict-kanji-db}/kanji.db" .
-                ln -s "${self.inputs.edict-expression-db}/expression.db" .
+
+                # todo change the lux test folder instead 
+                mkdir -p .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
+                ln -sf "${self.inputs.edict-kanji-db}/kanji.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
+                ln -sf "${self.inputs.edict-expression-db}/expression.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
 
                 cat ${configFile} >> .luarocks/config-5.1.lua
                 ${lib.concatMapStringsSep "\n" (val: "export ${val}") (exposeLib { name = "SQLITE"; dep = pkgs.sqlite; }) }

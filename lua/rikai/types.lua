@@ -3,11 +3,12 @@ local M = {}
 
 ---@enum rikai.types.CharacterType
 M.CharacterType = {
-    OTHER    = 1;
+    OTHER       = 1;
     -- ASCII    = 2;
-    KATAKANA = 3;
-    HIRAGANA = 4;
-    KANJI    = 5;
+    KATAKANA    = 3;
+    HIRAGANA    = 4;
+    KANJI       = 5;
+    EXPRESSION  = 6;
 
     -- TODO add __tostring ?
 }

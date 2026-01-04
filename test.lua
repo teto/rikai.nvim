@@ -1,4 +1,4 @@
-local cmdparse = require("mega.cmdparse")
+-- local cmdparse = require("mega.cmdparse")
 
 -- local utf8 = require'utf8'
 --

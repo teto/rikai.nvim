@@ -54,7 +54,7 @@ function M.is_halfwidth_katakana(code)
     return code >= 0xFF66 and code <= 0xFF9F
 end
 
----@param text string
+---@param text string?
 ---@return boolean
 function M.is_japanese(text)
     -- Check if the input is valid

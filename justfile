@@ -17,6 +17,7 @@ test:
     # we need to setup the environment so it can find the dictionaries
 	# @busted --lua=nlua
     # can use impure
+    # cp 
     lx test
 
 test-online:

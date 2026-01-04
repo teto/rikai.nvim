@@ -184,9 +184,8 @@ function M.get_db_handle(db_path)
 end
 
 --- Lookup translation for a kanji
----@class KanjiLookup
 ---@param kanji string Kanji to search for
----@return KanjiLookup
+---@return KanjiResult
 function M.lookup_kanji(kanji)
     local start = vim.uv.now()
 
@@ -197,6 +196,7 @@ function M.lookup_kanji(kanji)
     local req = M.build_kanji_query(kanji)
 
     logger.info("Looking up kanji: ".. tostring(kanji))
+    ---@diagnostic disable-next-line: need-check-nil
     for a in con:nrows(req) do
         -- res [#res + 1] = a
         table.insert(res, a)
@@ -208,10 +208,11 @@ function M.lookup_kanji(kanji)
     return res
 end
 
+---@class KanjiRadicals
 
 --- Find radicals of the kanji
 ---@param kanji string
----@return table
+---@return table of KanjiRadicals
 function M.lookup_kanji_radicals(kanji)
 
     local res = {}
@@ -221,6 +222,7 @@ function M.lookup_kanji_radicals(kanji)
     local req = M.get_radicals_from_kanji_query(kanji)
 
     logger.info("Looking up kanji radicals: ".. tostring(kanji))
+    ---@diagnostic disable-next-line: need-check-nil
     for a in con:nrows(req) do
         res [#res + 1] = a
     end
@@ -252,6 +254,7 @@ function M.lookup_expr(word)
     local req = M.query_jap_expr(word)
 
     logger.info("Looking up expr ".. tostring(word))
+    ---@diagnostic disable-next-line: need-check-nil
     for a in db:nrows(req) do
         res [#res + 1] = a
     end
@@ -259,9 +262,9 @@ function M.lookup_expr(word)
     return res
 end
 
---- smart lookup , can look for a kanji or an expression
+--- Smart lookup: can look for a kanji or an expression
 ---@param token string
----@return types.CharacterType
+---@return rikai.types.CharacterType
 ---@return KanjiResult
 function M.lookup(token)
     local token_code = vim.fn.char2nr(token)
@@ -278,8 +281,8 @@ function M.lookup(token)
         -- lookup expression for vim.fn.char2nr("引く")
         -- vim.fn.nr2char(code)
         results = M.lookup_expr(token)
+        return types.CharacterType.EXPRESSION, results
     end
-    return results
 end
 
 return M
