@@ -1,7 +1,7 @@
 -- Import the module containing the is_japanese function
 local utils = require('rikai.classifier')
 -- local kanji = require('rikai.kanji')
-local utf8 = require'utf8'
+-- local utf8 = require'utf8'
 
 describe("is_japanese function", function()
 

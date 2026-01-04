@@ -8,10 +8,16 @@ The db itself is generated via edict
 local sqlite3 = require'lsqlite3'
 local config = require'rikai.config'
 local logger = require'rikai.log'
+local classifier = require'rikai.classifier'
+local types = require'rikai.types'
 
-local jmdictdb = config.jmdictdb
 local M = {}
 
+
+---@class KanjiResult
+
+---@param kanji string the kanji to look for
+---@return string SQL query string
 function M.build_kanji_query(kanji)
     return [[
 SELECT character.*,
@@ -46,6 +52,8 @@ function M.get_radicals_from_kanji_query(kanji)
 end
 
 -- lang actually depends on dict
+---@param expr string
+---@return string SQL query string
 function M.query_native_expr(expr)
     local req = [[
 SELECT
@@ -98,6 +106,8 @@ end
 -- look at the jmdict DTD  to understand the different value
 -- basically if we are dealing with a kanji somewhere in expression, we should match against keb, and reb otherwise ?
 -- TODO remove the concat keb_reb_group
+---@param expr string
+---@return string SQL query string
 function M.query_jap_expr(expr)
 
     local req = [[
@@ -149,7 +159,8 @@ GROUP BY entry.id, sense.id;
   return req
 end
 
----@param db_path string 
+---@param db_path string
+---@return any|boolean database connection handle or false on error
 function M.get_db_handle(db_path)
 
     -- TODO check if a handle already exists
@@ -174,7 +185,7 @@ end
 
 --- Lookup translation for a kanji
 ---@param kanji string Kanji to search for
----@return table
+---@return KanjiResult
 function M.lookup_kanji(kanji)
     local start = vim.uv.now()
 
@@ -185,6 +196,7 @@ function M.lookup_kanji(kanji)
     local req = M.build_kanji_query(kanji)
 
     logger.info("Looking up kanji: ".. tostring(kanji))
+    ---@diagnostic disable-next-line: need-check-nil
     for a in con:nrows(req) do
         -- res [#res + 1] = a
         table.insert(res, a)
@@ -196,8 +208,11 @@ function M.lookup_kanji(kanji)
     return res
 end
 
+---@class KanjiRadicals
 
 --- Find radicals of the kanji
+---@param kanji string
+---@return table of KanjiRadicals
 function M.lookup_kanji_radicals(kanji)
 
     local res = {}
@@ -207,6 +222,7 @@ function M.lookup_kanji_radicals(kanji)
     local req = M.get_radicals_from_kanji_query(kanji)
 
     logger.info("Looking up kanji radicals: ".. tostring(kanji))
+    ---@diagnostic disable-next-line: need-check-nil
     for a in con:nrows(req) do
         res [#res + 1] = a
     end
@@ -225,6 +241,9 @@ end
 -- end
 
 
+--- Lookup several kanjis in database
+---@param word string
+---@return table
 function M.lookup_expr(word)
 
     -- logger.info("Opening " .. jmdictdb)
@@ -235,6 +254,7 @@ function M.lookup_expr(word)
     local req = M.query_jap_expr(word)
 
     logger.info("Looking up expr ".. tostring(word))
+    ---@diagnostic disable-next-line: need-check-nil
     for a in db:nrows(req) do
         res [#res + 1] = a
     end
@@ -242,6 +262,28 @@ function M.lookup_expr(word)
     return res
 end
 
+--- Smart lookup: can look for a kanji or an expression
+---@param token string
+---@return rikai.types.CharacterType
+---@return KanjiResult
+function M.lookup(token)
+    local token_code = vim.fn.char2nr(token)
+    local token_type = classifier.chartype(token_code)
+    local token_len = utf8.len(token)
+
+    local results
+    if token_len == 1 and token_type == types.CharacterType.KANJI then
+        -- if the token is only a single kanji ask the kanji db
+        results =  M.lookup_kanji(token)
+        return types.CharacterType.KANJI, results
+    else
+        -- we need to pass one character only
+        -- lookup expression for vim.fn.char2nr("引く")
+        -- vim.fn.nr2char(code)
+        results = M.lookup_expr(token)
+        return types.CharacterType.EXPRESSION, results
+    end
+end
 
 return M
 

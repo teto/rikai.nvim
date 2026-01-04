@@ -2,6 +2,7 @@
 local M = {}
 
 ---@param word string
+---@return table|nil
 function M.lookup(word)
 
     local args = {'wordbase-cli', '--output=json', 'lookup', word}

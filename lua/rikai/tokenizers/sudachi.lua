@@ -68,9 +68,12 @@ M.tokenize = function (content, enable_pos_processing)
 
     local tokens = {}
     -- Use format strings
-    -- TODO dont log the whole thing, 
+    -- TODO dont log the whole thing,
     logger.info(string.format("Tokenizer called with content '%s'", content))
 
+    ---@param _ number
+    ---@param data table
+    ---@param name string
     local handle_line = function(_, data, name)
 
     -- output format described at:

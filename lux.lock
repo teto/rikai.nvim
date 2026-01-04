@@ -331,6 +331,26 @@
           "source": "sha256-pEA+Z1pkykWLTT6NHQ5lo8roOh2P0fiHtnK+byTkF5o="
         }
       },
+      "89dfdcdc007420c5dc3ae90f496c7173877cc53b104e90fb0183bebd7ec7f444": {
+        "name": "nlua",
+        "version": "0.3.2-1",
+        "pinned": false,
+        "opt": false,
+        "dependencies": [],
+        "constraint": "==0.3.2",
+        "binaries": [
+          "nlua"
+        ],
+        "source": "luarocks_rockspec+https://luarocks.org/",
+        "source_url": {
+          "type": "url",
+          "url": "https://github.com/mfussenegger/nlua/archive/v0.3.2.zip"
+        },
+        "hashes": {
+          "rockspec": "sha256-WPlvpMZ6Ochzw61T+rxOAfh4VPqh3GhXVgfyH/+OyDY=",
+          "source": "sha256-Gep+0WGkNPJ/7acaIVfHpi+/wHoUevlly3JRc0G+hBU="
+        }
+      },
       "a6c5176043cb3de56336b7de119443dbb3d9e024be1d50e06289ad4b4959a2da": {
         "name": "lua_cliargs",
         "version": "3.0.2-1",
@@ -376,7 +396,8 @@
       }
     },
     "entrypoints": [
-      "56b98be57b1a97b869fd8ded0d2c0b9ce0b6b052e2d5abf84d060748617b2c90"
+      "56b98be57b1a97b869fd8ded0d2c0b9ce0b6b052e2d5abf84d060748617b2c90",
+      "89dfdcdc007420c5dc3ae90f496c7173877cc53b104e90fb0183bebd7ec7f444"
     ]
   }
 }

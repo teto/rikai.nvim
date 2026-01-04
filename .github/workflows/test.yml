@@ -19,5 +19,6 @@ jobs:
       - name: Run neovim with rikai
         shell: bash
         run: |
+          nix develop . --command lx check
           nix develop . --command just test
 

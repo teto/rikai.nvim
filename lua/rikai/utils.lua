@@ -3,17 +3,20 @@ local logger = require'rikai.log'
 local M = {}
 
 
---- @param name string used in logger
+---@param name string used in logger
+---@param op function
+---@return any
 function M.timeit(name, op, ...)
     local start = vim.uv.now()
-    res = op(...)
+    local res = op(...)
     vim.uv.update_time()
     local end_time = vim.uv.now()
-    logger.info(name.." operation took ".. tostring(end_time-start).. "ms")
+    logger.debug(name.." operation took ".. tostring(end_time-start).. "ms")
     return res
 end
 
 --- aint it weird that nvim commands dont pass columns ?
+---@return table
 function M.get_visual_selection()
    -- does not handle rectangular selection
    local s_start = vim.fn.getpos "'<"
@@ -35,6 +38,9 @@ function M.jisho_link(expr, as_kanji)
     return url
 end
 
+---@param content string
+---@param font_size number
+---@return nil
 function M.print_variable_size(content, font_size)
     -- todo adapt the number of newlines
     return print("\\e]66;s="..tostring(font_size)..";"..content.."\a\n\n")

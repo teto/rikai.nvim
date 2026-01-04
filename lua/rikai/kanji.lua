@@ -16,7 +16,8 @@ local M = {}
 
 
 --- Get radicals associated with kanji
----@param kanji string 
+---@param kanji string
+---@return table
 function M.format_radicals(kanji)
     logger.debug("Looking up radicals for kanji : ".. tostring(kanji))
     local res = {}
@@ -60,7 +61,7 @@ function M.format_kanji(res, radicals)
         "Radicals:",
     }
     for _i, radical in pairs(radicals) do
-        results = query.lookup_kanji(radical["id"])
+        local results = query.lookup_kanji(radical["id"])
         -- results[1]["meanings"])
         if #results > 0 then
             local radical_line = radical["id"] .. ": " .. (results[1]["meanings"] or "none")

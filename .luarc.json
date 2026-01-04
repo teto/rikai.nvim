@@ -1,5 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
+  "diagnostics": {
+    "globals": [
+      "setup",
+      "vim",
+      "vim.log.levels".
+      "vim.lsp.util.open_floating_preview.Opts"
+    ]
+  },
   "hint.enable": false,
   "workspace": {
     "ignoreDir": [

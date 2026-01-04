@@ -32,3 +32,6 @@ args = [ "src/main.lua" ]
 
 [build]
 type = "builtin"
+
+[test_dependencies]
+nlua = "0.3.2-1"
