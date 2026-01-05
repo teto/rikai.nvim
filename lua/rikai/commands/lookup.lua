@@ -71,7 +71,6 @@ M.popup_lookup = function(token)
         -- focus and return the existing buf, win
         api.nvim_set_current_win(win)
         api.nvim_command('stopinsert')
-        -- return api.nvim_win_get_buf(win), win
         return win
     else
          logger.debug("Could not find any preexisting popup focus_id=%s", focus_id)
@@ -94,19 +93,16 @@ M.popup_lookup = function(token)
 
 
     -- the chosen token
-    local results
-    local restype
-    restype, results = utils.timeit("lookup_expr", query.lookup, token)
+    local restype, results = utils.timeit("lookup_expr", query.lookup, token)
 
+    vim.print(results)
     -- assert(results, "There must be a result")
     if vim.tbl_isempty(results) then
-        print("No results matching token"..token)
+        print("No results matching "..types.as_str(restype).." "..token)
         return
     end
 
 
-    -- TODO check for kanjis for now but later we can deal with romajis/kanas etc
-    -- if it's numeral, ask expression db
     local nr_results = #results
     local formatted_results = {}
     logger.debug("Found "..tostring(nr_results).. " results")
@@ -152,7 +148,6 @@ M.popup_lookup = function(token)
 
     local winid = require'rikai.popup'.create_popup(
             token, formatted_results, popupOpts)
-    -- vim.print(vim.w[winid][token])
     return winid
 end
 

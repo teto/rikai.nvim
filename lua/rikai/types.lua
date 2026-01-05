@@ -21,6 +21,7 @@ function M.as_str(e)
         [M.CharacterType.KATAKANA] = "katakana";
         [M.CharacterType.HIRAGANA] = "hiragana";
         [M.CharacterType.KANJI] = "kanji";
+        [M.CharacterType.EXPRESSION] = "expression";
     }
     return map[e]
 end

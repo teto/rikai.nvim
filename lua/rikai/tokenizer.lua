@@ -34,8 +34,6 @@ end
 function M.get_current_token()
     -- vim.fn.getcurpos (byte) vs getcursorcharpos (index)
     -- Get the content of the current line in the buffer
-    -- local current_line_content = vim.api.nvim_get_current_line()
-    -- print(current_line_content)  -- Print the current line content for verification
     local word = vim.fn.expand("<cword>")
 
     -- TODO use matchaddpos({group},
@@ -43,24 +41,18 @@ function M.get_current_token()
     local cursorpos = vim.fn.getcursorcharpos()
     local curcharindex = cursorpos[3]
     local tokens = M.tokenize(word)
-    -- find the language
     -- find the matching token under current pos
-    -- vim.fn.strwidth("toto")
     local charindex = 0
     local current_token = ""
     for _i, tok in pairs(tokens) do
         current_token = tok[1]
         charindex = vim.fn.strwidth(current_token) + charindex
-        -- vim.print("charindex:", charindex)
         if curcharindex < charindex then
             break
         end
     end
-    -- vim.print("Identified token and pos ", current_token)
 
     return current_token
-    -- vim.print(tokens)
-
 end
 
 return M

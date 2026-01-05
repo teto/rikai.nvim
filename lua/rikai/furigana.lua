@@ -46,28 +46,19 @@ function M.add_furigana(_args)
         return
     end
     local res = tokenizer.tokenize(line2, true)
-    -- vim.print(res)
-    -- vim.print("Looping over tokens ...")
     local column = 1
     for _i, j in ipairs(res) do
         local token = j[1]
-        -- local token_len = utf8.len(token)
 
         local lexicon_type = j[2]
         local highlight = 'Comment'
-        -- TODO highlight should depend on lexicon type
         if lexicon_type == types.LexiconType.PROPER_NOUN then
             highlight = 'RikaiProperNoun'
         elseif lexicon_type == types.LexiconType.NOUN then
             highlight = 'RikaiName'
         end
 
-        -- vim.print(token)
-        -- if classifier.is_common_kanji(vim.fn.char2nr(token)) then
         if lexicon_type == types.LexiconType.PROPER_NOUN then
-            -- TODO get translation instead of token
-            -- table.insert(virtual_text, { j[1], highlight })
-            -- print(string.format("line %d, Column: %d", line, column))
 
             -- for now let's assume it's an expression
             local results = provider.lookup_expr(token)

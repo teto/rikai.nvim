@@ -4,16 +4,6 @@ local M = {}
 
 local util = vim.lsp.util
 
--- M.create_popup = function (content)
---     vim.validate{
---         content={content,'table' }
---     }
---     local params = vim.lsp.util.make_position_params()
---     vim.pretty_print(params)
---     local popupOptions = util.make_floating_popup_options(width, height, opts)
---     local _floating_bufnr, _floating_winnr = util.open_floating_preview(content, "text", popupOptions)
--- end
---
 
 ---@param focus_id string Popup identifier to focus or create
 ---@param lines table Content lines to display in popup

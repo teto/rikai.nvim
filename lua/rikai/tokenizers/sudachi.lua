@@ -96,7 +96,6 @@ M.tokenize = function (content, enable_pos_processing)
                 local res = vim.split(pos, ",")
 
                 pos = M.lexicon_type(res)
-                -- print("type of token:", pos)
             end
 
             -- iskeyword doesn't accept non-ascii ranges :'(

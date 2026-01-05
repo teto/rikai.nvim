@@ -6,9 +6,6 @@ local logger = require'rikai.log'
 
 local M = {}
 
--- parser:add_parameter({ name = "items", nargs="*", help="non-flag arguments." })
--- parser:add_parameter({ name = "--fizz", help="A word." })
--- parser:add_parameter({ name = "-d", action="store_true", help="Delta single-word." })
 ---@return nil
 function M.create_command()
     -- local parser = cmdparse.ParameterParser.new({ name = "Rikai", help = "Hello, World!"})
@@ -48,9 +45,6 @@ function M.create_command()
             "toggle", "clear", "enable", "disable" }, help="Test word."}
         )
     livehl_parser:set_execute(function(_args)
-        -- local megaargs = args.namespace
-        -- local pos = vim.fn.getpos(".")
-
         vim.api.nvim_create_autocmd({"CursorHold"}, {
             -- configurable ?
             pattern = { "*.md", "*.txt", "*.org" },
@@ -59,7 +53,6 @@ function M.create_command()
             callback = lookup.live_lookup
         })
 
-        -- toto
         -- if megaargs.hl_command == "clear" then
         --     logger.info("clearing hl")
         --     -- renvoye -1 ptet

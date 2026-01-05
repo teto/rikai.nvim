@@ -15,7 +15,7 @@ install-dictionaries:
 # Target to run Busted tests
 test:
     # we need to setup the environment so it can find the dictionaries
-	# @busted --lua=nlua
+    # @busted --lua=nlua
     # can use impure
     # cp 
     lx test

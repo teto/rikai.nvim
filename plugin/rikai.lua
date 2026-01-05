@@ -22,7 +22,6 @@ cmdparser.create_command()
 
 -- Function to execute on VimLeave
 local function on_vim_leave()
-    -- print("Exiting Neovim...")
     -- TODO close db when opened
 end
 

@@ -24,7 +24,7 @@ function M.get_visual_selection()
    -- in visual mode returns the other end of the connections
    local s_end = vim.fn.getpos "'>"
    local lines = vim.fn.getregion(s_start,s_end)
-   vim.print(lines)
+   -- vim.print(lines)
    return lines
 end
 
