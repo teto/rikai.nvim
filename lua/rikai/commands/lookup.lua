@@ -94,13 +94,12 @@ M.popup_lookup = function(token)
 
 
     -- the chosen token
-    local results
-    local restype
-    restype, results = utils.timeit("lookup_expr", query.lookup, token)
+    local restype, results = utils.timeit("lookup_expr", query.lookup, token)
 
+    vim.print(results)
     -- assert(results, "There must be a result")
     if vim.tbl_isempty(results) then
-        print("No results matching token"..token)
+        print("No results matching "..types.as_str(restype).." "..token)
         return
     end
 
