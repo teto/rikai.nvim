@@ -3,16 +3,17 @@ local logger = require'rikai.log'
 local M = {}
 
 
+--- You may need to unpack the result
 ---@param name string used in logger
 ---@param op function
 ---@return any
 function M.timeit(name, op, ...)
     local start = vim.uv.now()
-    local res = op(...)
+    local res = {op(...)}
     vim.uv.update_time()
     local end_time = vim.uv.now()
     logger.debug(name.." operation took ".. tostring(end_time-start).. "ms")
-    return res
+    return unpack(res)
 end
 
 --- aint it weird that nvim commands dont pass columns ?

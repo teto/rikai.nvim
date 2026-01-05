@@ -10,6 +10,7 @@ local config = require'rikai.config'
 local logger = require'rikai.log'
 local classifier = require'rikai.classifier'
 local types = require'rikai.types'
+local utf8 = require'utf8'
 
 local M = {}
 
@@ -274,7 +275,7 @@ function M.lookup(token)
     local results
     if token_len == 1 and token_type == types.CharacterType.KANJI then
         -- if the token is only a single kanji ask the kanji db
-        results =  M.lookup_kanji(token)
+        results = M.lookup_kanji(token)
         return types.CharacterType.KANJI, results
     else
         -- we need to pass one character only

@@ -2,20 +2,22 @@
   "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
   "diagnostics": {
     "globals": [
-      "setup",
       "vim",
-      "vim.log.levels".
-      "vim.lsp.util.open_floating_preview.Opts"
+      "setup"
     ]
+  },
+  "runtime": {
+    "version": "LuaJIT"
   },
   "hint.enable": false,
   "workspace": {
     "ignoreDir": [
-      "config/wireshark",
-      "config/mpv"
     ],
     "useGitIgnore": true,
     "library": [
+      "$VIMRUNTIME",
+      "${3rd}/busted/library",
+      "${3rd}/luv/library",
       ".lux/5.1/392c069ca7154cb446b52b0f9c6be33de04e6a6f0a7c9ff762b30c5b9db1bdc7-mega.logging@1.1.6-1/src",
       ".lux/5.1/45ae6ddbb8453b514dc9b68c3c382d794db39dc9629b81792aeb37e6523a0cf1-utf8@1.3-0/src",
       ".lux/5.1/51bf4213185eb717b01ff54a89e0363be1a69e9450eb04673469c530dfe56a28-mega.cmdparse@1.2.0-1/src",

@@ -13,9 +13,9 @@ local M = {}
 -- pasted
 ---@param name string
 ---@param value any
----@return number|nil
+---@return integer|nil
 function M.find_window_by_var(name, value)
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
+  for _, win in ipairs(api.nvim_list_wins()) do
     if vim.w[win][name] == value then
       return win
     end
@@ -64,8 +64,8 @@ M.popup_lookup = function(token)
     local win = M.find_window_by_var(focus_id, bufnr)
 
     logger.debug("Looking for existing window with focus_id=%s", focus_id)
-    -- win and
-    if win and vim.api.nvim_win_is_valid(win) and vim.fn.pumvisible() == 0 then
+    ---@diagnostic disable-next-line: unnecessary-if
+    if win and api.nvim_win_is_valid(win) and vim.fn.pumvisible() == 0 then
 
         logger.debug("Found a window with focus_id=%s", focus_id)
         -- focus and return the existing buf, win
@@ -139,7 +139,7 @@ M.popup_lookup = function(token)
     end
 
     -- add a link to jisho
-    ---@type vim.lsp.util.open_floating_preview.Opts?
+    --@type vim.lsp.util.open_floating_preview.Opts?
     local popupOpts = {
         -- focus existing popup with this id instead of creating one
         focusable = true,

@@ -1,8 +1,6 @@
 --- interface that can work with several tokenizers.
 --- Available:
 --- - sudachi
---
--- todo we should load tokenizer from config
 local config = require 'rikai.config'
 local utils = require 'rikai.utils'
 
@@ -14,10 +12,14 @@ local M = {}
 ---@field POS string part of speech tag
 ---@field normal string normal form ?
 
+
+---@class Tokenizer
+---@field tokenize function 
+
 --- Returns a table of TokenizationResult
 ---@param content string
----@param enable_pos_processing boolean enable part of speech processing
----@param force boolean ignore cache
+--@param enable_pos_processing boolean enable part of speech processing
+--@param force boolean ignore cache
 ---@return table of TokenizationResult
 M.tokenize = function (content, ...)
     local exists, tokenizer = pcall(require, 'rikai.tokenizers.'..config.tokenizer)

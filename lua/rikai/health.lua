@@ -19,7 +19,7 @@ end
 
 ---@param name string
 ---@param value any
----@param validator string
+---@param validator vim.validate.Validator
 ---@param optional? boolean
 ---@param message? string
 ---@return boolean

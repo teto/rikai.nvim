@@ -26,6 +26,7 @@ function M.format_radicals(kanji)
     local con = query.get_db_handle(config.kanjidb)
 
     assert (con)
+    ---@diagnostic disable-next-line: need-check-nil
     for a in con:nrows(req) do
         res [#res + 1] = a
     end

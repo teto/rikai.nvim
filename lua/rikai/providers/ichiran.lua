@@ -15,7 +15,7 @@ M.lookup = function ()
     local args = {'nix'}
 
     local output = {}
-    local jobId = vim.fn.jobstart(args
+    local _jobId = vim.fn.jobstart(args
     -- options
     , {
         stdout_buffered = true,

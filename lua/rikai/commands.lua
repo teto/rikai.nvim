@@ -79,14 +79,15 @@ function M.create_command()
     -- args vim.api.keyset.create_user_command.command_args
     hl_parser:set_execute(function(args)
         local megaargs = args.namespace
-
         local pos = vim.fn.getpos(".")
 
-        -- toto
         if megaargs.hl_command == "clear" then
             logger.info("clearing hl")
             -- renvoye -1 ptet
-            vim.fn.matchdelete('RikaiProperNoun')
+            
+            -- 'RikaiProperNoun'
+            -- hoping it exists ?
+            vim.fn.matchdelete(vim.w.rikai_hl)
         end
         require'rikai.highlighter'.toggle_highlights(pos, true)
     end)

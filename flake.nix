@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs = {
       # use my fork where jmdict is packaged
-      url = "github:nixos/nixpkgs/nixos-unstable";
+      url = "github:nixos/nixpkgs/master";
     };
 
     lux = {
@@ -128,6 +128,8 @@
               pkgs.cmake   # needed for luv install ?
               pkgs.sqlite.dev # for sqlite3.h
               pkgs.sudachi-rs
+              pkgs.emmylua-check
+              # pkgs.emmylua-ls
               # self.inputs.lux.packages.${platform}.lux-cli
               # self.inputs.lux.packages.${platform}.lux-lua51
               pkgs.pkg-config # required by lux ?

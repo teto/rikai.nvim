@@ -1,8 +1,8 @@
 local provider = require'rikai.providers.sqlite'
-local utf8 = require'utf8'
 local types = require'rikai.types'
-local classifier = require'rikai.classifier'
+-- local classifier = require'rikai.classifier'
 local tokenizer = require'rikai.tokenizers.sudachi'
+local logger = require'rikai.log'
 
 local M = {}
 
@@ -28,7 +28,6 @@ function M.add_furigana(_args)
     -- Get the buffer number (0 refers to the current buffer)
     -- get buf from getpos
     local pos = vim.fn.getpos(".")
-    -- vim.print(pos)
     local line = pos[2] -- nvim_buf_get_lines is 0-indexed
     local bufnr = pos[1]
 
@@ -37,13 +36,16 @@ function M.add_furigana(_args)
 
     -- exclusive
     local lines = vim.api.nvim_buf_get_lines(bufnr, line - 1, line, true)
-    assert(#lines, "lines should not be empty")
 
-    -- vim.print(lines)
     local virt_line = {}
     -- tokenizing only the first one
     -- TODO we should do all of them/in the range
-    local res = tokenizer.tokenize(lines[1], true)
+    local line2 = lines[1]
+    if line2 == nil then
+        logger.warn("Nothing to tokenize")
+        return
+    end
+    local res = tokenizer.tokenize(line2, true)
     -- vim.print(res)
     -- vim.print("Looping over tokens ...")
     local column = 1

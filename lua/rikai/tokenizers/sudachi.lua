@@ -6,13 +6,12 @@
 -- EOS
 local logger = require'rikai.log'
 local types = require'rikai.types'
-local classifier = require 'rikai.classifier'
 
 local M = {}
 
 local _state = {}
 
-local NUMERAL = "数詞"
+-- local NUMERAL = "数詞"
 local PROPER_NOUN = "固有名詞"
 local PUNCTUATION = "補助記号"
 
@@ -90,7 +89,7 @@ M.tokenize = function (content, enable_pos_processing)
         if line ~= "" and line ~= "EOS" then
             -- tab separated results
             local pieces = vim.split(line, "	")
-            local line_start = pieces[1]
+            -- local line_start = pieces[1]
             local pos = pieces[2]
 
             if enable_pos_processing then

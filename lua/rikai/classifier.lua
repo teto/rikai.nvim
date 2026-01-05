@@ -22,7 +22,7 @@ function M.chartype(code)
     end
 
     -- todo distinguish between greek/numeral
-    return types.CharacterType.OTHER
+    return ctype.OTHER
 end
 
 
