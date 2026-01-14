@@ -1,13 +1,12 @@
 # justfile to run Busted tests
-
-# format:
-# 	stylua -v --verify lua/rocks/ plugin/ installer.lua
-#
 # check:
 # 	luacheck lua/rocks plugin/ installer.lua
+# we use treefmt instead
+# lint:
+#     lx lint
 
-lint:
-	lx lint
+lint-check:
+    treefmt --fail-on-change
 
 install-dictionaries:
     nvim +'Rikai download'
@@ -21,14 +20,13 @@ test:
     lx test
 
 test-online:
-	# @busted --lua=nlua 
-	lx test
-
+    # @busted --lua=nlua 
+    lx test
 
 docgen:
-	mkdir -p doc
-	vimcats lua/rikai/{init,commands,config/init,meta,api/{init,hooks},log}.lua > doc/rikai.txt
+    mkdir -p doc
+    vimcats lua/rikai/{init,commands,config/init,meta,api/{init,hooks},log}.lua > doc/rikai.txt
 
 kokoro-test:
-	# pipe it into mpv ?
-	python3 -m kokoro --text "The sky above the port was the color of television, tuned to a dead channel." -o file.wav --debug
+    # pipe it into mpv ?
+    python3 -m kokoro --text "The sky above the port was the color of television, tuned to a dead channel." -o file.wav --debug

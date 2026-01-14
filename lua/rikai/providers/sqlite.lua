@@ -6,22 +6,21 @@ The db itself is generated via edict
 SQL requests are taken from https://github.com/odrevet/edict_database/wiki/SQL-recipes#search-in-japanese
 --]]
 
-local sqlite3 = require'lsqlite3'
-local config = require'rikai.config'
-local logger = require'rikai.log'
-local classifier = require'rikai.classifier'
-local types = require'rikai.types'
-local utf8 = require'utf8'
+local sqlite3 = require("lsqlite3")
+local config = require("rikai.config")
+local logger = require("rikai.log")
+local classifier = require("rikai.classifier")
+local types = require("rikai.types")
+local utf8 = require("utf8")
 
 local M = {}
-
 
 ---@class KanjiResult
 
 ---@param kanji string the kanji to look for
 ---@return string SQL query string
 function M.build_kanji_query(kanji)
-    return [[
+	return [[
 SELECT character.*,
        GROUP_CONCAT(DISTINCT character_radical.id_radical) AS radicals,
        GROUP_CONCAT(DISTINCT on_yomi.reading) AS on_reading,
@@ -36,20 +35,18 @@ SELECT character.*,
        kun_yomi ON kun_yomi.id_character = character.id
        LEFT JOIN
        meaning ON meaning.id_character = character.id
- WHERE character.id = "]]..kanji..[[";
+ WHERE character.id = "]] .. kanji .. [[";
 ]]
-
 end
-
 
 ---@param kanji string the kanji to look for
 ---@return string the SQL query
 function M.get_radicals_from_kanji_query(kanji)
-    return [[
+	return [[
     SELECT radical.* 
     FROM radical 
     JOIN character_radical ON character_radical.id_radical = radical.id 
-    WHERE character_radical.id_character="]]..kanji..[[";
+    WHERE character_radical.id_character="]] .. kanji .. [[";
     ]]
 end
 
@@ -57,7 +54,7 @@ end
 ---@param expr string
 ---@return string SQL query string
 function M.query_native_expr(expr)
-    local req = [[
+	local req = [[
 SELECT
   entry.id AS entry_id,
   sense.id AS sense_id,
@@ -96,13 +93,13 @@ WHERE
       sense
       JOIN gloss ON gloss.id_sense = sense.id
     WHERE
-      gloss.content = ']]..expr..[['
+      gloss.content = ']] .. expr .. [['
   )
 GROUP BY
   sense.id;
   ]]
 
-  return req
+	return req
 end
 
 -- リョクトウ
@@ -113,18 +110,18 @@ end
 ---@param expr string
 ---@return string SQL query string
 function M.query_jap_expr(expr)
-    logger.debug("Building SQL query for expr "..expr)
-    local token_code = vim.fn.char2nr(expr)
-    local token_type = classifier.chartype(token_code)
-    local where = "r_ele.reb"
-    if token_type == types.CharacterType.KANJI then
-        where = "k_ele.keb"
+	logger.debug("Building SQL query for expr " .. expr)
+	local token_code = vim.fn.char2nr(expr)
+	local token_type = classifier.chartype(token_code)
+	local where = "r_ele.reb"
+	if token_type == types.CharacterType.KANJI then
+		where = "k_ele.keb"
 
-        logger.debug("tokens identified as kanji")
-    end
+		logger.debug("tokens identified as kanji")
+	end
 
-    logger.debug("where clause: "..where)
-    local req = [[
+	logger.debug("where clause: " .. where)
+	local req = [[
 SELECT
     entry.id AS entry_id,
     sense.id AS sense_id,
@@ -165,61 +162,60 @@ FROM entry
     LEFT JOIN field ON sense_field.id_field = field.id
     LEFT JOIN sense_xref ON sense.id = sense_xref.id_sense
     LEFT JOIN sense_ant ON sense.id = sense_ant.id_sense
-WHERE ]]..where..[[ = ']]..expr..[['
+WHERE ]] .. where .. [[ = ']] .. expr .. [['
 GROUP BY entry.id, sense.id;
-  ]];
+  ]]
 
-  logger.debug(req)
-  return req
+	logger.debug(req)
+	return req
 end
 
 ---@param db_path string
 ---@return any|boolean database connection handle or false on error
 function M.get_db_handle(db_path)
+	-- TODO check if a handle already exists
+	local con = config._state[db_path]
+	if con then
+		logger.debug("Returning existing handle to db: " .. db_path)
+		return con
+	else
+		logger.info("Opening " .. db_path)
+		-- open readonly
+		local errmsg, _errcode
+		con, errmsg, _errcode = sqlite3.open(db_path, sqlite3.OPEN_READONLY)
+		if not con then
+			vim.notify(string.format("rikai: could not open %s:\n%s", db_path, errmsg))
+			return false
+		end
+		config._state[db_path] = con
+	end
 
-    -- TODO check if a handle already exists
-    local con = config._state[db_path]
-    if con then
-        logger.debug("Returning existing handle to db: " .. db_path)
-        return con
-    else
-        logger.info("Opening " .. db_path)
-        -- open readonly
-        local errmsg, _errcode
-        con, errmsg, _errcode = sqlite3.open(db_path, sqlite3.OPEN_READONLY)
-        if not con then
-            vim.notify(string.format("rikai: could not open %s:\n%s", db_path, errmsg))
-            return false
-        end
-        config._state[db_path] = con
-    end
-
-    return con
+	return con
 end
 
 --- Lookup translation for a kanji
 ---@param kanji string Kanji to search for
 ---@return KanjiResult
 function M.lookup_kanji(kanji)
-    local start = vim.uv.now()
+	local start = vim.uv.now()
 
-    local res = {}
+	local res = {}
 
-    local con = M.get_db_handle(config.kanjidb)
-    assert (con, "could not open db")
-    local req = M.build_kanji_query(kanji)
+	local con = M.get_db_handle(config.kanjidb)
+	assert(con, "could not open db")
+	local req = M.build_kanji_query(kanji)
 
-    logger.info("Looking up kanji: ".. tostring(kanji))
-    ---@diagnostic disable-next-line: need-check-nil
-    for a in con:nrows(req) do
-        -- res [#res + 1] = a
-        table.insert(res, a)
-    end
+	logger.info("Looking up kanji: " .. tostring(kanji))
+	---@diagnostic disable-next-line: need-check-nil
+	for a in con:nrows(req) do
+		-- res [#res + 1] = a
+		table.insert(res, a)
+	end
 
-    vim.uv.update_time()
-    local end_time = vim.uv.now()
-    logger.info("Kanji search took ".. tostring(end_time-start).. " ms")
-    return res
+	vim.uv.update_time()
+	local end_time = vim.uv.now()
+	logger.info("Kanji search took " .. tostring(end_time - start) .. " ms")
+	return res
 end
 
 ---@class KanjiRadicals
@@ -228,44 +224,41 @@ end
 ---@param kanji string
 ---@return table of KanjiRadicals
 function M.lookup_kanji_radicals(kanji)
+	local res = {}
 
-    local res = {}
+	local con = M.get_db_handle(config.kanjidb)
+	assert(con, "could not open db")
+	local req = M.get_radicals_from_kanji_query(kanji)
 
-    local con = M.get_db_handle(config.kanjidb)
-    assert (con, "could not open db")
-    local req = M.get_radicals_from_kanji_query(kanji)
+	logger.info("Looking up kanji radicals: " .. tostring(kanji))
+	---@diagnostic disable-next-line: need-check-nil
+	for a in con:nrows(req) do
+		res[#res + 1] = a
+	end
 
-    logger.info("Looking up kanji radicals: ".. tostring(kanji))
-    ---@diagnostic disable-next-line: need-check-nil
-    for a in con:nrows(req) do
-        res [#res + 1] = a
-    end
-
-    return res
+	return res
 end
-
 
 --- Lookup several kanjis in database
 ---@param word string
 ---@return table
 function M.lookup_expr(word)
+	-- logger.info("Opening " .. jmdictdb)
+	local db = M.get_db_handle(config.jmdictdb)
+	assert(db)
+	local res = {}
 
-    -- logger.info("Opening " .. jmdictdb)
-    local db = M.get_db_handle(config.jmdictdb)
-    assert(db)
-    local res = {}
+	local req = M.query_jap_expr(word)
 
-    local req = M.query_jap_expr(word)
+	logger.info("Looking up expr " .. tostring(word))
+	logger.set_level(logger.levels.TRACE)
+	logger.debug("Ran request" .. req)
+	---@diagnostic disable-next-line: need-check-nil
+	for a in db:nrows(req) do
+		res[#res + 1] = a
+	end
 
-    logger.info("Looking up expr ".. tostring(word))
-    logger.set_level(logger.levels.TRACE)
-    logger.debug("Ran request" .. req)
-    ---@diagnostic disable-next-line: need-check-nil
-    for a in db:nrows(req) do
-        res [#res + 1] = a
-    end
-
-    return res
+	return res
 end
 
 --- Smart lookup: can look for a kanji or an expression
@@ -273,22 +266,21 @@ end
 ---@return rikai.types.CharacterType
 ---@return KanjiResult
 function M.lookup(token)
-    local token_code = vim.fn.char2nr(token)
-    local token_type = classifier.chartype(token_code)
-    local token_len = utf8.len(token)
+	local token_code = vim.fn.char2nr(token)
+	local token_type = classifier.chartype(token_code)
+	local token_len = utf8.len(token)
 
-    local results
-    if token_len == 1 and token_type == types.CharacterType.KANJI then
-        -- if the token is only a single kanji ask the kanji db
-        results = M.lookup_kanji(token)
-        return types.CharacterType.KANJI, results
-    else
-        -- we need to pass one character only
-        -- lookup expression for vim.fn.char2nr("引く")
-        results = M.lookup_expr(token)
-        return types.CharacterType.EXPRESSION, results
-    end
+	local results
+	if token_len == 1 and token_type == types.CharacterType.KANJI then
+		-- if the token is only a single kanji ask the kanji db
+		results = M.lookup_kanji(token)
+		return types.CharacterType.KANJI, results
+	else
+		-- we need to pass one character only
+		-- lookup expression for vim.fn.char2nr("引く")
+		results = M.lookup_expr(token)
+		return types.CharacterType.EXPRESSION, results
+	end
 end
 
 return M
-

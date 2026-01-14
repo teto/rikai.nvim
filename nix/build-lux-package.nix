@@ -9,7 +9,7 @@
   # Whether the derivation provides a lua module or not.
   luarocksCheckHook,
   luaLib,
-  lux
+  lux,
 }:
 
 {
@@ -97,10 +97,11 @@ let
         generatedRockspecFilename = "./${self.pname}-${self.rockspecVersion}.rockspec";
 
         nativeBuildInputs = [
-          lua  # for lua.h
+          lua # for lua.h
           wrapLua
           luarocks_bootstrap
-        ] ++ lib.optionals self.doCheck ([ luarocksCheckHook ] ++ self.nativeCheckInputs);
+        ]
+        ++ lib.optionals self.doCheck ([ luarocksCheckHook ] ++ self.nativeCheckInputs);
 
         inherit
           doCheck

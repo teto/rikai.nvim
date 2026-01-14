@@ -1,13 +1,10 @@
-local cmdparser = require'rikai.commands'
-
+local cmdparser = require("rikai.commands")
 
 -- Create a new highlight group linked to 'Comment'
-vim.api.nvim_set_hl(0, 'RikaiVirtualText', { link = 'Comment' })
-vim.api.nvim_set_hl(0, 'RikaiProperNoun', { link = 'Search' })
+vim.api.nvim_set_hl(0, "RikaiVirtualText", { link = "Comment" })
+vim.api.nvim_set_hl(0, "RikaiProperNoun", { link = "Search" })
 -- Const / Character
-vim.api.nvim_set_hl(0, 'RikaiName', { link = 'Const' })
-
-
+vim.api.nvim_set_hl(0, "RikaiName", { link = "Const" })
 
 cmdparser.create_command()
 
@@ -22,7 +19,7 @@ cmdparser.create_command()
 
 -- Function to execute on VimLeave
 local function on_vim_leave()
-    -- TODO close db when opened
+	-- TODO close db when opened
 end
 
 -- Create an autocommand group for exiting
@@ -30,9 +27,7 @@ local exit_group = vim.api.nvim_create_augroup("ExitGroup", { clear = true })
 
 -- Autocommand to trigger on VimLeave
 vim.api.nvim_create_autocmd("VimLeave", {
-    group = exit_group,
-    pattern = "*",
-    callback = on_vim_leave,
+	group = exit_group,
+	pattern = "*",
+	callback = on_vim_leave,
 })
-
-

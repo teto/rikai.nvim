@@ -1,11 +1,11 @@
-local types = require'rikai.types'
-local kanji = require'rikai.kanji'
-local expr = require'rikai.expression'
-local tokenizer = require'rikai.tokenizer'
-local logger = require'rikai.log'
-local utils = require'rikai.utils'
-local utf8 = require'utf8'
-local query = require 'rikai.providers.sqlite'
+local types = require("rikai.types")
+local kanji = require("rikai.kanji")
+local expr = require("rikai.expression")
+local tokenizer = require("rikai.tokenizer")
+local logger = require("rikai.log")
+local utils = require("rikai.utils")
+local utf8 = require("utf8")
+local query = require("rikai.providers.sqlite")
 local api = vim.api
 
 local M = {}
@@ -15,29 +15,29 @@ local M = {}
 ---@param value any
 ---@return integer|nil
 function M.find_window_by_var(name, value)
-  for _, win in ipairs(api.nvim_list_wins()) do
-    if vim.w[win][name] == value then
-      return win
-    end
-  end
+	for _, win in ipairs(api.nvim_list_wins()) do
+		if vim.w[win][name] == value then
+			return win
+		end
+	end
 end
 
+local separator = " ---------- "
 
 -- This function highlights the current token under cursor to help with comprehension
 M.live_lookup = function()
-    -- tokenize
-    local token = tokenizer.get_current_token()
-    if not token then
-        vim.notify("Could not find current token")
-    else
-        print("TODO live lookup of token: "..token)
-    end
-
+	-- tokenize
+	local token = tokenizer.get_current_token()
+	if not token then
+		vim.notify("Could not find current token")
+	else
+		print("TODO live lookup of token: " .. token)
+	end
 end
 
 -- we should tokenize and based on what we find lookup kanji or not ?
 -- でる
--- 
+--
 -- How to translate "日高" from our sqlite dbs ?
 -- 1. first we tokenize
 -- 2. For the first tokenized item
@@ -47,109 +47,96 @@ end
 ---@param token string
 ---@return number|nil winid
 M.popup_lookup = function(token)
-    -- mega.cmdparse generated arguments
-    logger.info("%s called", token)
-    local word=token
+	-- mega.cmdparse generated arguments
+	logger.info("%s called", token)
+	local word = token
 
-    logger.info("Looking into word: "..word)
+	logger.info("Looking into word: " .. word)
 
-    -- find the firest
-    -- TODO if length is one, no need to tokenize !
-    -- use rikai prefix
-    local focus_id = token
-    local bufnr = api.nvim_get_current_buf()
+	-- find the firest
+	-- TODO if length is one, no need to tokenize !
+	-- use rikai prefix
+	local focus_id = token
+	local bufnr = api.nvim_get_current_buf()
 
-    -- here we reimplement part of open_floating_preview
-    -- aka we want to check if we've
-    local win = M.find_window_by_var(focus_id, bufnr)
+	-- here we reimplement part of open_floating_preview
+	-- aka we want to check if we've
+	local win = M.find_window_by_var(focus_id, bufnr)
 
-    logger.debug("Looking for existing window with focus_id=%s", focus_id)
-    ---@diagnostic disable-next-line: unnecessary-if
-    if win and api.nvim_win_is_valid(win) and vim.fn.pumvisible() == 0 then
+	logger.debug("Looking for existing window with focus_id=%s", focus_id)
+	---@diagnostic disable-next-line: unnecessary-if
+	if win and api.nvim_win_is_valid(win) and vim.fn.pumvisible() == 0 then
+		logger.debug("Found a window with focus_id=%s", focus_id)
+		-- focus and return the existing buf, win
+		api.nvim_set_current_win(win)
+		api.nvim_command("stopinsert")
+		return win
+	else
+		logger.debug("Could not find any preexisting popup focus_id=%s", focus_id)
+	end
 
-        logger.debug("Found a window with focus_id=%s", focus_id)
-        -- focus and return the existing buf, win
-        api.nvim_set_current_win(win)
-        api.nvim_command('stopinsert')
-        return win
-    else
-         logger.debug("Could not find any preexisting popup focus_id=%s", focus_id)
-    end
+	if utf8.len(word) > 1 then
+		-- todo get first element
+		-- TODO tokenize should be called in caller instead
+		local tokens = utils.timeit("tokenize", tokenizer.tokenize, word, true)
+		if vim.tbl_isempty(tokens) then
+			logger.debug("No tokens found")
+			return
+		end
+		-- returns an array of TokenizationResult
+		token = tokens[1][1]
+	else
+		logger.debug("Word " .. word .. " is one character: skipping tokenization...")
+	end
 
+	-- the chosen token
+	local restype, results = utils.timeit("lookup_expr", query.lookup, token)
 
-    if utf8.len(word) > 1 then
-        -- todo get first element
-        -- TODO tokenize should be called in caller instead
-        local tokens = utils.timeit("tokenize", tokenizer.tokenize, word, true)
-        if vim.tbl_isempty(tokens) then
-            logger.debug("No tokens found")
-            return
-        end
-        -- returns an array of TokenizationResult
-        token = tokens[1][1]
-    else
-        logger.debug("Word "..word.." is one character: skipping tokenization...")
-    end
+	assert(results, "There must be a result")
+	if vim.tbl_isempty(results) then
+		print("No results matching " .. types.as_str(restype) .. " " .. token)
+		return
+	end
 
+	local nr_results = #results
+	local formatted_results = {}
+	logger.debug("Found " .. tostring(nr_results) .. " results")
 
-    -- the chosen token
-    local restype, results = utils.timeit("lookup_expr", query.lookup, token)
+	for i, r in ipairs(results) do
+		-- add a separator if not first result
+		if i > 1 then
+			table.insert(formatted_results, separator)
+		end
 
-    vim.print(results)
-    -- assert(results, "There must be a result")
-    if vim.tbl_isempty(results) then
-        print("No results matching "..types.as_str(restype).." "..token)
-        return
-    end
+		if restype == types.CharacterType.KANJI then
+			-- append radicals
+			local radicals = query.lookup_kanji_radicals(token)
+			local new_result = kanji.format_kanji(r, radicals)
+			for j = 1, #new_result do
+				table.insert(formatted_results, new_result[j])
+			end
+		else
+			local new_result = expr.format_expression(token, r)
+			for j = 1, #new_result do
+				table.insert(formatted_results, new_result[j])
+			end
+		end
+	end
 
+	-- add a link to jisho
+	--@type vim.lsp.util.open_floating_preview.Opts?
+	local popupOpts = {
+		-- focus existing popup with this id instead of creating one
+		focusable = true,
+		title = "rikai.nvim",
+	}
 
-    local nr_results = #results
-    local formatted_results = {}
-    logger.debug("Found "..tostring(nr_results).. " results")
+	if nr_results > 1 then
+		popupOpts["title"] = popupOpts["title"] .. " (" .. tostring(nr_results) .. " results)"
+	end
 
-    -- TODO limit loop according to max_results
-    -- local max_results = 5
-    -- TODO use config.ui.separator
-    local separator = " ---------- "
-
-    for i, r in ipairs(results) do
-
-        -- add a separator if not first result
-        if i > 1 then
-            table.insert(formatted_results, separator)
-        end
-
-        if restype == types.CharacterType.KANJI then
-            -- append radicals
-            local radicals = query.lookup_kanji_radicals(token)
-            local new_result = kanji.format_kanji(r, radicals)
-            for j = 1, #new_result do
-                table.insert(formatted_results, new_result[j])
-            end
-        else
-            local new_result = expr.format_expression(token, r)
-            for j = 1, #new_result do
-                table.insert(formatted_results, new_result[j])
-            end
-        end
-    end
-
-    -- add a link to jisho
-    --@type vim.lsp.util.open_floating_preview.Opts?
-    local popupOpts = {
-        -- focus existing popup with this id instead of creating one
-        focusable = true,
-        title = "rikai.nvim",
-    }
-
-    if nr_results > 1 then
-        popupOpts["title"] = popupOpts["title"] .. " (".. tostring(nr_results) .. " results)"
-    end
-
-    local winid = require'rikai.popup'.create_popup(
-            token, formatted_results, popupOpts)
-    return winid
+	local winid = require("rikai.popup").create_popup(token, formatted_results, popupOpts)
+	return winid
 end
-
 
 return M

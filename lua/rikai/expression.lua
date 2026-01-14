@@ -1,5 +1,5 @@
 local M = {}
-local utils = require'rikai.utils'
+local utils = require("rikai.utils")
 -- {
 -- ||   entry_id = 1169250,
 -- ||   gloss_group = "to lead (e.g. a horse),to pull,to tug",
@@ -20,20 +20,19 @@ local utils = require'rikai.utils'
 ---@param res ExpressionDesc
 ---@return table (as expected by 'open_floating_preview')
 function M.format_expression(original_token, res)
-    local lines = {
-        -- annoyingly it contains the prefix / request
-        res["keb_reb_group"], -- .. " (k_ele_id) ",
-        -- "kun reading: ".. res["kun_reading"],
-        -- "on reading: ".. res["on_reading"],
-        -- "pos_group ?"..res["pos_group"],
-        "",
-        res["gloss_group"],
-        "",
-        utils.jisho_link(original_token, false)
-    }
+	local lines = {
+		-- annoyingly it contains the prefix / request
+		res["keb_reb_group"], -- .. " (k_ele_id) ",
+		-- "kun reading: ".. res["kun_reading"],
+		-- "on reading: ".. res["on_reading"],
+		-- "pos_group ?"..res["pos_group"],
+		"",
+		res["gloss_group"],
+		"",
+		utils.jisho_link(original_token, false),
+	}
 
-    return lines
+	return lines
 end
 
 return M
-
