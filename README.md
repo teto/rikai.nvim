@@ -8,17 +8,20 @@ The name is inspired by the great browser [rikaitan][rikaitan] plugin.
 
 # How to install ?
 
-Right now it's in development so it's fully declarative but soon we should get a
-nix build along with a rockspec.
+Right now the plugin is in development and mot fully declarative but soon we should get a nix build along with a rockspec.
 
 Dependencies:
-- [sudachi_rs][sudachi-rs] as a tokenizer (ie., split words)
+- [sudachi_rs][sudachi-rs] as a tokenizer (ie., split words), use the full
+  version 
 - [edict_database][edict-as-sqlite] as sqlite databases
 <!-- - [lual for logging][lual-luarocks] -->
 - [alogger][alogger-luarocks] for logging
 - [official sqlite bindings][lsqlite-luarocks] for lua 'sqlite'
 - [utf8][luautf8-github] to get utf8
 
+
+Popups are written in markdown, to improve the rendering I advise installing
+[render-markdown-nvim][rendermarkdown-github] though it remains optional.
 
 # How to use ?
 
@@ -88,5 +91,6 @@ Run `:Rikai download`, else do:
 [rikai-wiki]: https://github.com/teto/rikai.nvim/wiki
 [rikaitan]: https://addons.mozilla.org/en-US/firefox/addon/rikaitan/
 [sudachi-rs]: https://github.com/WorksApplications/sudachi.rs
+[rendermarkdown-github]: https://github.com/MeanderingProgrammer/render-markdown.nvim
 <!-- - [lsqlite3](https://luarocks.org/modules/javierguerragiraldez/lsqlite3) ? -->
 <!-- - https://github.com/uga-rosa/utf8.nvim (last commit 2 years ago) -->
