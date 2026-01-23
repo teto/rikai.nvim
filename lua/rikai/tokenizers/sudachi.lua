@@ -28,6 +28,8 @@ function M.lexicon_type(pos)
 		return types.LexiconType.PROPER_NOUN
 	elseif pos[1] == "名詞" then -- last name
 		return types.LexiconType.NAME
+	elseif pos1 == "形状詞" then
+		return types.LexiconType.ADJECTIVE
 	elseif pos1 == "助詞" then
 		return types.LexiconType.PARTICLE
 	elseif pos1 == "補助記号" then
@@ -52,9 +54,6 @@ function M.lexicon_to_str(lex_type)
 	return map[lex_type] or "unknown"
 end
 
--- M.tokenize = function (content, enable_pos_processing, force)
---     if
--- end
 
 --- Returns a table of TokenizationResult
 ---@param content string
