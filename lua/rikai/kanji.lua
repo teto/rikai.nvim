@@ -55,7 +55,7 @@ function M.format_kanji(res, radicals)
 		"",
 		res["meanings"],
 		"",
-		"Radicals:",
+		"# Radicals",
 	}
 	for _i, radical in pairs(radicals) do
 		local results = query.lookup_kanji(radical["id"])

@@ -3,6 +3,7 @@
 --- - sudachi
 local config = require("rikai.config")
 local utils = require("rikai.utils")
+local utf8 = require("utf8")
 
 local M = {}
 
