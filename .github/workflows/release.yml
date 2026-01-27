@@ -2,13 +2,12 @@ name: Push to Luarocks
 
 on:
   push:
-    tags:
+    tags: # Will upload to luarocks.org when a tag is pushed
       - '*'
   release:
     types:
       - created
-  pull_request:
-  workflow_dispatch:
+  pull_request: # Will test a local install without uploading to luarocks.org
 
 jobs:
   luarocks-upload:
@@ -25,7 +24,6 @@ jobs:
           LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
         with:
           version: ${{ env.LUAROCKS_VERSION }}
-          test_interpreters: ""
           # ideally this would be fetched from the lockfile/rockspec
           dependencies: |
             lua == 5.1
@@ -33,7 +31,10 @@ jobs:
             utf8
             mega.cmdparse
             alogger
+          copy_directories: |
+            {{ neovim.plugin.dirs }}
           labels: |
             neovim
           detailed_description: |
-            rikai.nvim
+            Translate japanese words on demand, or automatically on CursorHold.
+            Can highlight tokens as well.
