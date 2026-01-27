@@ -28,17 +28,18 @@ function M.add_furigana(_args)
 	local pos = vim.fn.getpos(".")
 	local line = pos[2] -- nvim_buf_get_lines is 0-indexed
 	local bufnr = pos[1]
+	local virt_line = {}
 
 	-- Create a namespace for virtual text
 	local namespace_id = vim.api.nvim_create_namespace(furigana_ns)
 
-	-- exclusive
-	local lines = vim.api.nvim_buf_get_lines(bufnr, line - 1, line, true)
+	-- exclusive use 
+	-- local lines = vim.api.nvim_buf_get_lines(bufnr, line - 1, line, true)
 
-	local virt_line = {}
 	-- tokenizing only the first one
 	-- TODO we should do all of them/in the range
-	local line2 = lines[1]
+	-- local line2 = lines[1]
+	local line2 = vim.api.nvim_get_current_line()
 	if line2 == nil then
 		logger.warn("Nothing to tokenize")
 		return

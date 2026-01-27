@@ -33,6 +33,8 @@ M.LexiconType = {
 	NAME = 1,
 	PROPER_NOUN = 2,
 	NOUN = 3,
+    -- "adjectival noun" ?
+    NA_ADJECTIVE = 4,
 	PARTICLE = 10,
 	AUXILIARY = 11,
 	PUNCTUATION = 20,
