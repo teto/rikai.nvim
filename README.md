@@ -34,11 +34,18 @@ vim.keymap.set({'n', 'v'}, '<D-j>', function() vim.cmd([[ Rikai lookup ]]) end, 
 
 ```
 
-You can also call `:Rikai lookup 見`
+You can also call `:Rikai lookup 見` to see the translation.
 
-Highlights used are:
+To enable a more rikaichamp/yomitan-like experience, run `:Rikai live_hl enable`
+to enable automatic translation and hilighting of current token. It's quite
+experimental and not as polished as its inspiration though.
+
+<!-- todo add link -->
+Highlights used are visible in plugin/rikai.lua:
 - RikaiHighlightWordGroup
-- RikaiNames
+- RikaiProperNoun
+- RikaiCurrentToken
+<!-- RikaiNames -->
 
 
 # Roadmap 
