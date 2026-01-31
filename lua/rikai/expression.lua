@@ -29,10 +29,13 @@ function M.format_expression(original_token, res)
 		"",
 		res["gloss_group"],
 		"",
-		utils.jisho_link(original_token, false),
 	}
 
 	return lines
 end
+
+--@param exps ExpressionDesc[]
+-- function M.format_expression_list(exps)
+-- end
 
 return M

@@ -59,7 +59,6 @@
         # lp.utf8 installed by nx
       ]);
 
-      # lua = pkgs.luajit.override ;
       lua = pkgs.lua5_1.override {
         packageOverrides = self.overlays.luaOverlay;
       };
@@ -131,7 +130,9 @@
       formatter = treefmtEval.config.build.wrapper;
 
       packages.${platform} = {
-        default = pyEnv;
+        default = lua.pkgs.rikai-nvim;
+        inherit (lua.pkgs) rikai-nvim;
+        
         pyEnv = pyEnv;
         fugashi = fugashi-unidic pkgs.python3.pkgs;
         mojimoji = mojimoji pkgs.python3.pkgs;
@@ -141,6 +142,9 @@
               core-type = "full";
             };
           });
+
+
+
       };
 
       devShells.${platform}.default = pkgs.mkShell {
