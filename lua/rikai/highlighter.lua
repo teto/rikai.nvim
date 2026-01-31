@@ -3,16 +3,18 @@ local types = require("rikai.types")
 local tokenizer = require("rikai.tokenizers.sudachi")
 local logger = require("rikai.log")
 
--- Function to highlight the current word using <cword>
+-- Function to highlight the current token
 -- funnily enough, it highlights different kanjis
-local function highlight_current_word()
-	local word = vim.fn.expand("<cword>")
+-- TODO might be able to disappear
+function M.highlight_current_token(token)
+	local word = token
 	if word ~= "" then
 		vim.cmd("match Search /\\<" .. word .. "\\>/")
 	end
 end
 
 -- Create an autocommand group for highlighting
+-- todo how do we clear this one ?
 M.highlight_group = vim.api.nvim_create_augroup("RikaiHighlightWordGroup", { clear = true })
 
 --- Add highlights for names present in current line
@@ -44,7 +46,7 @@ M.toggle_highlights = function(pos, highlight_names)
 	for _i, j in ipairs(res) do
 		local lexicon_type = j[2]
 		if lexicon_type == types.LexiconType.PROPER_NOUN and highlight_names then
-			vim.w.rikai_hl = vim.fn.matchadd("RikaiProperNoun", j[1])
+			vim.w.rikai_propernoun_hl = vim.fn.matchadd("RikaiProperNoun", j[1])
 		end
 	end
 end
@@ -52,5 +54,6 @@ end
 --- Clear the names registered by toggle_names
 ---@return nil
 function M.clear_names() end
-
+    -- TODO remove
+    -- vim.w.rikai_hl
 return M

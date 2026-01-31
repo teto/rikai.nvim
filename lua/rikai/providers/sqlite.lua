@@ -208,7 +208,6 @@ function M.lookup_kanji(kanji)
 	logger.info("Looking up kanji: " .. tostring(kanji))
 	---@diagnostic disable-next-line: need-check-nil
 	for a in con:nrows(req) do
-		-- res [#res + 1] = a
 		table.insert(res, a)
 	end
 

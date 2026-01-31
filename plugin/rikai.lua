@@ -5,6 +5,7 @@ vim.api.nvim_set_hl(0, "RikaiVirtualText", { link = "Comment" })
 vim.api.nvim_set_hl(0, "RikaiProperNoun", { link = "Search" })
 -- Const / Character
 vim.api.nvim_set_hl(0, "RikaiName", { link = "Const" })
+vim.api.nvim_set_hl(0, "RikaiCurrentToken", { bg = "red" })
 
 cmdparser.create_command()
 
@@ -24,6 +25,7 @@ end
 
 -- Create an autocommand group for exiting
 local exit_group = vim.api.nvim_create_augroup("ExitGroup", { clear = true })
+
 
 -- Autocommand to trigger on VimLeave
 vim.api.nvim_create_autocmd("VimLeave", {

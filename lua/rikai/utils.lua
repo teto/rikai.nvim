@@ -2,6 +2,13 @@ local logger = require("rikai.log")
 
 local M = {}
 
+
+---@param msg string
+function M.notify(msg, level)
+    logger.debug("notify:"..msg)
+    vim.notify(msg, level)
+end
+
 --- You may need to unpack the result
 ---@param name string used in logger
 ---@param op function

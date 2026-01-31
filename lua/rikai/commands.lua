@@ -1,43 +1,68 @@
 -- command parser generated https://github.com/ColinKennedy/mega.cmdparse
 local cmdparse = require("mega.cmdparse")
 local lookup = require("rikai.commands.lookup")
+local livehl = require("rikai.commands.live_hl")
 local utils = require("rikai.utils")
 local logger = require("rikai.log")
+local tokenizer = require("rikai.tokenizer")
+local utf8 = require("utf8")
 
 local M = {}
 
 ---@return nil
 function M.create_command()
-	-- local parser = cmdparse.ParameterParser.new({ name = "Rikai", help = "Hello, World!"})
-	-- parser:set_execute(function(data) print("Hello, World!") end)
-	-- cmdparse.create_user_command(parser)
 
 	local parser = cmdparse.ParameterParser.new({ name = "Rikai", help = "Nested Subparsers" })
 	local top_subparsers = parser:add_subparsers({ destination = "commands" })
 
 	local lookup_parser = top_subparsers:add_parser({ name = "lookup", help = "Lookup the characters" })
 	lookup_parser:add_parameter({ name = "expression", required = false, help = "Text to translate" })
+
+    -- move this to its own file ?
 	lookup_parser:set_execute(function(args)
 		local megaargs = args.namespace
-		local word
+		local to_translate, to_tokenize
 		-- number of items in range
 		if megaargs.expression then
-			word = megaargs.expression
+			to_tokenize = megaargs.expression
 		elseif args.options.range ~= 0 then
 			-- splits between kanas and kanjis
 			-- https://github.com/neovim/neovim/discussions/35081
 			-- todo use get_selection instead ?
 			local visual_selection = utils.get_visual_selection()
 			-- take first line of visual selection
-			word = visual_selection[1]
+			to_tokenize = visual_selection[1]
 		else
-			-- cword implementation is based on \k
-			-- TODO cword is bad, we should tokenize, get current word
-			word = vim.fn.expand("<cword>")
+			-- cto_tokenize implementation is based on \k
+			-- TODO cto_tokenize is bad, we should tokenize, get current to_tokenize
+            -- let's tokenize the whole line
+            -- advantage of cword is that it doesn't care about
+            -- local cursor_pos = vim.api.nvim_win_get_cursor(0)
+			to_tokenize = vim.fn.expand("<cword>")
+			-- to_tokenize = vim.api.nvim_get_current_line()
+            -- line = cursor_pos
 			-- TODO replace with get_current_token()
+            -- vim.g.rikai._state._current_line = 
 		end
 
-		lookup.popup_lookup(word)
+        if utf8.len(to_tokenize) > 1 then
+            -- todo get first element
+            -- TODO tokenize should be called in caller instead
+            local tokens = utils.timeit("tokenize", tokenizer.tokenize, to_tokenize, true)
+            if vim.tbl_isempty(tokens) then
+                -- todo notify as well
+                utils.notify("No tokens found", vim.log.levels.INFO)
+                -- logger.debug("No tokens found")
+                return
+            end
+            -- returns an array of TokenizationResult
+            to_translate = tokens[1][1]
+        else
+            logger.debug("Word " .. to_tokenize .. " is one character: skipping tokenization...")
+            to_translate = to_tokenize
+        end
+
+		lookup.popup_lookup(to_translate)
 	end)
 
 	local livehl_parser = top_subparsers:add_parser({ name = "live_hl", help = "Highlight current token" })
@@ -49,24 +74,9 @@ function M.create_command()
 			"enable",
 			"disable",
 		},
-		help = "Test word.",
+		help = "Autoupdate text highlights depending on their type: names, verbs, ...",
 	})
-	livehl_parser:set_execute(function(_args)
-		vim.api.nvim_create_autocmd({ "CursorHold" }, {
-			-- configurable ?
-			pattern = { "*.md", "*.txt", "*.org" },
-			desc = "Display translations on hover",
-			-- inspired by "hover"
-			callback = lookup.live_lookup,
-		})
-
-		-- if megaargs.hl_command == "clear" then
-		--     logger.info("clearing hl")
-		--     -- renvoye -1 ptet
-		--     vim.fn.matchdelete('RikaiProperNoun')
-		-- end
-		-- require'rikai.highlighter'.toggle_highlights(pos, true)
-	end)
+	livehl_parser:set_execute(livehl.setup_hl_autocmds)
 
 	local hl_parser = top_subparsers:add_parser({
 		name = "hl",
@@ -93,8 +103,6 @@ function M.create_command()
 
 		if megaargs.hl_command == "clear" then
 			logger.info("clearing hl")
-			-- renvoye -1 ptet
-
 			-- 'RikaiProperNoun'
 			-- hoping it exists ?
 			vim.fn.matchdelete(vim.w.rikai_hl)
@@ -118,7 +126,7 @@ function M.create_command()
 		require("rikai.furigana").add_furigana()
 	end)
 
-	local log = top_subparsers:add_parser({ name = "log" })
+	local log = top_subparsers:add_parser({ name = "log" , help = "" })
 	log:set_execute(function(_data)
 		-- TODO implement a log.get_logfile()
 		vim.cmd.e("rikai.log")
