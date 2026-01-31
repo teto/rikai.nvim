@@ -1,6 +1,31 @@
 { pkgs }:
 luafinal: luaprev: {
 
+  rikai-nvim = pkgs.toVimPlugin (pkgs.buildLuarocksPackage (
+{ alogger, buildLuarocksPackage, fetchurl, fetchzip, lua, mega-cmdparse, sqlite, utf8 }:
+buildLuarocksPackage {
+  pname = "rikai.nvim";
+  version = "0.0.2-1";
+  knownRockspec = (fetchurl {
+    url    = "mirror://luarocks/rikai.nvim-0.0.2-1.rockspec";
+    sha256 = "1nraiwafqhxpfkqqd568kdi2ps1j825sxzy22ixnlpyqbin5988b";
+  }).outPath;
+  src = fetchzip {
+    url    = "https://github.com/teto/rikai.nvim/archive/0.0.2.zip";
+    sha256 = "1rb4fsnxsrq3cl441san88s6mq6xjg006jc1ilqbgxdjpra6vaw8";
+  };
+
+  disabled = lua.luaversion != "5.1";
+  propagatedBuildInputs = [ alogger mega-cmdparse sqlite utf8 ];
+
+  meta = {
+    homepage = "https://github.com/teto/rikai.nvim";
+    description = "rikaitan for neovim, i.e., japanese translation integrated ";
+    license.fullName = "LGPL-3.0";
+  };
+})) {};
+
+
   alogger = luafinal.luaPackages.callPackage (
     {
       buildLuarocksPackage,
