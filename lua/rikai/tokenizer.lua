@@ -3,8 +3,7 @@
 --- - sudachi
 local config = require("rikai.config")
 local utils = require("rikai.utils")
--- local utf8 = require("utf8")
-local logger = require("rikai.log")
+-- local logger = require("rikai.log")
 
 local M = {}
 
@@ -59,7 +58,7 @@ function M.get_current_token()
     -- compute the size of the token
 	for i, tok in pairs(tokens) do
 		nextoffset = curcoloffset + vim.fn.strlen(tok[1])
-        logger.info(string.format("Round %d, inspecting token %s. Comparing cursor offset %d with nextoffset %d", i, tok[1], cursorcoloffset, nextoffset))
+        -- logger.info(string.format("Round %d, inspecting token %s. Comparing cursor offset %d with nextoffset %d", i, tok[1], cursorcoloffset, nextoffset))
 		if cursorcoloffset < nextoffset then
             current_token = tok[1]
 			break

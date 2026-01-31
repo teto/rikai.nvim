@@ -131,7 +131,9 @@
       formatter = treefmtEval.config.build.wrapper;
 
       packages.${platform} = {
-        default = pyEnv;
+        default = pkgs.luajitPackages.rikai-nvim;
+        inherit (pkgs.luajitPackages) rikai-nvim;
+        
         pyEnv = pyEnv;
         fugashi = fugashi-unidic pkgs.python3.pkgs;
         mojimoji = mojimoji pkgs.python3.pkgs;
@@ -141,6 +143,9 @@
               core-type = "full";
             };
           });
+
+
+
       };
 
       devShells.${platform}.default = pkgs.mkShell {
