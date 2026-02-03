@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs = {
       # use my fork where jmdict is packaged
-      url = "github:nixos/nixpkgs/master";
+      url = "github:nixos/nixpkgs/nixos-unstable";
     };
 
     lux = {
@@ -156,6 +156,8 @@
           # lx can autoinstall busted
           # lua.pkgs.busted  # careful with order as this puts a different lua in PATH
           # lua.pkgs.nlua
+
+          pkgs.lux-cli # lux
 
           # pyEnv
           pkgs.sqlite.dev # to install lsqlite3 via luarocks
