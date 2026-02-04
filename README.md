@@ -66,7 +66,6 @@ Highlights used are visible in plugin/rikai.lua:
 
 See [wiki][rikai-nvim-wiki] for more reference.
 
-- https://towardsdatascience.com/mecab-usage-and-add-user-dictionary-to-mecab-9ee58966fc6
 
 # How to get the various dictionaries used by rikai.nvim ?
 

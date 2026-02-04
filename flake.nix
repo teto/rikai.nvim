@@ -36,6 +36,7 @@
       platform = "x86_64-linux";
       inherit (pkgs) lib;
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      luaPkgOverlay = import ./nix/lua-overlay.nix { inherit pkgs; };
 
       # python3.pkgs.python.pkgs exists and
       # p is probably python3.pkgs
@@ -46,6 +47,10 @@
           python = p.pkgs.python3;
         };
 
+
+      # make sure the luaPkgOverlay was applied to the interpreter
+      lua = pkgs.lua5_1;
+
       # TODO I should be able to remove those as they get provided via lux
       luaEnv = lua.withPackages (lp: [
 
@@ -54,14 +59,12 @@
         # lp.sqlite # lux can't build it
 
         # lux can't build lsqlite3 'cos the website's antibot detection throws it off
-        lp.lsqlite3 # official bindings
+        # lp.lsqlite3 # official bindings
 
         # lp.utf8 installed by nx
       ]);
 
-      lua = pkgs.lua5_1.override {
-        packageOverrides = self.overlays.luaOverlay;
-      };
+
 
       # for text-to-speech, e.g., to read japanese out loud
       fugashi-unidic =
@@ -225,7 +228,11 @@
       };
 
       overlays = {
-        luaOverlay = import ./nix/lua-overlay.nix { inherit pkgs; };
+        luaOverlay = {
+          lua5_1 = pkgs.lua5_1.override {
+            packageOverrides = luaPkgOverlay ;
+          };
+        }; 
       };
     };
 }
