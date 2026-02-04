@@ -1,7 +1,7 @@
 { pkgs }:
-luafinal: luaprev: {
+final: prev: {
 
-  rikai-nvim = pkgs.toVimPlugin (pkgs.buildLuarocksPackage (
+  rikai-nvim = pkgs.vimUtils.toVimPlugin (final.callPackage (
 { alogger, buildLuarocksPackage, fetchurl, fetchzip, lua, mega-cmdparse, sqlite, utf8 }:
 buildLuarocksPackage {
   pname = "rikai.nvim";
@@ -23,10 +23,10 @@ buildLuarocksPackage {
     description = "rikaitan for neovim, i.e., japanese translation integrated ";
     license.fullName = "LGPL-3.0";
   };
-})) {};
+}) );
 
 
-  alogger = luafinal.luaPackages.callPackage (
+  alogger = final.callPackage (
     {
       buildLuarocksPackage,
       fetchFromGitLab,
@@ -58,7 +58,7 @@ buildLuarocksPackage {
     }
   ) { };
 
-  utf8 = luafinal.luaPackages.callPackage (
+  utf8 = final.callPackage (
     {
       buildLuarocksPackage,
       fetchFromGitHub,
@@ -91,7 +91,7 @@ buildLuarocksPackage {
     }
   ) { };
 
-  lual = luafinal.luaPackages.callPackage (
+  lual = final.callPackage (
     {
       buildLuarocksPackage,
       fetchFromGitHub,
@@ -123,7 +123,7 @@ buildLuarocksPackage {
     }
   ) { };
 
-  lsqlite3 = luafinal.callPackage (
+  lsqlite3 = final.callPackage (
     {
       buildLuarocksPackage,
       fetchurl,

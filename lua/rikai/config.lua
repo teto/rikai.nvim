@@ -13,11 +13,15 @@ local JapDefaultConfig = {
 	log_level = vim.log.levels.WARN,
 	tokenizer = "sudachi",
 
-    ---
-    use_images = true,
 	-- separator = " ------ ",
 
 	popup_options = {
+        ---
+        use_images = true,
+        generate_image_cmd = function (token)
+            -- TODO get 'Normal' instead as background color
+			return {  'magick', '-background', 'transparent', '-fill', 'white', '-pointsize', '24', 'label:"'..token..'"', 'output.png' }
+		end,
 		max_height = 20,
 	},
 

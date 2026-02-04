@@ -12,11 +12,11 @@ description = {
 }
 
 dependencies = {
-	"lua>=5.1",
-	"sqlite==v1.0.0",
+	"lua==5.1",
+	"lsqlite3",
 	"utf8==1.3",
-	"mega.cmdparse==1.0.4",
-	"alogger==0.6.0",
+	"mega.cmdparse",
+	"alogger",
 }
 
 source = {
