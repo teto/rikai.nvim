@@ -17,7 +17,7 @@ alogger = "0.6.0-1"
 utf8 = "1.3-0"
 "mega.cmdparse" = "1.2.0-1"
 # doesnt compile
-sqlite = "v1.0.0-1"
+# sqlite = "v1.0.0-1"
 lsqlite3 = "0.9.6-1"
 
 # [dependencies."mega.cmdparse"]
