@@ -1,9 +1,14 @@
 
-This plugin aims at providing offline translations when hovering asian (japanese for now) characters.
+This plugin aims at providing offline translations either on-demand and/or automatically when hovering asian (japanese for now) characters.
 
 The name is inspired by the great browser [rikaitan][rikaitan] plugin.
 理解 ("rikai") [translates][jisho-rikai] to "understanding", "comprehension".
 
+Here are some possibly outdated screenshots: 
+- Popup for a kanji
+<img width="1112" height="542" alt="image" src="https://github.com/user-attachments/assets/16b04f0e-d0e1-4d9c-9f80-2c3724b297bf" />
+- popup for an expression, the current word is automatically highlighted on cursor movement
+ <img width="916" height="317" alt="image" src="https://github.com/user-attachments/assets/ab6433f6-758b-4566-827d-c0133fa4bb4e" />
 
 
 # How to install ?
@@ -51,16 +56,8 @@ Highlights used are visible in plugin/rikai.lua:
 # Roadmap 
 
 - lux packaging
-- support more tokenizers
 - romaji to kana and vice-versa
 - let users customize display (support https://jpdb.io/)
-- create a top-level Rikai command with subcommands: "lookup", ...
-- ability to focus popup
-- translate visual selection
-- add examples
-- list radicals
-- open db on command (register handle in some state)
-- close it at the end of after some time ?
 - add rikai translate
 
 
@@ -73,11 +70,7 @@ See [wiki][rikai-nvim-wiki] for more reference.
 
 # How to get the various dictionaries used by rikai.nvim ?
 
-Run `:Rikai download`, else do:
-
-- clone https://github.com/odrevet/edict_database.git (fetch)
-- nix shell nixpkgs#dart
-
+Run `:Rikai download`.
 
 # Related software
 
