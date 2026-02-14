@@ -21,7 +21,7 @@ function M.format_radicals(kanji)
 	local res = {}
 
 	local req = query.query_kanji_get_radicals(kanji)
-	local con = query.get_db_handle(config.kanjidb)
+	local con = query.get_db_handle(config.dictionaries.kanjidb)
 
 	assert(con)
 	---@diagnostic disable-next-line: need-check-nil

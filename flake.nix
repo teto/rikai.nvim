@@ -162,6 +162,8 @@
 
           pkgs.lux-cli # lux
 
+          pkgs.librsvg # for rsvg-convert executable
+
           # pyEnv
           pkgs.sqlite.dev # to install lsqlite3 via luarocks
           pkgs.cmake # needed for luv install ?
@@ -194,6 +196,7 @@
               text = luarocksConfContent;
             };
 
+            # this should be bone automatically wtf
             exposeLib =
               { name, dep }:
               [
