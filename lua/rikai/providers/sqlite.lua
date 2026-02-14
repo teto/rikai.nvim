@@ -201,7 +201,7 @@ function M.lookup_kanji(kanji)
 
 	local res = {}
 
-	local con = M.get_db_handle(config.kanjidb)
+	local con = M.get_db_handle(config.dictionaries.kanjidb)
 	assert(con, "could not open db")
 	local req = M.build_kanji_query(kanji)
 
@@ -225,7 +225,7 @@ end
 function M.lookup_kanji_radicals(kanji)
 	local res = {}
 
-	local con = M.get_db_handle(config.kanjidb)
+	local con = M.get_db_handle(config.dictionaries.kanjidb)
 	assert(con, "could not open db")
 	local req = M.get_radicals_from_kanji_query(kanji)
 
@@ -243,7 +243,7 @@ end
 ---@return table
 function M.lookup_expr(word)
 	-- logger.info("Opening " .. jmdictdb)
-	local db = M.get_db_handle(config.jmdictdb)
+	local db = M.get_db_handle(config.dictionaries.jmdictdb)
 	assert(db)
 	local res = {}
 

@@ -1,8 +1,6 @@
 local logger = require("rikai.log")
 -- local config = require'rikai.config'
 
--- created just for convenience
--- vim.api.nvim_create_user_command('RikaiDownload',
 
 local dict_version = "v0.0.5"
 
@@ -10,6 +8,8 @@ local kanji_url = "https://github.com/odrevet/edict_database/releases/download/"
 local expression_url = "https://github.com/odrevet/edict_database/releases/download/"
 	.. dict_version
 	.. "/expression.zip"
+-- optional, to plot stroke order
+-- local kanjivg_url = "https://github.com/KanjiVG/kanjivg/releases/download/r20250816/kanjivg-20250816-all.zip"
 
 ---@param _args any
 function download(_args)
@@ -35,7 +35,7 @@ function download(_args)
 	end
 
 	vim.net.request(kanji_url, {
-		outpath = vim.g.rikai.kanjidb,
+		outpath = vim.g.rikai.dictionaries.kanjidb,
 		verbose = true,
 		-- retry = 3
 	}, on_reponse)

@@ -1,3 +1,5 @@
+local image = require("rikai.image")
+
 ---@class RikaiConfig jap.nvim plugin configuration.
 ---@field kanjidb string path towards a https://github.com/odrevet/edict_database's compatible db
 ---@field jmdictdb string
@@ -6,22 +8,27 @@
 ---@field use_images boolean convert kanjis into images to make them easier to read/bigger
 ---@field _state table internal dont use
 local JapDefaultConfig = {
+	---@class RikaiConfigDictionaries
+	---@field kanjidb string
+	dictionaries = {
+		kanjidb = vim.fn.stdpath("data") .. "/rikai/kanji.db",
+		jmdictdb = vim.fn.stdpath("data") .. "/rikai/expression.db",
+		kanjivg = vim.fn.stdpath("data") .. "/rikai/kanjivg",
+	},
 	width = 100,
 	height = 30,
-	kanjidb = vim.fn.stdpath("data") .. "/rikai/kanji.db",
-	jmdictdb = vim.fn.stdpath("data") .. "/rikai/expression.db",
 	log_level = vim.log.levels.WARN,
 	tokenizer = "sudachi",
 
 	-- separator = " ------ ",
 
+	---@class RikaiConfigPopupOptions
+	---@field generate_image_cmd fun(string): string
 	popup_options = {
         ---
         use_images = true,
-        generate_image_cmd = function (token)
-            -- TODO get 'Normal' instead as background color
-			return {  'magick', '-background', 'transparent', '-fill', 'white', '-pointsize', '24', 'label:"'..token..'"', 'output.png' }
-		end,
+
+		generate_image_cmd = image.from_kanjivg,
 		max_height = 20,
 	},
 
