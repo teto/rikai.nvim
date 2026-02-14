@@ -84,8 +84,6 @@ M.popup_lookup = function(token)
         local radicals = query.lookup_kanji_radicals(token)
 
 
-        -- todo retreive the
-
         if config.popup_options.use_images then
             logger.debug("displaying image")
             local has_image, _ = pcall(require, "snacks.image")
@@ -93,16 +91,10 @@ M.popup_lookup = function(token)
                 vim.notify("Can't preview kanji: Snacks is not available")
             end
 
-            --
-            local cmd_generate_image = config.popup_options.generate_image_cmd(token)
-            local obj = vim.system(cmd_generate_image, {
-                timeout = 3000,
-            }):wait()
-            if obj.code ~= 0 then
-                vim.notify("Could not generate image for kanji:\n"..obj.stderr , vim.log.levels.ERROR)
-            end
-            -- 
-            table.insert(formatted_results,"![kanji](./output.png)")
+            -- TODO we should implement some caching
+            local output_filename = config.popup_options.generate_image_cmd(token)
+
+            table.insert(formatted_results,"![kanji]("..output_filename..")")
         end
 
         -- local attached, f = pcall(image.doc.attach, bufnr)

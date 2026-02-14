@@ -36,7 +36,7 @@ local function check_config()
 	h.start("Checking rocks.nvim config")
 
 	local cfg = vim.g.rikai
-	local ok, err = validate("kanjidb", cfg.kanjidb, "string")
+	local ok, err = validate("kanjidb", cfg.dictionaries.kanjidb, "string")
 	-- TODO check the file exists ! and if it's outdated ?
 	if not ok then
 		h.error(err or "" .. vim.g.rikai and "" or " This looks like a plugin bug!")
