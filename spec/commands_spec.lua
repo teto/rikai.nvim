@@ -7,7 +7,7 @@ describe("is_japanese function", function()
 	setup(function()
 		-- error('failing a setup method')
 		-- TODO download symlink
-		print(vim.g.rikai.kanjidb)
+		print(vim.g.rikai.dictionaries.kanjidb)
 	end)
 
 	it("", function()

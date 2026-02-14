@@ -55,4 +55,12 @@ function M.print_variable_size(content, font_size)
 	-- printf "\e]66;n=1:d=2;Half sized text\a\n"
 end
 
+function M.tatoeba_link(token)
+	-- token should be encoded  like %E8%A6%8B%E3%82%8B
+
+	return [[https://tatoeba.org/en/sentences/search?from=&has_audio=&list=&native=&original=&orphans=no&to=eng&query=]]
+		.. token
+	-- ..[[&sort=relevance&sort_reverse=&tags=&&trans_filter=limit&trans_has_audio=&trans_link=&trans_native=&trans_orphan=&trans_to=&trans_unapproved=&trans_user=&unapproved=no&user=&word_count_max=&word_count_min=1]]
+end
+
 return M
