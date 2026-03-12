@@ -7,6 +7,8 @@
       url = "github:nixos/nixpkgs/nixos-unstable";
     };
 
+    flake-utils.url = "github:numtide/flake-utils";
+
     lux = {
       url = "github:nvim-neorocks/lux";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -29,116 +31,124 @@
     {
       self,
       nixpkgs,
+      flake-utils,
       treefmt-nix,
       ...
     }:
-    let
-      platform = "x86_64-linux";
-      inherit (pkgs) lib;
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      luaPkgOverlay = import ./nix/lua-overlay.nix { inherit pkgs; };
+    flake-utils.lib.eachSystem [ "x86_64-linux" ] (
+      system:
+      let
+        # TODO
+        inherit (vanilla_pkgs) lib;
+        vanilla_pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import nixpkgs {
 
-      # python3.pkgs.python.pkgs exists and
-      # p is probably python3.pkgs
-      mojimoji =
-        p:
-        pkgs.callPackage ./default.nix {
-          # builtins.trace p.pkgs.python.version
-          python = p.pkgs.python3;
+          # system = "x86_64-linux";
+          inherit system;
+          overlays = [
+            self.overlays.luaOverlay
+          ];
+
         };
 
+        # python3.pkgs.python.pkgs exists and
+        # p is probably python3.pkgs
+        mojimoji =
+          p:
+          pkgs.callPackage ./default.nix {
+            # builtins.trace p.pkgs.python.version
+            python = p.pkgs.python3;
+          };
 
-      # make sure the luaPkgOverlay was applied to the interpreter
-      lua = pkgs.lua5_1;
+        # make sure the luaPkgOverlay was applied to the interpreter
+        lua = pkgs.lua5_1;
 
-      # TODO I should be able to remove those as they get provided via lux
-      luaEnv = lua.withPackages (lp: [
+        # TODO I should be able to remove those as they get provided via lux
+        luaEnv = lua.withPackages (lp: [
 
-        # lp.alogger
-        # lp.lual # unused logging library
-        # lp.sqlite # lux can't build it
+          # lp.alogger
+          # lp.lual # unused logging library
+          # lp.sqlite # lux can't build it
 
-        # lux can't build lsqlite3 'cos the website's antibot detection throws it off
-        # lp.lsqlite3 # official bindings
+          # lux can't build lsqlite3 'cos the website's antibot detection throws it off
+          # lp.lsqlite3 # official bindings
 
-        # lp.utf8 installed by nx
-      ]);
-
-
-
-      # for text-to-speech, e.g., to read japanese out loud
-      fugashi-unidic =
-        p: p.fugashi
-      #   p.toPythonModule (p.fugashi.overridePythonAttrs(oa: {
-      #
-      #   # tests succeed with unidic-lite but fail with unidic :/
-      #   nativeBuildInputs = oa.optional-dependencies.unidic ++ oa.nativeBuildInputs;
-      #   dependencies = (oa.dependencies or []) ++ oa.optional-dependencies.unidic;
-      # }))
-      ;
-
-      # lacks mojimoji for now
-      pyEnv =
-        let
-          # TODO use toPythonModule
-          # the default uses unidic-lite
-
-          # TODO override fugashi to use a fugashi with optional-dependencies.unidic ?
-          misaki-jp =
-            p:
-            (p.misaki.override ({
-              fugashi = fugashi-unidic p;
-            })).overridePythonAttrs
-              (oa: {
-                dependencies =
-                  oa.dependencies
-                  ++ oa.passthru.optional-dependencies.ja
-                  ++ [
-                    # needs mojimoji and pyopenjtalk, both marked as not packaged
-                    # but pyopenjtalk is available from voicevox-engine
-                    pkgs.voicevox-engine.passthru.pyopenjtalk
-                    (p.toPythonModule (mojimoji p))
-                  ];
-              });
-
-          kokoro_jp =
-            p:
-            p.toPythonModule (
-              (p.kokoro.override ({
-                misaki = misaki-jp p;
-              })).overridePythonAttrs
-                ({
-
-                  #  'pyopenjtalk' is apparently the newest version
-                  patchPhase = ''
-                    substituteInPlace kokoro/pipeline.py \
-                      --replace-fail "ja.JAG2P()" "ja.JAG2P(version= 'pyopenjtalk')"
-                  '';
-
-                })
-            );
-
-        in
-        pkgs.python3.withPackages (p: [
-          (kokoro_jp p)
-          p.soundfile
-          p.pip
-          p.spacy-models.en_core_web_sm
+          # lp.utf8 installed by nx
         ]);
 
-      treefmtEval = treefmt-nix.lib.evalModule pkgs ./nix/treefmt.nix;
-    in
-    {
+        # for text-to-speech, e.g., to read japanese out loud
+        fugashi-unidic =
+          p: p.fugashi
+        #   p.toPythonModule (p.fugashi.overridePythonAttrs(oa: {
+        #
+        #   # tests succeed with unidic-lite but fail with unidic :/
+        #   nativeBuildInputs = oa.optional-dependencies.unidic ++ oa.nativeBuildInputs;
+        #   dependencies = (oa.dependencies or []) ++ oa.optional-dependencies.unidic;
+        # }))
+        ;
 
-      formatter = treefmtEval.config.build.wrapper;
+        # lacks mojimoji for now
+        pyEnv =
+          let
+            # TODO use toPythonModule
+            # the default uses unidic-lite
 
-      packages.${platform} = {
-        default = lua.pkgs.rikai-nvim;
-        inherit (lua.pkgs) rikai-nvim;
-        
-        pyEnv = pyEnv;
-        fugashi = fugashi-unidic pkgs.python3.pkgs;
-        mojimoji = mojimoji pkgs.python3.pkgs;
+            # TODO override fugashi to use a fugashi with optional-dependencies.unidic ?
+            misaki-jp =
+              p:
+              (p.misaki.override ({
+                fugashi = fugashi-unidic p;
+              })).overridePythonAttrs
+                (oa: {
+                  dependencies =
+                    oa.dependencies
+                    ++ oa.passthru.optional-dependencies.ja
+                    ++ [
+                      # needs mojimoji and pyopenjtalk, both marked as not packaged
+                      # but pyopenjtalk is available from voicevox-engine
+                      pkgs.voicevox-engine.passthru.pyopenjtalk
+                      (p.toPythonModule (mojimoji p))
+                    ];
+                });
+
+            kokoro_jp =
+              p:
+              p.toPythonModule (
+                (p.kokoro.override ({
+                  misaki = misaki-jp p;
+                })).overridePythonAttrs
+                  ({
+
+                    #  'pyopenjtalk' is apparently the newest version
+                    patchPhase = ''
+                      substituteInPlace kokoro/pipeline.py \
+                        --replace-fail "ja.JAG2P()" "ja.JAG2P(version= 'pyopenjtalk')"
+                    '';
+
+                  })
+              );
+
+          in
+          pkgs.python3.withPackages (p: [
+            (kokoro_jp p)
+            p.soundfile
+            p.pip
+            p.spacy-models.en_core_web_sm
+          ]);
+
+        treefmtEval = treefmt-nix.lib.evalModule pkgs ./nix/treefmt.nix;
+      in
+
+      {
+
+        packages = {
+          default = lua.pkgs.rikai-nvim;
+          # TODO call pkgs.vimUtils.toVimPlugin  on it ?
+          inherit (lua.pkgs) rikai-nvim;
+
+          pyEnv = pyEnv;
+          fugashi = fugashi-unidic pkgs.python3.pkgs;
+          mojimoji = mojimoji pkgs.python3.pkgs;
 
           sudachi-rs-full = pkgs.sudachi-rs.override ({
             sudachidict = pkgs.sudachidict.override {
@@ -146,96 +156,99 @@
             };
           });
 
+        };
 
+        devShells.default = pkgs.mkShell {
+          name = "rikai.nvim";
 
-      };
+          buildInputs = [
+            treefmtEval.config.build.wrapper
+            luaEnv
+            # lx can autoinstall busted
+            # lua.pkgs.busted  # careful with order as this puts a different lua in PATH
+            # lua.pkgs.nlua
 
-      devShells.${platform}.default = pkgs.mkShell {
-        name = "rikai.nvim";
+            pkgs.just # for 'just'
+            pkgs.lux-cli # lux
 
-        buildInputs = [
-          treefmtEval.config.build.wrapper
-          luaEnv
-          # lx can autoinstall busted
-          # lua.pkgs.busted  # careful with order as this puts a different lua in PATH
-          # lua.pkgs.nlua
+            pkgs.librsvg # for rsvg-convert executable
 
-          pkgs.lux-cli # lux
+            # pyEnv
+            pkgs.sqlite.dev # to install lsqlite3 via luarocks
+            pkgs.cmake # needed for luv install ?
+            pkgs.sqlite.dev # for sqlite3.h
 
-          pkgs.librsvg # for rsvg-convert executable
+            pkgs.emmylua-check
+            # pkgs.emmylua-ls
+            # self.inputs.lux.packages.${platform}.lux-cli
+            # self.inputs.lux.packages.${platform}.lux-lua51
+            pkgs.pkg-config # required by lux ?
+            pkgs.vimcats
+          ];
 
-          # pyEnv
-          pkgs.sqlite.dev # to install lsqlite3 via luarocks
-          pkgs.cmake # needed for luv install ?
-          pkgs.sqlite.dev # for sqlite3.h
+          # not packaged in nixpkgs yet
+          # ${pkgs.lib.toShellVars pkgs.lua5_1.lsqlite3.variables}
+          shellHook =
+            let
+              luarocksConfContent = pkgs.lib.generators.toLua { asBindings = true; } luarocksConfig;
+              luarocksConfig = pkgs.lua.pkgs.luaLib.generateLuarocksConfig {
 
-          pkgs.emmylua-check
-          # pkgs.emmylua-ls
-          # self.inputs.lux.packages.${platform}.lux-cli
-          # self.inputs.lux.packages.${platform}.lux-lua51
-          pkgs.pkg-config # required by lux ?
-          pkgs.vimcats
-        ];
+                externalDeps = [
+                  {
+                    name = "SQLITE";
+                    dep = pkgs.sqlite;
+                  }
+                ];
+              };
+              configFile = pkgs.writeTextFile {
+                name = "rikai-dev-luarocks-config.lua";
+                text = luarocksConfContent;
+              };
 
-        # not packaged in nixpkgs yet
-        # ${pkgs.lib.toShellVars pkgs.lua5_1.lsqlite3.variables}
-        shellHook =
-          let
-            luarocksConfContent = pkgs.lib.generators.toLua { asBindings = true; } luarocksConfig;
-            luarocksConfig = pkgs.lua.pkgs.luaLib.generateLuarocksConfig {
+              # this should be bone automatically wtf
+              exposeLib =
+                { name, dep }:
+                [
+                  ''${name}_INCDIR="${lib.getDev dep}/include"''
+                  ''${name}_LIBDIR="${lib.getLib dep}/lib"''
+                  ''${name}_BINDIR="${lib.getBin dep}/bin"''
+                ];
 
-              externalDeps = [
-                {
-                  name = "SQLITE";
-                  dep = pkgs.sqlite;
-                }
-              ];
-            };
-            configFile = pkgs.writeTextFile {
-              name = "rikai-dev-luarocks-config.lua";
-              text = luarocksConfContent;
-            };
+            in
 
-            # this should be bone automatically wtf
-            exposeLib =
-              { name, dep }:
-              [
-                ''${name}_INCDIR="${lib.getDev dep}/include"''
-                ''${name}_LIBDIR="${lib.getLib dep}/lib"''
-                ''${name}_BINDIR="${lib.getBin dep}/bin"''
-              ];
+            # /home/teto/neovim/rikai.nvim/.lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/kanji.db
+            ''
+              mkdir -p .luarocks
 
-          in
+              # todo change the lux test folder instead
+              mkdir -p .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
+              ln -sf "${self.inputs.edict-kanji-db}/kanji.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
+              ln -sf "${self.inputs.edict-expression-db}/expression.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
 
-          # /home/teto/neovim/rikai.nvim/.lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/kanji.db
-          ''
-            mkdir -p .luarocks
-
-            # todo change the lux test folder instead 
-            mkdir -p .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
-            ln -sf "${self.inputs.edict-kanji-db}/kanji.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
-            ln -sf "${self.inputs.edict-expression-db}/expression.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
-
-            cat ${configFile} >> .luarocks/config-5.1.lua
-            ${lib.concatMapStringsSep "\n" (val: "export ${val}") (exposeLib {
-              name = "SQLITE";
-              dep = pkgs.sqlite;
-            })}
-            export LUA_PATH="$LUA_PATH;lua/?.lua"
-            # this is used by `lx shell` but for some reason SHELL still points to the older one
-            export SHELL=${pkgs.bashInteractive}/bin/bash
-            echo "export LUA_PATH='$(lx path lua)'" > .lua.env
-            echo "export LUA_CPATH='$(lx path c)'" >> .lua.env
-            source .lua.env
-          '';
-      };
+              cat ${configFile} >> .luarocks/config-5.1.lua
+              ${lib.concatMapStringsSep "\n" (val: "export ${val}") (exposeLib {
+                name = "SQLITE";
+                dep = pkgs.sqlite;
+              })}
+              export LUA_PATH="$LUA_PATH;lua/?.lua"
+              # this is used by `lx shell` but for some reason SHELL still points to the older one
+              export SHELL=${pkgs.bashInteractive}/bin/bash
+              echo "export LUA_PATH='$(lx path lua)'" > .lua.env
+              echo "export LUA_CPATH='$(lx path c)'" >> .lua.env
+              source .lua.env
+            '';
+        };
+      }
+    )
+    // {
+      # formatter = treefmtEval.config.build.wrapper;
 
       overlays = {
-        luaOverlay = {
-          lua5_1 = pkgs.lua5_1.override {
-            packageOverrides = luaPkgOverlay ;
+        luaOverlay = final: prev: {
+          lua5_1 = prev.lua5_1.override {
+            packageOverrides = import ./nix/lua-overlay.nix { pkgs = final; };
           };
-        }; 
+        };
       };
     };
 }

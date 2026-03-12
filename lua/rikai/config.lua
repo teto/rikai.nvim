@@ -25,8 +25,8 @@ local JapDefaultConfig = {
 	---@class RikaiConfigPopupOptions
 	---@field generate_image_cmd fun(string): string
 	popup_options = {
-        ---
-        use_images = true,
+		---
+		use_images = true,
 
 		generate_image_cmd = image.from_kanjivg,
 		max_height = 20,

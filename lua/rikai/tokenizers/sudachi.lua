@@ -54,7 +54,6 @@ function M.lexicon_to_str(lex_type)
 	return map[lex_type] or "unknown"
 end
 
-
 --- Returns a table of TokenizationResult
 ---@param content string
 ---@param enable_pos_processing boolean enable part of speech processing

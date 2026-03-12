@@ -74,45 +74,43 @@ M.live_lookup = function()
 	end
 end
 
+function M.setup_hl_autocmds(_args)
+	-- local update_tokenizer_cache = function ()
+	-- vim.ringbuf()
+	local curbuf = vim.api.nvim_get_current_buf()
 
-function M.setup_hl_autocmds (_args)
-    -- local update_tokenizer_cache = function ()
-    -- vim.ringbuf()
-    local curbuf = vim.api.nvim_get_current_buf()
+	vim.api.nvim_create_autocmd("CursorMoved", {
+		-- all 			-- pattern = { "*.md", "*.txt", "*.org" },
+		-- pattern = "*",
+		buffer = curbuf,
+		desc = "Highlights current token with RikaiCurrentToken",
+		callback = function()
+			-- TODO
+			-- 1. check if line changed tokenization exists in cache
+			-- if it didn't tokenize current line and save it in cache
+			-- use vim.ringbuf ?
+			M.highlight_current_token()
+		end,
+	})
 
-    vim.api.nvim_create_autocmd("CursorMoved", {
-        -- all 			-- pattern = { "*.md", "*.txt", "*.org" },
-        -- pattern = "*",
-        buffer = curbuf,
-        desc = "Highlights current token with RikaiCurrentToken",
-        callback = function ()
-            -- TODO 
-            -- 1. check if line changed tokenization exists in cache
-            -- if it didn't tokenize current line and save it in cache
-            -- use vim.ringbuf ?
-            M.highlight_current_token()
-        end,
-    })
+	-- disabled during testing, this works fine
+	-- vim.api.nvim_create_autocmd({ "CursorHold" }, {
+	--     -- group = "rikai",
+	--     buffer = curbuf,
+	--     desc = "Display translations on hover",
+	--     -- inspired by "hover"
+	--     callback = function ()
+	--         M.live_lookup()
+	--         -- todo update highlight
+	--     end,
+	-- })
 
-
-    -- disabled during testing, this works fine
-    -- vim.api.nvim_create_autocmd({ "CursorHold" }, {
-    --     -- group = "rikai",
-    --     buffer = curbuf,
-    --     desc = "Display translations on hover",
-    --     -- inspired by "hover"
-    --     callback = function () 
-    --         M.live_lookup()
-    --         -- todo update highlight
-    --     end,
-    -- })
-
-    -- if megaargs.hl_command == "clear" then
-    --     logger.info("clearing hl")
-    --     -- renvoye -1 ptet
-    --     vim.fn.matchdelete('RikaiProperNoun')
-    -- end
-    -- require'rikai.highlighter'.toggle_highlights(pos, true)
+	-- if megaargs.hl_command == "clear" then
+	--     logger.info("clearing hl")
+	--     -- renvoye -1 ptet
+	--     vim.fn.matchdelete('RikaiProperNoun')
+	-- end
+	-- require'rikai.highlighter'.toggle_highlights(pos, true)
 end
 
 return M
