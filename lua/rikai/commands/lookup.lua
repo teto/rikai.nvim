@@ -79,46 +79,44 @@ M.popup_lookup = function(token)
 	local formatted_results = {}
 	logger.debug("Found " .. tostring(nr_results) .. " results")
 
-    if restype == types.CharacterType.KANJI then
-        -- TODO check there is one result as least
-        local radicals = query.lookup_kanji_radicals(token)
+	if restype == types.CharacterType.KANJI then
+		-- TODO check there is one result as least
+		local radicals = query.lookup_kanji_radicals(token)
 
+		if config.popup_options.use_images then
+			logger.debug("displaying image")
+			local has_image, _ = pcall(require, "snacks.image")
+			if not has_image then
+				vim.notify("Can't preview kanji: Snacks is not available")
+			end
 
-        if config.popup_options.use_images then
-            logger.debug("displaying image")
-            local has_image, _ = pcall(require, "snacks.image")
-            if not has_image then
-                vim.notify("Can't preview kanji: Snacks is not available")
-            end
+			-- TODO we should implement some caching
+			local output_filename = config.popup_options.generate_image_cmd(token)
 
-            -- TODO we should implement some caching
-            local output_filename = config.popup_options.generate_image_cmd(token)
+			table.insert(formatted_results, "![kanji](" .. output_filename .. ")")
+		end
 
-            table.insert(formatted_results,"![kanji]("..output_filename..")")
-        end
+		-- local attached, f = pcall(image.doc.attach, bufnr)
 
-        -- local attached, f = pcall(image.doc.attach, bufnr)
+		local new_result = kanji.format_kanji(results[1], radicals)
+		for j = 1, #new_result do
+			table.insert(formatted_results, new_result[j])
+		end
+	else
+		-- TODO find a way to sort / limit results ?
+		for i, r in ipairs(results) do
+			-- add a separator if not first result
+			if i > 1 then
+				table.insert(formatted_results, separator)
+			end
 
-        local new_result = kanji.format_kanji(results[1], radicals)
-        for j = 1, #new_result do
-            table.insert(formatted_results, new_result[j])
-        end
-    else
-        -- TODO find a way to sort / limit results ?
-        for i, r in ipairs(results) do
-            -- add a separator if not first result
-            if i > 1 then
-                table.insert(formatted_results, separator)
-            end
-
-            local new_result = expr.format_expression(token, r)
-            for j = 1, #new_result do
-                table.insert(formatted_results, new_result[j])
-            end
-        end
-        table.insert(formatted_results,	utils.jisho_link(token, false))
-    end
-
+			local new_result = expr.format_expression(token, r)
+			for j = 1, #new_result do
+				table.insert(formatted_results, new_result[j])
+			end
+		end
+		table.insert(formatted_results, utils.jisho_link(token, false))
+	end
 
 	-- add a link to jisho
 	--@type vim.lsp.util.open_floating_preview.Opts?

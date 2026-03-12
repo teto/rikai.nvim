@@ -11,7 +11,6 @@ local M = {}
 
 ---@return nil
 function M.create_command()
-
 	local parser = cmdparse.ParameterParser.new({ name = "Rikai", help = "Nested Subparsers" })
 	local top_subparsers = parser:add_subparsers({ destination = "commands" })
 

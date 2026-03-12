@@ -1,6 +1,8 @@
 --- Collection of functions to generate kanji images
 local M = {}
 
+local logger = require("rikai.log")
+
 ---
 function M.from_magick(token)
 	-- TODO get 'Normal' instead as background color
@@ -30,25 +32,38 @@ function M.from_magick(token)
 end
 
 function M.from_kanjivg(token)
-            -- TODO get 'Normal' instead as background color
-            local output_filename = 'output.png'
-            local kanjivg = vim.fn.stdpath("data") .. "/rikai/kanjivg"
+	-- TODO get 'Normal' instead as background color
+	local kanjivg_dir = vim.fn.stdpath("data") .. "/rikai/kanjivg"
 
-            local cmd_generate_image
-            local input_filename = vim.fs.joinpath(kanjivg, "0f9af.svg")
+	local cmd_generate_image
+	local unicode_value = vim.fn.char2nr(token)
+	-- respect kanjivg format
+	local hex_value = string.format("%05x", unicode_value)
+	local output_filename = vim.fn.stdpath("cache") .. "/rikai/" .. hex_value .. ".png"
 
-            cmd_generate_image = {  
-                "rsvg-convert",  "-w", "1024", "-h", "768", input_filename,
-                "-o", output_filename }
+	local input_filename = vim.fs.joinpath(kanjivg_dir, hex_value .. ".svg")
 
-            local obj = vim.system(cmd_generate_image, {
-                timeout = 3000,
-            }):wait()
-            if obj.code ~= 0 then
-                vim.notify("Could not generate image for kanji:\n"..obj.stderr , vim.log.levels.ERROR)
-            end
-            
-			return output_filename
-		end
+	cmd_generate_image = {
+		"rsvg-convert",
+		"-w",
+		"1024",
+		"-h",
+		"768",
+		input_filename,
+		"-o",
+		output_filename,
+	}
+
+	-- join(' ')
+	logger.debug("Running ", cmd_generate_image)
+	local obj = vim.system(cmd_generate_image, {
+		timeout = 3000,
+	}):wait()
+	if obj.code ~= 0 then
+		vim.notify("Could not generate image for kanji:\n" .. obj.stderr, vim.log.levels.ERROR)
+	end
+
+	return output_filename
+end
 
 return M
