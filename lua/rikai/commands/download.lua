@@ -1,7 +1,6 @@
 local logger = require("rikai.log")
 -- local config = require'rikai.config'
 
-
 local dict_version = "v0.0.5"
 
 local kanji_url = "https://github.com/odrevet/edict_database/releases/download/" .. dict_version .. "/kanji.zip"
