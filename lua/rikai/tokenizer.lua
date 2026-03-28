@@ -55,7 +55,7 @@ function M.get_current_token()
 
 	-- Find which token cursor is highlighting by comparing offsets ?
 	-- compute the size of the token
-	for i, tok in pairs(tokens) do
+	for _i, tok in pairs(tokens) do
 		nextoffset = curcoloffset + vim.fn.strlen(tok[1])
 		-- logger.info(string.format("Round %d, inspecting token %s. Comparing cursor offset %d with nextoffset %d", i, tok[1], cursorcoloffset, nextoffset))
 		if cursorcoloffset < nextoffset then

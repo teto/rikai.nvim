@@ -8,7 +8,7 @@ local M = {}
 -- _state.current_token
 
 ---@class LiveHlState
----@field current_token table
+---@field current_token table?
 -- cache some state
 local _state = {}
 

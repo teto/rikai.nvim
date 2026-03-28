@@ -1,5 +1,4 @@
 local M = {}
-local utils = require("rikai.utils")
 -- {
 -- ||   entry_id = 1169250,
 -- ||   gloss_group = "to lead (e.g. a horse),to pull,to tug",
@@ -15,7 +14,9 @@ local utils = require("rikai.utils")
 ---@field pos_group string
 ---@field sense_id number
 ---@field keb_reb_group string
+---@field gloss_group string
 
+---@diagnostic disable-next-line: unused
 ---@param original_token string The original search
 ---@param res ExpressionDesc
 ---@return table (as expected by 'open_floating_preview')
