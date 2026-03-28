@@ -11,6 +11,7 @@ local M = {}
 ---@field freq number frequency
 ---@field kun_reading string
 ---@field on_reading string
+---@field stroke_count string
 ---@field meanings string
 
 --- Get radicals associated with kanji

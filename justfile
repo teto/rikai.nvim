@@ -19,6 +19,11 @@ test:
     # cp 
     lx test
 
+# check types
+emmylua_check:
+    # VIMRUNTIME=$(nvim --headless +'echo $VIMRUNTIME' -cq)
+    emmylua_check --verbose .
+
 test-online:
     # @busted --lua=nlua 
     lx test
