@@ -179,7 +179,6 @@
             pkgs.sqlite.dev # for sqlite3.h
 
             pkgs.emmylua-check
-            # pkgs.emmylua-ls
             # self.inputs.lux.packages.${platform}.lux-cli
             # self.inputs.lux.packages.${platform}.lux-lua51
             pkgs.pkg-config # required by lux ?

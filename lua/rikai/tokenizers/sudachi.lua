@@ -29,7 +29,7 @@ function M.lexicon_type(pos)
 	elseif pos[1] == "名詞" then -- last name
 		return types.LexiconType.NAME
 	elseif pos1 == "形状詞" then
-		return types.LexiconType.ADJECTIVE
+		return types.LexiconType.NA_ADJECTIVE
 	elseif pos1 == "助詞" then
 		return types.LexiconType.PARTICLE
 	elseif pos1 == "補助記号" then

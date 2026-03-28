@@ -44,23 +44,32 @@ function M.from_kanjivg(token)
 	local input_filename = vim.fs.joinpath(kanjivg_dir, hex_value .. ".svg")
 
 	cmd_generate_image = {
-		"rsvg-convert",
+		"rsvg-convert", -- available in "librsvg"
 		"-w",
-		"1024",
+		"512",
 		"-h",
-		"768",
+		"512",
 		input_filename,
 		"-o",
 		output_filename,
 	}
 
-	-- join(' ')
 	logger.debug("Running ", cmd_generate_image)
-	local obj = vim.system(cmd_generate_image, {
-		timeout = 3000,
-	}):wait()
-	if obj.code ~= 0 then
-		vim.notify("Could not generate image for kanji:\n" .. obj.stderr, vim.log.levels.ERROR)
+	local has_job, obj_or_err = pcall(vim.system, cmd_generate_image, {
+		-- timeout = 3000,
+	})
+	print(has_job)
+	if not has_job then
+		logger.error("Could not generate image for kanji:\n" .. obj_or_err, vim.log.levels.ERROR)
+	else
+		---@diagnostic disable-next-line: need-check-nil
+		local hdl = obj_or_err
+		---@diagnostic disable-next-line: need-check-nil
+		-- in milliseconds
+		local res = hdl:wait(3000)
+		if res.code ~= 0 then
+			logger.error("Could not generate image for kanji:\n" .. res.stderr, vim.log.levels.ERROR)
+		end
 	end
 
 	return output_filename
