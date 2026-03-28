@@ -10,7 +10,7 @@ local util = vim.lsp.util
 ---@return number window ID
 function M.create_popup(focus_id, lines, opts)
 	local width = config.width
-	local height = (#lines or config.max_height) + 1
+	local height = (#lines or config.popup_options.max_height) + 1
 	-- vim.lsp.util.open_floating_preview.Opts?
 	local lopts = vim.tbl_extend("error", opts, {
 		wrap = true,

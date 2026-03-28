@@ -4,8 +4,7 @@ local image = require("rikai.image")
 ---@field kanjidb string path towards a https://github.com/odrevet/edict_database's compatible db
 ---@field jmdictdb string
 ---@field log_level vim.log.levels logging level
----@field popup_options vim.lsp.util.open_floating_preview.Opts
----@field use_images boolean convert kanjis into images to make them easier to read/bigger
+---@field popup_options RikaiConfigPopupOptions
 ---@field _state table internal dont use
 local JapDefaultConfig = {
 	---@class RikaiConfigDictionaries
@@ -24,6 +23,8 @@ local JapDefaultConfig = {
 
 	---@class RikaiConfigPopupOptions
 	---@field generate_image_cmd fun(string): string
+	---@field use_images boolean convert kanjis into images to make them easier to read/bigger
+	--- TODO vim.lsp.util.open_floating_preview.Opts
 	popup_options = {
 		---
 		use_images = true,
