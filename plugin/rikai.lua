@@ -1,4 +1,4 @@
-local cmdparser = require("rikai.commands")
+local cmdparser = require"rikai.commands"
 
 -- Create a new highlight group linked to 'Comment'
 vim.api.nvim_set_hl(0, "RikaiVirtualText", { link = "Comment" })

@@ -4,6 +4,10 @@
 
 local M = {}
 
+local external_dependencies = {
+    "sudachi",
+}
+
 local h = vim.health
 
 -- ideally we would return the version
@@ -33,21 +37,32 @@ end
 ---@return boolean|nil
 ---@return string|nil
 local function check_config()
-	h.start("Checking rocks.nvim config")
-
 	local cfg = vim.g.rikai
+    print("HELLO")
+
 	local ok, err = validate("kanjidb", cfg.dictionaries.kanjidb, "string")
 	-- TODO check the file exists ! and if it's outdated ?
 	if not ok then
 		h.error(err or "" .. vim.g.rikai and "" or " This looks like a plugin bug!")
 		return false, err
+    else 
+        h.ok("config structure ok")
 	end
+
+    if cfg.popup_options.use_image then
+        if vim.fn.isdirectory(cfg.dictionaries.kanjivg) == false then
+            h.error("Could not find the kanjivg directory")
+        else
+            h.ok(string.format("Found the kanjivg directory [%s]", cfg.dictionaries.kanjivg))
+        end
+    else
+        h.ok("Rendering kanji stroke order as images disabled")
+    end
 end
 
+
 function M.check()
-	local external_dependencies = {
-		"sudachi",
-	}
+	local cfg = vim.g.rikai
 	h.start("Checking external dependencies")
 	for _, dep in ipairs(external_dependencies) do
 		if check_installed(dep) then
@@ -56,6 +71,21 @@ function M.check()
 			h.error("Program '" .. dep .. "' is not executable")
 		end
 	end
+
+    -- { "kanjivg", "kanjidb",
+    -- local default_config = require'rikai.config.default'
+	for _k, key in ipairs({ 'kanjidb', 'jmdictdb' }) do
+        -- kanjivg is a folder though
+        local dep = cfg.dictionaries[key]
+        -- print(key)
+        -- print(dep)
+		if vim.fn.filereadable(dep) == 1 then
+			h.ok("Dictionary file '" .. dep .. "' exists")
+		else
+			h.error("Missing dictionary file '" .. dep .. "'")
+		end
+	end
+
 
 	check_config()
 end
