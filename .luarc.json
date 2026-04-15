@@ -1,6 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
   "diagnostics": {
+    "libraryFiles": "Disable",
     "disable": [
           "unnecessary-if"
     ],
@@ -26,13 +27,15 @@
   },
   "workspace": {
     "ignoreDir": [
-        ".luarocks"
+        ".luarocks",
+        "result"
     ],
     "ignoreGlobs": [
       "**/*_spec.lua"
     ],
     "useGitIgnore": true,
     "library": [
+      "/nix/store/nrfmz96d34kawi604mlk0f92khs6ym2q-neovim-unwrapped-7720e52/share/nvim/runtime/lua",
       "${3rd}/busted/library",
       "${3rd}/luv/library"
     ]
