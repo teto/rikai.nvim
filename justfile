@@ -8,8 +8,11 @@
 lint-check:
     treefmt --fail-on-change
 
-install-dictionaries:
-    nvim +'Rikai download'
+test-install-dictionaries:
+    nvim --clean --cmd 'set rtp^=.' +'Rikai download' -e +quitall!
+    [ -d ~/.local/share/nvim/rikai/kanjivg ]
+    [ -f ~/.local/share/nvim/rikai/kanji.db ]
+    [ -f ~/.local/share/nvim/rikai/expression.db ]
 
 # Target to run Busted tests
 test:
