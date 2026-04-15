@@ -13,24 +13,57 @@ Here are some possibly outdated screenshots:
 
 # How to install ?
 
-Right now the plugin is in development and mot fully declarative but soon we should get a nix build along with a rockspec.
+If you are using nix, you can use the flake to add the vim plugin to your system.
+Dependencies are visible in the flake.nix.
+Similarly if you want to test it out, you can just enter the shell with `nix
+develop`.
+
+On other systems, you must find a way to install these dependencies:
 
 Dependencies:
 - [sudachi_rs][sudachi-rs] as a tokenizer (ie., split words), use the full
   version 
-- [edict_database][edict-as-sqlite] as sqlite databases
 <!-- - [lual for logging][lual-luarocks] -->
 - [alogger][alogger-luarocks] for logging
 - [official sqlite bindings][lsqlite-luarocks] for lua 'sqlite'
 - [utf8][luautf8-github] to get utf8
 
+I recommand using the neovim package manager [rocks.nvim][rocks.nvim] since it
+automatically installs the lua dependencies.
 
-Popups are written in markdown, to improve the rendering I advise installing
-[render-markdown-nvim][rendermarkdown-github] though it remains optional.
+`:Rocks install rikai.nvim`
+
+Once the plugin is installed, you will need to download the japanese
+dictionaries with `:Rikai download` (needed just once):
+- [edict_database][edict-as-sqlite] as sqlite databases
+
+
+> [!TIP]
+> Popups are written in markdown, to improve the rendering I advise installing
+> [render-markdown-nvim][rendermarkdown-github] though it remains optional.
+
+# How to configure ?
+
+The plugin does not need any configuration: it works out of the box once installed.
+You can tweak its behavior via `vim.g.rikai`, see `lua/rikai/config/default.lua`
+for the available options.
+
+> [!TIP]
+> 
+> Enable image preview if your terminal (for instance 'kitty') supports it with:
+> ```lua
+> vim.g.rikai = {
+>   popup_options = {
+>     use_images = true,
+>   }
+> }
+> ```
+
+You can tweak the highlights starting with `Rikai*` as well.
+
+You can finally check your installation/configuration with `:checkhealth rikai`
 
 # How to use ?
-
-Run `:Rikai download` to fetch the dictionaries (needed just once).
 
 There are no default keymaps so you need to set one
 
@@ -61,7 +94,6 @@ Highlights used are visible in plugin/rikai.lua:
 - add rikai translate
 
 
-
 <!-- Lua dependencies: -->
 
 See [wiki][rikai-nvim-wiki] for more reference.
@@ -79,6 +111,7 @@ Run `:Rikai download`.
   study](https://play.google.com/store/apps/details?id=com.mindtwisted.kanjistudy&pli=1)
 - [ichiran][ichiran-github]
 
+[rocks.nvim]: https://github.com/lumen-oss/rocks.nvim
 [alogger-luarocks]: https://luarocks.org/modules/swarg/alogger/
 [edict-as-sqlite]: https://github.com/odrevet/edict_database
 [ichiran-github]: https://github.com/tshatrov/ichiran

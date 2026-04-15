@@ -158,7 +158,8 @@
 
         };
 
-        devShells.default = pkgs.mkShell {
+        devShells = {
+          default = pkgs.mkShell {
           name = "rikai.nvim";
 
           buildInputs = [
@@ -236,6 +237,7 @@
               echo "export LUA_CPATH='$(lx path c)'" >> .lua.env
               source .lua.env
             '';
+          };
         };
       }
     )
