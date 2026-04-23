@@ -41,6 +41,8 @@ function M.jisho_link(expr, as_kanji)
 	if as_kanji then
 		url = url .. "%23kanji"
 	end
+
+	-- Format the URL with OSC8 for clickable links in terminals
 	return url
 end
 

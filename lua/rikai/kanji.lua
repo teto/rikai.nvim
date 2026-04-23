@@ -68,7 +68,13 @@ function M.format_kanji(res, radicals)
 	end
 
 	table.insert(lines, "")
-	table.insert(lines, utils.jisho_link(res["id"], true))
+	local jisho_link = utils.jisho_link(res["id"], true)
+
+	-- todo add osc8 on the correct line
+	-- local ns = vim.api.nvim_create_namespace("rikai-osc8")
+	-- vim.api.nvim_buf_set_extmark(0, ns, 0, 0, { end_col = 16, url = jisho_link})
+
+	table.insert(lines, jisho_link)
 	return lines
 end
 

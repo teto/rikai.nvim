@@ -160,83 +160,83 @@
 
         devShells = {
           default = pkgs.mkShell {
-          name = "rikai.nvim";
+            name = "rikai.nvim";
 
-          buildInputs = [
-            treefmtEval.config.build.wrapper
-            luaEnv
-            # lx can autoinstall busted
-            # lua.pkgs.busted  # careful with order as this puts a different lua in PATH
-            # lua.pkgs.nlua
+            buildInputs = [
+              treefmtEval.config.build.wrapper
+              luaEnv
+              # lx can autoinstall busted
+              # lua.pkgs.busted  # careful with order as this puts a different lua in PATH
+              # lua.pkgs.nlua
 
-            pkgs.just # for 'just'
-            pkgs.lux-cli # lux
+              pkgs.just # for 'just'
+              pkgs.lux-cli # lux
 
-            pkgs.librsvg # for rsvg-convert executable
+              pkgs.librsvg # for rsvg-convert executable
 
-            # pyEnv
-            pkgs.sqlite.dev # to install lsqlite3 via luarocks
-            pkgs.cmake # needed for luv install ?
-            pkgs.sqlite.dev # for sqlite3.h
+              # pyEnv
+              pkgs.sqlite.dev # to install lsqlite3 via luarocks
+              pkgs.cmake # needed for luv install ?
+              pkgs.sqlite.dev # for sqlite3.h
 
-            pkgs.emmylua-check
-            # self.inputs.lux.packages.${platform}.lux-cli
-            # self.inputs.lux.packages.${platform}.lux-lua51
-            pkgs.pkg-config # required by lux ?
-            pkgs.vimcats
-          ];
+              pkgs.emmylua-check
+              # self.inputs.lux.packages.${platform}.lux-cli
+              # self.inputs.lux.packages.${platform}.lux-lua51
+              pkgs.pkg-config # required by lux ?
+              pkgs.vimcats
+            ];
 
-          # not packaged in nixpkgs yet
-          # ${pkgs.lib.toShellVars pkgs.lua5_1.lsqlite3.variables}
-          shellHook =
-            let
-              luarocksConfContent = pkgs.lib.generators.toLua { asBindings = true; } luarocksConfig;
-              luarocksConfig = pkgs.lua.pkgs.luaLib.generateLuarocksConfig {
+            # not packaged in nixpkgs yet
+            # ${pkgs.lib.toShellVars pkgs.lua5_1.lsqlite3.variables}
+            shellHook =
+              let
+                luarocksConfContent = pkgs.lib.generators.toLua { asBindings = true; } luarocksConfig;
+                luarocksConfig = pkgs.lua.pkgs.luaLib.generateLuarocksConfig {
 
-                externalDeps = [
-                  {
-                    name = "SQLITE";
-                    dep = pkgs.sqlite;
-                  }
-                ];
-              };
-              configFile = pkgs.writeTextFile {
-                name = "rikai-dev-luarocks-config.lua";
-                text = luarocksConfContent;
-              };
+                  externalDeps = [
+                    {
+                      name = "SQLITE";
+                      dep = pkgs.sqlite;
+                    }
+                  ];
+                };
+                configFile = pkgs.writeTextFile {
+                  name = "rikai-dev-luarocks-config.lua";
+                  text = luarocksConfContent;
+                };
 
-              # this should be bone automatically wtf
-              exposeLib =
-                { name, dep }:
-                [
-                  ''${name}_INCDIR="${lib.getDev dep}/include"''
-                  ''${name}_LIBDIR="${lib.getLib dep}/lib"''
-                  ''${name}_BINDIR="${lib.getBin dep}/bin"''
-                ];
+                # this should be bone automatically wtf
+                exposeLib =
+                  { name, dep }:
+                  [
+                    ''${name}_INCDIR="${lib.getDev dep}/include"''
+                    ''${name}_LIBDIR="${lib.getLib dep}/lib"''
+                    ''${name}_BINDIR="${lib.getBin dep}/bin"''
+                  ];
 
-            in
+              in
 
-            # /home/teto/neovim/rikai.nvim/.lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/kanji.db
-            ''
-              mkdir -p .luarocks
+              # /home/teto/neovim/rikai.nvim/.lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/kanji.db
+              ''
+                mkdir -p .luarocks
 
-              # todo change the lux test folder instead
-              mkdir -p .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
-              ln -sf "${self.inputs.edict-kanji-db}/kanji.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
-              ln -sf "${self.inputs.edict-expression-db}/expression.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
+                # todo change the lux test folder instead
+                mkdir -p .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
+                ln -sf "${self.inputs.edict-kanji-db}/kanji.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
+                ln -sf "${self.inputs.edict-expression-db}/expression.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
 
-              cat ${configFile} >> .luarocks/config-5.1.lua
-              ${lib.concatMapStringsSep "\n" (val: "export ${val}") (exposeLib {
-                name = "SQLITE";
-                dep = pkgs.sqlite;
-              })}
-              export LUA_PATH="$LUA_PATH;lua/?.lua"
-              # this is used by `lx shell` but for some reason SHELL still points to the older one
-              export SHELL=${pkgs.bashInteractive}/bin/bash
-              echo "export LUA_PATH='$(lx path lua)'" > .lua.env
-              echo "export LUA_CPATH='$(lx path c)'" >> .lua.env
-              source .lua.env
-            '';
+                cat ${configFile} >> .luarocks/config-5.1.lua
+                ${lib.concatMapStringsSep "\n" (val: "export ${val}") (exposeLib {
+                  name = "SQLITE";
+                  dep = pkgs.sqlite;
+                })}
+                export LUA_PATH="$LUA_PATH;lua/?.lua"
+                # this is used by `lx shell` but for some reason SHELL still points to the older one
+                export SHELL=${pkgs.bashInteractive}/bin/bash
+                echo "export LUA_PATH='$(lx path lua)'" > .lua.env
+                echo "export LUA_CPATH='$(lx path c)'" >> .lua.env
+                source .lua.env
+              '';
           };
         };
       }

@@ -20,9 +20,11 @@ develop`.
 
 On other systems, you must find a way to install these dependencies:
 
-Dependencies:
-- [sudachi_rs][sudachi-rs] as a tokenizer (ie., split words), use the full
-  version 
+System Dependencies:
+- [sudachi_rs][sudachi-rs] as a tokenizer (ie., split words), use the full version 
+- [unzip][unzip] to unpack dictionaries
+
+Lua dependencies:
 <!-- - [lual for logging][lual-luarocks] -->
 - [alogger][alogger-luarocks] for logging
 - [official sqlite bindings][lsqlite-luarocks] for lua 'sqlite'
@@ -54,10 +56,12 @@ for the available options.
 > ```lua
 > vim.g.rikai = {
 >   popup_options = {
->     use_images = true,
+>     render_images = true,
 >   }
 > }
 > ```
+>
+> You will need to install [snacks.nvim][gh-snacks] as well.
 
 You can tweak the highlights starting with `Rikai*` as well.
 
@@ -124,5 +128,6 @@ Run `:Rikai download`.
 [rikaitan]: https://addons.mozilla.org/en-US/firefox/addon/rikaitan/
 [sudachi-rs]: https://github.com/WorksApplications/sudachi.rs
 [rendermarkdown-github]: https://github.com/MeanderingProgrammer/render-markdown.nvim
+[gh-snacks]: https://github.com/folke/snacks.nvim
 <!-- - [lsqlite3](https://luarocks.org/modules/javierguerragiraldez/lsqlite3) ? -->
 <!-- - https://github.com/uga-rosa/utf8.nvim (last commit 2 years ago) -->

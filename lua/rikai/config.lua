@@ -1,4 +1,4 @@
-local JapDefaultConfig =  require'rikai.config.default'
+local JapDefaultConfig = require("rikai.config.default")
 
 ---@type RikaiConfig
 RikaiConfig = vim.tbl_deep_extend("keep", vim.g.rikai or {}, JapDefaultConfig)
