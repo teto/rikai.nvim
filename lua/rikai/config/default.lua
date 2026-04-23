@@ -7,14 +7,13 @@ local image = require("rikai.image")
 
 ---@class RikaiConfigPopupOptions
 ---@field generate_image_cmd fun(string): string
----@field use_images boolean convert kanjis into images to make them easier to read/bigger
+---@field render_images boolean convert kanjis into images to make them easier to read/bigger
 
----@class RikaiConfig 
+---@class RikaiConfig
 ---@field log_level vim.log.levels logging level
 ---@field popup_options RikaiConfigPopupOptions
 ---@field dictionaries RikaiConfigDictionaries
 ---@field _state table internal dont use
-
 
 ---@type RikaiConfig
 local JapDefaultConfig = {
@@ -45,4 +44,3 @@ local JapDefaultConfig = {
 }
 
 return JapDefaultConfig
-
