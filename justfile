@@ -9,7 +9,7 @@ lint-check:
     treefmt --fail-on-change
 
 test-install-dictionaries:
-    nvim --clean --cmd 'set rtp^=.' +'Rikai download' -e +quitall!
+    nvim --headless --clean --cmd 'set rtp^=.' +'Rikai download' -e +quitall!
     [ -d ~/.local/share/nvim/rikai/kanjivg ]
     [ -f ~/.local/share/nvim/rikai/kanji.db ]
     [ -f ~/.local/share/nvim/rikai/expression.db ]

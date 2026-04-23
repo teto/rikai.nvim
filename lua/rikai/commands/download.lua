@@ -8,43 +8,81 @@ local expression_url = "https://github.com/odrevet/edict_database/releases/downl
 	.. dict_version
 	.. "/expression.zip"
 -- optional, to plot stroke order
--- local kanjivg_url = "https://github.com/KanjiVG/kanjivg/releases/download/r20250816/kanjivg-20250816-all.zip"
+local kanjivg_url = "https://github.com/KanjiVG/kanjivg/releases/download/r20250816/kanjivg-20250816-all.zip"
 
----@param _args any
-function download(_args)
-	-- print("downloading dicts...")
-	-- local furigana_url = "https://github.com/Doublevil/JmdictFurigana/releases/download/2.3.1%2B2024-11-25/JmdictFurigana.json.tar.gz"
+successful = false
 
-	-- runs in fast context
-	---@param err string|nil
-	---@param _response any
-	local on_reponse = function(err, _response)
-		local msg = "placeholder message"
-		if err then
-			-- set ERROR level
-			msg = "Downloading rikai DB failed:\n" .. err
-			logger.error(msg)
-			print("Downloading rikai DB failed:\n" .. err)
-		else
-			msg = "Finished downloading rikai dictionary."
-			logger.info(msg)
-			print(msg)
-			-- vim.notify("Finished downloading rikai dictionary.")
-		end
+local function unzip_file(zip_path, output_dir)
+	local cmd = string.format("unzip -u %s -d %s", vim.fn.shellescape(zip_path), vim.fn.shellescape(output_dir))
+	logger.info("Running: ", cmd)
+	local result = vim.fn.system(cmd)
+	return result
+end
+
+-- runs in fast context
+---@param url string where to install from
+---@param dest string where to install file
+local function download(url, dest)
+	local tmp = os.tmpname() .. ".zip"
+
+	local done, err, res = false, nil, nil
+
+	---@param e string|nil
+	---@param r any
+	local on_reponse = function(e, r)
+		err, res, done = e, r, true
 	end
 
-	vim.net.request(kanji_url, {
-		outpath = vim.g.rikai.dictionaries.kanjidb,
+	local _job = vim.net.request(url, {
+		outpath = tmp,
 		verbose = true,
 		-- retry = 3
 	}, on_reponse)
-	vim.net.request(expression_url, {
-		outpath = vim.g.rikai.jmdictdb,
-	}, on_reponse)
-	-- TODO uncompress ?
-	vim.net.request(expression_url, {
-		outpath = vim.fn.stdpath("data") .. "/rikai/furigana.json",
-	}, on_reponse)
+
+	local timeout_ms = 360 * 1000
+	vim.wait(timeout_ms, function()
+		logger.debug("Checking if download is finished")
+		return done
+	end, 200, true)
+
+	local status = res and res.status or 0
+	-- local ok = (not err) and ((status >= 200 and status < 300) or (status == 0 and file_ok(outpath)))
+	-- return not not ok, (status ~= 0 and status or nil), err
+
+	local msg = "placeholder message"
+	if err or status ~= 0 then
+		-- set ERROR level
+		msg = "Downloading rikai DB failed:\n" .. err
+		logger.error(msg)
+		print("Downloading rikai DB failed:\n" .. err)
+	else
+		msg = "Finished downloading rikai dictionary."
+		logger.info(msg)
+
+		successful = true
+		-- vim.notify("Finished downloading rikai dictionary.")
+	end
+
+	if not successful then
+		vim.notify("Failed to download " .. url)
+		return
+	end
+
+	-- expect output dir rather
+	local out_dir = vim.fn.stdpath("data") .. "/rikai"
+	unzip_file(tmp, out_dir)
 end
 
-return download
+-- todo one should be able to download only one of the dicts
+---@param _args any
+function cmd_download(_args)
+	download(kanji_url, vim.g.rikai.dictionaries.kanjidb)
+	download(expression_url, vim.g.rikai.dictionaries.jmdictdb)
+
+	local cfg = vim.g.rikai
+	if cfg.popup_options.render_images then
+		download(kanjivg_url, vim.g.rikai.dictionaries.kanjivg)
+	end
+end
+
+return cmd_download
