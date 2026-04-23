@@ -83,7 +83,7 @@ M.popup_lookup = function(token)
 		-- TODO check there is one result as least
 		local radicals = query.lookup_kanji_radicals(token)
 
-		if config.popup_options.use_images then
+		if config.popup_options.render_images then
 			logger.debug("displaying image")
 			local has_image, _ = pcall(require, "snacks.image")
 			if not has_image then

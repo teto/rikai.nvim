@@ -92,7 +92,7 @@ function M.create_command()
 			"enable",
 			"disable",
 		},
-		help = "Test word.",
+		help = "Choose behavior",
 	})
 	hl_parser:add_parameter({ name = "--name", help = "highlight names ?" })
 	-- args vim.api.keyset.create_user_command.command_args
@@ -109,8 +109,13 @@ function M.create_command()
 		require("rikai.highlighter").toggle_highlights(pos, true)
 	end)
 
-	local download = top_subparsers:add_parser({ name = "download", help = "download the necessary dictionaries" })
-	download:set_execute(function(_data)
+	local dl_parser = top_subparsers:add_parser({ name = "download", help = "download the necessary dictionaries" })
+	dl_parser:add_parameter({
+		name = "--name",
+		choices = vim.tbl_keys(vim.g.rikai.dictionaries),
+		help = "Dictionary name",
+	})
+	dl_parser:set_execute(function(_data)
 		require("rikai.commands.download")()
 	end)
 
