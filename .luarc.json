@@ -3,7 +3,8 @@
   "diagnostics": {
     "libraryFiles": "Disable",
     "disable": [
-          "unnecessary-if"
+      "unnecessary-if",
+      "need-check-nil"
     ],
     "globals": [
       "setup",
@@ -27,8 +28,8 @@
   },
   "workspace": {
     "ignoreDir": [
-        ".luarocks",
-        "result"
+      ".luarocks",
+      "result"
     ],
     "ignoreGlobs": [
       "**/*_spec.lua"
@@ -37,7 +38,24 @@
     "library": [
       "/nix/store/nrfmz96d34kawi604mlk0f92khs6ym2q-neovim-unwrapped-7720e52/share/nvim/runtime/lua",
       "${3rd}/busted/library",
-      "${3rd}/luv/library"
+      "${3rd}/luv/library",
+      ".lux/5.1/392c069ca7154cb446b52b0f9c6be33de04e6a6f0a7c9ff762b30c5b9db1bdc7-mega.logging@1.1.6-1/src",
+      ".lux/5.1/45ae6ddbb8453b514dc9b68c3c382d794db39dc9629b81792aeb37e6523a0cf1-utf8@1.3-0/src",
+      ".lux/5.1/51bf4213185eb717b01ff54a89e0363be1a69e9450eb04673469c530dfe56a28-mega.cmdparse@1.2.0-1/src",
+      ".lux/5.1/7e53044b4486d7fa5bbcf1011cc634de7470d5302c208559faa32d987886c52a-lsqlite3@0.9.6-1/src",
+      ".lux/5.1/a676997275cbc3f95f0589058fa302ea51fdb62cb62df1fa1603e2aac75eb459-alogger@0.6.0-1/src",
+      ".lux/5.1/test_dependencies/5.1/01a3c364614bddff7370223a5a9c4580f8e62d144384148444c518ec5367a59b-mediator_lua@1.1.2-0/src",
+      ".lux/5.1/test_dependencies/5.1/287e827f4a088d41bba04af5f61a13614346c16fe8150eb7c4246e67d6fd163e-lua-term@0.8-1/src",
+      ".lux/5.1/test_dependencies/5.1/2bd1c8e4fea66a88aeb65c1c8a3d0efdf188d681d2d47f163b976a771545aac9-penlight@1.15.0-1/src",
+      ".lux/5.1/test_dependencies/5.1/455cd98d50c6191a9685cffcda4ce783efbb957934625e134c39f43bd5df6818-luassert@1.9.0-1/src",
+      ".lux/5.1/test_dependencies/5.1/4e9592a499c9ced4f8ce366db9db7d9c0dd1424ea8d4c8c16c1550ea3a61a696-say@1.4.1-3/src",
+      ".lux/5.1/test_dependencies/5.1/4fc3dea26b8026d085b3b0ccf29add2849c42e62d1fb23f0b6fc6f3201307953-dkjson@2.10-1/src",
+      ".lux/5.1/test_dependencies/5.1/5abed54457baf9037ff989a1ec78172ee7483d87e794bc9175dbed61f08be72c-lua_cliargs@3.0.2-1/src",
+      ".lux/5.1/test_dependencies/5.1/611b19eca413e8557258c177563402d31094cde79f82d340f5648d2ac8f3b8a1-luafilesystem@1.9.0-1/src",
+      ".lux/5.1/test_dependencies/5.1/6ce29c2c535c40246c386c056f24689344cddb56ec397473931431e6b67694d2-say@1.4.1-3/src",
+      ".lux/5.1/test_dependencies/5.1/89dfdcdc007420c5dc3ae90f496c7173877cc53b104e90fb0183bebd7ec7f444-nlua@0.3.2-1/src",
+      ".lux/5.1/test_dependencies/5.1/aa700d6a934caa749d578927c97e22211ffabf97234705d63e95dc6403f6aafe-busted@2.3.0-1/src",
+      ".lux/5.1/test_dependencies/5.1/fe607fc3a725b032acf5722632cf6993702c56ffa7c9f65e28f9d0324c17be34-luasystem@0.7.1-1/src"
     ]
   }
 }

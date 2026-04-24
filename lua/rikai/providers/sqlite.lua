@@ -243,6 +243,7 @@ end
 ---@return table
 function M.lookup_expr(word)
 	-- logger.info("Opening " .. jmdictdb)
+	print("opening ", config.dictionaries.jmdictdb)
 	local db = M.get_db_handle(config.dictionaries.jmdictdb)
 	assert(db)
 	local res = {}

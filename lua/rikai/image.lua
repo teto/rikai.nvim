@@ -58,7 +58,7 @@ function M.from_kanjivg(token)
 	local has_job, obj_or_err = pcall(vim.system, cmd_generate_image, {
 		-- timeout = 3000,
 	})
-	print(has_job)
+	print("has_job", has_job)
 	if not has_job then
 		logger.error("Could not generate image for kanji:\n" .. obj_or_err, vim.log.levels.ERROR)
 	else
