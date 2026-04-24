@@ -8,11 +8,6 @@
 
     flake-utils.url = "github:numtide/flake-utils";
 
-    lux = {
-      url = "github:nvim-neorocks/lux";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     edict-kanji-db = {
       url = "https://github.com/odrevet/edict_database/releases/download/v0.0.5/kanji.zip";
       flake = false;
@@ -61,15 +56,12 @@
 
         # TODO I should be able to remove those as they get provided via lux
         luaEnv = lua.withPackages (lp: [
-
-          # lp.alogger
-          # lp.lual # unused logging library
-          # lp.sqlite # lux can't build it
-
-          # lux can't build lsqlite3 'cos the website's antibot detection throws it off
+          lp.alogger
+          lp.sqlite # lux can't build it
+          lp.busted
+          lp.nlua
           # lp.lsqlite3 # official bindings
-
-          # lp.utf8 installed by nx
+          lp.utf8 # installed by nx
         ]);
 
         # for text-to-speech, e.g., to read japanese out loud
@@ -153,20 +145,24 @@
         };
 
         devShells = {
+          ci = self.devShells.${system}.default.overrideAttrs (oa: {
+            buildInputs = oa.buildInputs ++ [
+              pkgs.neovim-unwrapped
+            ];
+          });
+
           default = pkgs.mkShell {
             name = "rikai.nvim";
 
             buildInputs = [
               treefmtEval.config.build.wrapper
               luaEnv
-              # lx can autoinstall busted
-              # lua.pkgs.busted  # careful with order as this puts a different lua in PATH
-              # lua.pkgs.nlua
-
               pkgs.just # for 'just'
+              # lx can autoinstall busted
               pkgs.lux-cli # lux
 
               pkgs.librsvg # for rsvg-convert executable
+              pkgs.sudachi-rs
 
               # pyEnv
               pkgs.sqlite.dev # to install lsqlite3 via luarocks
@@ -174,16 +170,13 @@
               pkgs.sqlite.dev # for sqlite3.h
 
               pkgs.emmylua-check
-              # self.inputs.lux.packages.${platform}.lux-cli
-              # self.inputs.lux.packages.${platform}.lux-lua51
               pkgs.pkg-config # required by lux ?
               pkgs.vimcats
             ];
 
-            # not packaged in nixpkgs yet
-            # ${pkgs.lib.toShellVars pkgs.lua5_1.lsqlite3.variables}
             shellHook =
               let
+                # soon not needed anymore once we get
                 luarocksConfContent = pkgs.lib.generators.toLua { asBindings = true; } luarocksConfig;
                 luarocksConfig = pkgs.lua.pkgs.luaLib.generateLuarocksConfig {
 
@@ -208,16 +201,23 @@
                     ''${name}_BINDIR="${lib.getBin dep}/bin"''
                   ];
 
+                # passed to the tests
+                dictionariesFolder = pkgs.symlinkJoin {
+                  name = "rikai-data";
+                  paths = [
+                    self.inputs.edict-kanji-db
+                    self.inputs.edict-expression-db
+                    # ln -sf "${self.inputs.edict-expression-db}/expression.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
+                  ];
+
+                };
               in
 
-              # /home/teto/neovim/rikai.nvim/.lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/kanji.db
               ''
                 mkdir -p .luarocks
-
                 # todo change the lux test folder instead
-                mkdir -p .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
-                ln -sf "${self.inputs.edict-kanji-db}/kanji.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
-                ln -sf "${self.inputs.edict-expression-db}/expression.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
+                #  /home/runner/work/rikai.nvim/rikai.nvim/
+                export RIKAI_DICTIONARIES_FOLDER="${dictionariesFolder}"
 
                 cat ${configFile} >> .luarocks/config-5.1.lua
                 ${lib.concatMapStringsSep "\n" (val: "export ${val}") (exposeLib {

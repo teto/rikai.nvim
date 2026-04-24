@@ -85,6 +85,8 @@ M.popup_lookup = function(token)
 
 		if config.popup_options.render_images then
 			logger.debug("displaying image")
+			-- local has_image, _ = vim.fn.has("nvim-0.13")
+			-- TODO replace with native image api
 			local has_image, _ = pcall(require, "snacks.image")
 			if not has_image then
 				vim.notify("Can't preview kanji: Snacks is not available")

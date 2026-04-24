@@ -23,6 +23,12 @@ jobs:
       - name: Run neovim with rikai
         shell: bash
         run: |
+          echo "Running emmylua checks"
           nix develop . --command just emmylua_check
-          nix develop . --command just test
+          # ls .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
+          echo "Running testsuite"
+          # just test-busted
+          nix develop .#ci --command lx test
+
+          # ls .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
 

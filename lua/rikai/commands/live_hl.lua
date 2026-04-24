@@ -8,7 +8,7 @@ local M = {}
 -- _state.current_token
 
 ---@class LiveHlState
----@field current_token table?
+---@field current_token integer|table same type as vim.fn.addpos
 -- cache some state
 local _state = {}
 
@@ -56,7 +56,7 @@ M.highlight_current_token = function()
 	if res < 0 then
 		logger.error("Could not create position")
 	else
-		vim.print(res)
+		vim.print("live_hl res", res)
 		_state.current_token = res
 	end
 end
@@ -68,7 +68,6 @@ M.live_lookup = function()
 	if not token then
 		utils.notify("Could not find current token")
 	else
-		-- print("TODO live lookup of token: " .. token)
 		-- lookup() / open window
 		lookup.popup_lookup(token)
 	end
