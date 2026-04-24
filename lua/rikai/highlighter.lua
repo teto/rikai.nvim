@@ -42,7 +42,6 @@ M.toggle_highlights = function(pos, highlight_names)
 
 	logger.info("Setting vim.g.rikai._state")
 	vim.g.rikai._state = res
-	-- vim.print("Looping over tokens ...")
 	for _i, j in ipairs(res) do
 		local lexicon_type = j[2]
 		if lexicon_type == types.LexiconType.PROPER_NOUN and highlight_names then

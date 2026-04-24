@@ -16,8 +16,6 @@ license = "GPL-2.0"
 alogger = "0.6.0-1"
 utf8 = "1.3-0"
 "mega.cmdparse" = "1.2.0-1"
-# doesnt compile
-# sqlite = "v1.0.0-1"
 lsqlite3 = "0.9.6-1"
 
 # [dependencies."mega.cmdparse"]
@@ -33,5 +31,6 @@ args = [ "src/main.lua" ]
 [build]
 type = "builtin"
 
-[test_dependencies]
-nlua = "0.3.2-1"
+[test]
+type = "busted-nlua"
+flags = [ ] # Optional CLI flags to pass to busted
