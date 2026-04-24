@@ -5,7 +5,7 @@ vim.api.nvim_set_hl(0, "RikaiVirtualText", { link = "Comment" })
 vim.api.nvim_set_hl(0, "RikaiProperNoun", { link = "Search" })
 -- Const / Character
 vim.api.nvim_set_hl(0, "RikaiName", { link = "Const" })
-vim.api.nvim_set_hl(0, "RikaiCurrentToken", { bg = "red" })
+vim.api.nvim_set_hl(0, "RikaiCurrentToken", { link = "Search" })
 
 cmdparser.create_command()
 

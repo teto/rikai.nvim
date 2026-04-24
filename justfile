@@ -5,6 +5,9 @@
 # lint:
 #     lx lint
 
+lint:
+    treefmt
+
 lint-check:
     treefmt --fail-on-change
 
@@ -27,8 +30,10 @@ emmylua_check:
     # VIMRUNTIME=$(nvim --headless +'echo $VIMRUNTIME' -cq)
     emmylua_check --verbose .
 
-test-online:
-    # @busted --lua=nlua 
+test-busted:
+    @busted --lua=nlua 
+
+test-lx:
     lx test
 
 docgen:

@@ -1,23 +1,31 @@
+==========================
 Contributing to rikai.nvim
 ======================
 
 Getting started
 ---------------
 
-nixos.org 
+To get a shell with development dependencies
 
+
+```nix
 $ nix develop
+```
 
-`
+
+You can get a REPL with lua dependencies via:
+`lx lua`
+
+To setup the env for other tools, one can do
 
 ```
 echo "export LUA_PATH='$(lx path lua)'" > .lua.env
 source .lua.env
 ```
 
-# regenerate those dictionaries
+# regenerate the dictionaries we are relying on:
 
-- clone https://github.com/odrevet/edict_database.git (fetch)
+- git clone https://github.com/odrevet/edict_database.git (fetch)
 - nix shell nixpkgs#dart
 
 

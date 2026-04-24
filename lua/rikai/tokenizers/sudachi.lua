@@ -83,10 +83,11 @@ M.tokenize = function(content, enable_pos_processing)
 				-- tab separated results
 				local pieces = vim.split(line, "	")
 				-- local line_start = pieces[1]
+				---@type rikai.types.LexiconType|string?
 				local pos = pieces[2]
 
 				if enable_pos_processing then
-					local res = vim.split(pos, ",")
+					local res = vim.split(tostring(pos) or "", ",")
 
 					pos = M.lexicon_type(res)
 				end

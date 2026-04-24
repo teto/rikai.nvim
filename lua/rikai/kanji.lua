@@ -21,7 +21,7 @@ function M.format_radicals(kanji)
 	logger.debug("Looking up radicals for kanji : " .. tostring(kanji))
 	local res = {}
 
-	local req = query.query_kanji_get_radicals(kanji)
+	local req = query.get_radicals_from_kanji_query(kanji)
 	local con = query.get_db_handle(config.dictionaries.kanjidb)
 
 	assert(con)

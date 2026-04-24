@@ -75,7 +75,6 @@ function M.is_japanese(text)
 	for _pos, code in utf8.codes(text) do
 		local chartype = M.chartype(code)
 		first_type = chartype
-		-- print("chartype", chartype)
 		break
 	end
 

@@ -74,8 +74,6 @@ function M.check()
 	for _k, key in ipairs({ "kanjidb", "jmdictdb" }) do
 		-- kanjivg is a folder though
 		local dep = cfg.dictionaries[key]
-		-- print(key)
-		-- print(dep)
 		if vim.fn.filereadable(dep) == 1 then
 			h.ok("Dictionary file '" .. dep .. "' exists")
 		else

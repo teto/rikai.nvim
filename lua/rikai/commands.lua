@@ -73,6 +73,7 @@ function M.create_command()
 			"enable",
 			"disable",
 		},
+		required = true,
 		help = "Autoupdate text highlights depending on their type: names, verbs, ...",
 	})
 	livehl_parser:set_execute(livehl.setup_hl_autocmds)
@@ -132,8 +133,7 @@ function M.create_command()
 
 	local log = top_subparsers:add_parser({ name = "log", help = "" })
 	log:set_execute(function(_data)
-		-- TODO implement a log.get_logfile()
-		vim.cmd.e("rikai.log")
+		vim.cmd.edit(vim.fn.fnameescape(vim.fn.stdpath("log") .. "/rikai.log"))
 	end)
 
 	cmdparse.create_user_command(parser, nil, { range = true })
