@@ -36,7 +36,6 @@ local function download(url, dest)
 	local _job = vim.net.request(url, {
 		outpath = tmp,
 		verbose = true,
-		-- retry = 3
 	}, on_reponse)
 
 	local timeout_ms = 360 * 1000
@@ -69,19 +68,19 @@ local function download(url, dest)
 	end
 
 	-- expect output dir rather
-	local out_dir = vim.fn.stdpath("data") .. "/rikai"
-	unzip_file(tmp, out_dir)
+	unzip_file(tmp, dest)
 end
 
 -- todo one should be able to download only one of the dicts
 ---@param _args any
 function cmd_download(_args)
+	local out_dir = vim.fn.stdpath("data") .. "/rikai"
 	download(kanji_url, vim.g.rikai.dictionaries.kanjidb)
 	download(expression_url, vim.g.rikai.dictionaries.jmdictdb)
 
 	local cfg = vim.g.rikai
 	if cfg.popup_options.render_images then
-		download(kanjivg_url, vim.g.rikai.dictionaries.kanjivg)
+		download(kanjivg_url, out_dir)
 	end
 end
 

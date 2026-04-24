@@ -28,12 +28,9 @@ local JapDefaultConfig = {
 	log_level = vim.log.levels.WARN,
 	tokenizer = "sudachi",
 
-	-- separator = " ------ ",
-
 	--- TODO vim.lsp.util.open_floating_preview.Opts
 	popup_options = {
-		---
-		use_images = true,
+		render_images = true,
 
 		generate_image_cmd = image.from_kanjivg,
 		max_height = 20,

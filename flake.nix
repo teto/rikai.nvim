@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs = {
-      # use my fork where jmdict is packaged
       url = "github:nixos/nixpkgs/nixos-unstable";
     };
 
@@ -38,12 +37,9 @@
     flake-utils.lib.eachSystem [ "x86_64-linux" ] (
       system:
       let
-        # TODO
         inherit (vanilla_pkgs) lib;
         vanilla_pkgs = nixpkgs.legacyPackages.${system};
         pkgs = import nixpkgs {
-
-          # system = "x86_64-linux";
           inherit system;
           overlays = [
             self.overlays.luaOverlay
@@ -150,11 +146,9 @@
           fugashi = fugashi-unidic pkgs.python3.pkgs;
           mojimoji = mojimoji pkgs.python3.pkgs;
 
-          sudachi-rs-full = pkgs.sudachi-rs.override ({
-            sudachidict = pkgs.sudachidict.override {
-              core-type = "full";
-            };
-          });
+          sudachi-rs-full = pkgs.sudachi-rs.override {
+            sudachidict = pkgs.python3Packages.sudachidict-full;
+          };
 
         };
 
