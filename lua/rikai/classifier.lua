@@ -55,11 +55,11 @@ end
 ---@return boolean
 function M.is_japanese(text)
 	-- Check if the input is valid
-	-- logger.debug("Checking if code "..text)
+	-- logger:debug("Checking if code "..text)
 	assert(text, "Accepts only string")
 
 	if #text == 0 then
-		logger.debug("Empty string")
+		logger:debug("Empty string")
 		return false
 	end
 
@@ -78,8 +78,8 @@ function M.is_japanese(text)
 		break
 	end
 
-	-- logger.debug("Checking if mb_char ["..mb_char.."] is japanese")
-	-- logger.debug("Checking if code "..tostring(code).." is japanese")
+	-- logger:debug("Checking if mb_char ["..mb_char.."] is japanese")
+	-- logger:debug("Checking if code "..tostring(code).." is japanese")
 
 	-- -- Check if the character is within the Japanese Unicode ranges
 	if

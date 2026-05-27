@@ -77,23 +77,22 @@
           "source": "sha256-7MbnY2pU8CG8pbSgGzWvBv16b8iyHEs+zNT9td0yrYI="
         }
       },
-      "a676997275cbc3f95f0589058fa302ea51fdb62cb62df1fa1603e2aac75eb459": {
-        "name": "alogger",
-        "version": "0.6.0-1",
+      "f884ed08025badba954e55cc5720ef0b283c1b2260645c0b1e60ea28c43f4cbe": {
+        "name": "mega.logging",
+        "version": "1.1.6-1",
         "pinned": false,
         "opt": false,
         "dependencies": [],
-        "constraint": "==0.6.0",
+        "constraint": "==1.1.6",
         "binaries": [],
         "source": "luarocks_rockspec+https://luarocks.org/",
         "source_url": {
-          "type": "git",
-          "url": "https://gitlab.com/lua_rocks/alogger.git",
-          "ref": "v0.6.0"
+          "type": "url",
+          "url": "https://github.com/ColinKennedy/mega.logging/archive/v1.1.6.zip"
         },
         "hashes": {
-          "rockspec": "sha256-hws/LFcEmvHBWW5zot2UantoYl6naTh2XjvIfkXPHAo=",
-          "source": "sha256-/OVwQvm+ViK0rpIbQOzKWYAeLSLBHEPLqlz+r+LmCbA="
+          "rockspec": "sha256-b/UNBHzASov3C1Tp3B43NfCtejHOBc3FjYNZHAndRu0=",
+          "source": "sha256-xz8Btm9bYc+VR5jcgdzVSmnhFaVzi7pj6NkoBXd0FFQ="
         }
       }
     },
@@ -101,7 +100,7 @@
       "45ae6ddbb8453b514dc9b68c3c382d794db39dc9629b81792aeb37e6523a0cf1",
       "51bf4213185eb717b01ff54a89e0363be1a69e9450eb04673469c530dfe56a28",
       "7e53044b4486d7fa5bbcf1011cc634de7470d5302c208559faa32d987886c52a",
-      "a676997275cbc3f95f0589058fa302ea51fdb62cb62df1fa1603e2aac75eb459"
+      "f884ed08025badba954e55cc5720ef0b283c1b2260645c0b1e60ea28c43f4cbe"
     ]
   },
   "test_dependencies": {
@@ -284,26 +283,6 @@
           "source": "sha256-IjNkK1leVtYgbEjUqguVMjbdW+0BHAOCE0pazrVuF50="
         }
       },
-      "89dfdcdc007420c5dc3ae90f496c7173877cc53b104e90fb0183bebd7ec7f444": {
-        "name": "nlua",
-        "version": "0.3.2-1",
-        "pinned": false,
-        "opt": false,
-        "dependencies": [],
-        "constraint": "==0.3.2",
-        "binaries": [
-          "nlua"
-        ],
-        "source": "luarocks_rockspec+https://luarocks.org/",
-        "source_url": {
-          "type": "url",
-          "url": "https://github.com/mfussenegger/nlua/archive/v0.3.2.zip"
-        },
-        "hashes": {
-          "rockspec": "sha256-WPlvpMZ6Ochzw61T+rxOAfh4VPqh3GhXVgfyH/+OyDY=",
-          "source": "sha256-Gep+0WGkNPJ/7acaIVfHpi+/wHoUevlly3JRc0G+hBU="
-        }
-      },
       "aa700d6a934caa749d578927c97e22211ffabf97234705d63e95dc6403f6aafe": {
         "name": "busted",
         "version": "2.3.0-1",
@@ -335,6 +314,26 @@
           "source": "sha256-ZSfnbsDiaIo/abVpwb/LV5Ktp5wFSZQNO0OdbnjqVSs="
         }
       },
+      "d85464dc58c62460a1ecb14e6ac773ae615a66a8224b26ceb25d954c6b05ca74": {
+        "name": "nlua",
+        "version": "0.3.2-1",
+        "pinned": false,
+        "opt": false,
+        "dependencies": [],
+        "constraint": null,
+        "binaries": [
+          "nlua"
+        ],
+        "source": "luarocks_rockspec+https://luarocks.org/",
+        "source_url": {
+          "type": "url",
+          "url": "https://github.com/mfussenegger/nlua/archive/v0.3.2.zip"
+        },
+        "hashes": {
+          "rockspec": "sha256-WPlvpMZ6Ochzw61T+rxOAfh4VPqh3GhXVgfyH/+OyDY=",
+          "source": "sha256-Gep+0WGkNPJ/7acaIVfHpi+/wHoUevlly3JRc0G+hBU="
+        }
+      },
       "fe607fc3a725b032acf5722632cf6993702c56ffa7c9f65e28f9d0324c17be34": {
         "name": "luasystem",
         "version": "0.7.1-1",
@@ -356,8 +355,8 @@
       }
     },
     "entrypoints": [
-      "89dfdcdc007420c5dc3ae90f496c7173877cc53b104e90fb0183bebd7ec7f444",
-      "aa700d6a934caa749d578927c97e22211ffabf97234705d63e95dc6403f6aafe"
+      "aa700d6a934caa749d578927c97e22211ffabf97234705d63e95dc6403f6aafe",
+      "d85464dc58c62460a1ecb14e6ac773ae615a66a8224b26ceb25d954c6b05ca74"
     ]
   }
 }

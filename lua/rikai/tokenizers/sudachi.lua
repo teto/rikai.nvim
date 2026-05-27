@@ -62,7 +62,7 @@ M.tokenize = function(content, enable_pos_processing)
 	local tokens = {}
 	-- Use format strings
 	-- TODO dont log the whole thing,
-	logger.info(string.format("Tokenizer called with content '%s'", content))
+	logger:info(string.format("Tokenizer called with content '%s'", content))
 
 	---@param _ number
 	---@param data table
@@ -76,7 +76,7 @@ M.tokenize = function(content, enable_pos_processing)
 		-- - Normalized Form
 		-- Part of speech starts with word type
 
-		logger.debug("Handle_line called for event " .. name)
+		logger:debug("Handle_line called for event " .. name)
 		for _, line in ipairs(data) do
 			-- sudachi prints 'EOS' too. can sudachi be configured differently ?
 			if line ~= "" and line ~= "EOS" then
@@ -96,9 +96,9 @@ M.tokenize = function(content, enable_pos_processing)
 				-- https://groups.google.com/g/vim_dev/c/XrRP7Gcb9uc
 				-- so till then we can't count on <cword> and have to classify stuff ourself
 				-- if not classifier.is_japanese(line_start) then
-				--     logger.debug("Skipping non-japanese token", line_start)
+				--     logger:debug("Skipping non-japanese token", line_start)
 				-- else
-				-- logger.debug("Inserting description of token ".. line_start)
+				-- logger:debug("Inserting description of token ".. line_start)
 				table.insert(tokens, {
 					pieces[1],
 					pos, -- processed or not
@@ -137,7 +137,7 @@ M.tokenize = function(content, enable_pos_processing)
 		-- local reskill = vim.fn.jobstop( chan )
 	end
 
-	logger.debug("Found " .. tostring(#tokens) .. " different tokens")
+	logger:debug("Found " .. tostring(#tokens) .. " different tokens")
 	return tokens
 end
 

@@ -4,7 +4,7 @@ local M = {}
 
 ---@param msg string
 function M.notify(msg, level)
-	logger.debug("notify:" .. msg)
+	logger:debug("notify:" .. msg)
 	vim.notify(msg, level)
 end
 
@@ -17,7 +17,7 @@ function M.timeit(name, op, ...)
 	local res = { op(...) }
 	vim.uv.update_time()
 	local end_time = vim.uv.now()
-	logger.debug(name .. " operation took " .. tostring(end_time - start) .. "ms")
+	logger:debug(name .. " operation took " .. tostring(end_time - start) .. "ms")
 	return unpack(res)
 end
 
