@@ -16,7 +16,7 @@ dependencies = {
 	"lsqlite3",
 	"utf8==1.3",
 	"mega.cmdparse",
-	"alogger",
+	"mega.logging",
 }
 
 source = {

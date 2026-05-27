@@ -24,7 +24,7 @@ M.highlight_group = vim.api.nvim_create_augroup("RikaiHighlightWordGroup", { cle
 M.toggle_highlights = function(pos, highlight_names)
 	-- for now just enable
 	-- tokenize the current line, searching for names and adding highlights for them
-	logger.info("Toggling highlights ")
+	logger:info("Toggling highlights ")
 	-- local line = pos[2] -1 -- nvim_buf_get_lines is 0-indexed
 
 	local lines = vim.api.nvim_buf_get_lines(
@@ -40,7 +40,7 @@ M.toggle_highlights = function(pos, highlight_names)
 	end
 	local res = tokenizer.tokenize(line, true)
 
-	logger.info("Setting vim.g.rikai._state")
+	logger:info("Setting vim.g.rikai._state")
 	vim.g.rikai._state = res
 	for _i, j in ipairs(res) do
 		local lexicon_type = j[2]

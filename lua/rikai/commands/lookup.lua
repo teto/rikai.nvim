@@ -42,7 +42,7 @@ local separator = " ---------- "
 ---@param token string
 ---@return number|nil winid
 M.popup_lookup = function(token)
-	logger.info("Looking into token: " .. token)
+	logger:info("Looking into token: " .. token)
 
 	-- find the firest
 	-- TODO if length is one, no need to tokenize !
@@ -54,16 +54,16 @@ M.popup_lookup = function(token)
 	-- aka we want to check if we've
 	local win = M.find_window_by_var(focus_id, bufnr)
 
-	logger.debug("Looking for existing window with focus_id=%s", focus_id)
+	logger:debug(string.format("Looking for existing window with focus_id=%s", focus_id))
 	---@diagnostic disable-next-line: unnecessary-if
 	if win and api.nvim_win_is_valid(win) and vim.fn.pumvisible() == 0 then
-		logger.debug("Found a window with focus_id=%s", focus_id)
+		logger:debug(string.format("Found a window with focus_id=%s", focus_id))
 		-- focus and return the existing buf, win
 		api.nvim_set_current_win(win)
 		api.nvim_command("stopinsert")
 		return win
 	else
-		logger.debug("Could not find any preexisting popup focus_id=%s", focus_id)
+		logger:debug(string.format("Could not find any preexisting popup focus_id=%s", focus_id))
 	end
 
 	-- the chosen token
@@ -77,14 +77,14 @@ M.popup_lookup = function(token)
 
 	local nr_results = #results
 	local formatted_results = {}
-	logger.debug("Found " .. tostring(nr_results) .. " results")
+	logger:debug("Found " .. tostring(nr_results) .. " results")
 
 	if restype == types.CharacterType.KANJI then
 		-- TODO check there is one result as least
 		local radicals = query.lookup_kanji_radicals(token)
 
 		if config.popup_options.render_images then
-			logger.debug("displaying image")
+			logger:debug("displaying image")
 			-- local has_image, _ = vim.fn.has("nvim-0.13")
 			-- TODO replace with native image api
 			local has_image, _ = pcall(require, "snacks.image")

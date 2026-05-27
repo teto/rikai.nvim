@@ -41,7 +41,7 @@ function M.add_furigana(_args)
 	-- local line2 = lines[1]
 	local line2 = vim.api.nvim_get_current_line()
 	if line2 == nil then
-		logger.warn("Nothing to tokenize")
+		logger:warn("Nothing to tokenize")
 		return
 	end
 	local res = tokenizer.tokenize(line2, true)
