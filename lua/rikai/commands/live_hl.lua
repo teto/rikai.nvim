@@ -39,7 +39,7 @@ M.highlight_current_token = function()
 	if _state.current_token then
 		-- todo
 		-- remove the saved
-		logger.debug(string.format("Removing previous hl %d", _state.current_token))
+		logger:debug(string.format("Removing previous hl %d", _state.current_token))
 		vim.fn.matchdelete(_state.current_token)
 	end
 	local res = vim.fn.matchaddpos(
@@ -54,7 +54,7 @@ M.highlight_current_token = function()
 		}
 	)
 	if res < 0 then
-		logger.error("Could not create position")
+		logger:error("Could not create position")
 	else
 		vim.print("live_hl res", res)
 		_state.current_token = res
@@ -105,7 +105,7 @@ function M.setup_hl_autocmds(_args)
 	-- })
 
 	-- if megaargs.hl_command == "clear" then
-	--     logger.info("clearing hl")
+	--     logger:info("clearing hl")
 	--     -- renvoye -1 ptet
 	--     vim.fn.matchdelete('RikaiProperNoun')
 	-- end

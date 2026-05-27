@@ -57,7 +57,7 @@ function M.get_current_token()
 	-- compute the size of the token
 	for _i, tok in pairs(tokens) do
 		nextoffset = curcoloffset + vim.fn.strlen(tok[1])
-		-- logger.info(string.format("Round %d, inspecting token %s. Comparing cursor offset %d with nextoffset %d", i, tok[1], cursorcoloffset, nextoffset))
+		-- logger:info(string.format("Round %d, inspecting token %s. Comparing cursor offset %d with nextoffset %d", i, tok[1], cursorcoloffset, nextoffset))
 		if cursorcoloffset < nextoffset then
 			current_token = tok[1]
 			break

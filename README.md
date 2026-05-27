@@ -26,7 +26,7 @@ System Dependencies:
 
 Lua dependencies:
 <!-- - [lual for logging][lual-luarocks] -->
-- [alogger][alogger-luarocks] for logging
+- [mega.logging][mega-logging-luarocks] for logging
 - [official sqlite bindings][lsqlite-luarocks] for lua 'sqlite'
 - [utf8][luautf8-github] to get utf8
 
@@ -116,13 +116,13 @@ Run `:Rikai download`.
 - [ichiran][ichiran-github]
 
 [rocks.nvim]: https://github.com/lumen-oss/rocks.nvim
-[alogger-luarocks]: https://luarocks.org/modules/swarg/alogger/
 [edict-as-sqlite]: https://github.com/odrevet/edict_database
 [ichiran-github]: https://github.com/tshatrov/ichiran
 [jisho-rikai]: https://jisho.org/search/%E7%90%86%E8%A7%A3
 [lual-luarocks]: https://luarocks.org/modules/arthur-debert/lual
 [lsqlite-luarocks]: https://luarocks.org/modules/javierguerragiraldez/lsqlite3
 [luautf8-github]: https://github.com/starwing/luautf8
+[mega-logging-luarocks]: https://luarocks.org/modules/colinkennedy/mega.logging
 [rikai-nvim-wiki]: https://github.com/teto/rikai.nvim/wiki/Home
 [rikai-wiki]: https://github.com/teto/rikai.nvim/wiki
 [rikaitan]: https://addons.mozilla.org/en-US/firefox/addon/rikaitan/

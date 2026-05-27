@@ -4,32 +4,27 @@ final: prev: {
   rikai-nvim =
     (final.callPackage (
       {
-        alogger,
         buildLuarocksPackage,
-        fetchurl,
-        fetchzip,
         lua,
         mega-cmdparse,
+        mega-logging,
         sqlite,
         utf8,
       }:
       buildLuarocksPackage {
         pname = "rikai.nvim";
-        version = "0.0.2-1";
-        knownRockspec =
-          (fetchurl {
-            url = "mirror://luarocks/rikai.nvim-0.0.2-1.rockspec";
-            sha256 = "1nraiwafqhxpfkqqd568kdi2ps1j825sxzy22ixnlpyqbin5988b";
-          }).outPath;
-        src = fetchzip {
-          url = "https://github.com/teto/rikai.nvim/archive/0.0.2.zip";
-          sha256 = "1rb4fsnxsrq3cl441san88s6mq6xjg006jc1ilqbgxdjpra6vaw8";
-        };
+        version = "0.1.0-1";
+        knownRockspec = pkgs.runCommand "rikai.nvim-0.1.0-1.rockspec" { } ''
+          substitute ${../rikai.nvim-0.1.0-1.rockspec} $out \
+            --replace-fail '"lsqlite3",' '"sqlite",'
+        '';
+        # clean
+        src = pkgs.lib.cleanSource ../.;
 
         disabled = lua.luaversion != "5.1";
         propagatedBuildInputs = [
-          alogger
           mega-cmdparse
+          mega-logging
           sqlite
           utf8
         ];
@@ -47,68 +42,66 @@ final: prev: {
     ))
       { };
 
-  alogger = final.callPackage (
-    {
-      buildLuarocksPackage,
-      fetchFromGitLab,
-      fetchurl,
-      luaOlder,
-    }:
-    buildLuarocksPackage {
-      pname = "alogger";
-      version = "0.6.0-1";
-      knownRockspec =
-        (fetchurl {
-          url = "mirror://luarocks/alogger-0.6.0-1.rockspec";
-          sha256 = "02hwrx2pxj1vbrv3hsd7bri6hyvajkfs4wvfb70z36h4awn3y2w7";
-        }).outPath;
-      src = fetchFromGitLab {
-        owner = "lua_rocks";
-        repo = "alogger";
-        rev = "v0.6.0";
-        hash = "sha256-/OVwQvm+ViK0rpIbQOzKWYAeLSLBHEPLqlz+r+LmCbA=";
-      };
+  # mega-logging = final.callPackage (
+  #   {
+  #     buildLuarocksPackage,
+  #     fetchzip,
+  #     fetchurl,
+  #     luaOlder,
+  #   }:
+  #   buildLuarocksPackage {
+  #     pname = "mega.logging";
+  #     version = "1.1.6-1";
+  #     knownRockspec =
+  #       (fetchurl {
+  #         url = "mirror://luarocks/mega.logging-1.1.6-1.rockspec";
+  #         hash = "sha256-b/UNBHzASov3C1Tp3B43NfCtejHOBc3FjYNZHAndRu0=";
+  #       }).outPath;
+  #     src = fetchzip {
+  #       url = "https://github.com/ColinKennedy/mega.logging/archive/v1.1.6.zip";
+  #       hash = "sha256-hV7uJyu0XszGLOvcRcDNDE9P6d8GTxBX+la1lQVxx2s=";
+  #     };
+  #
+  #     disabled = luaOlder "5.1";
+  #
+  #     meta = {
+  #       homepage = "https://github.com/ColinKennedy/mega.logging";
+  #       description = "A Neovim plugin for logging to Neovim or to disk";
+  #       license.fullName = "MIT";
+  #     };
+  #   }
+  # ) { };
 
-      disabled = luaOlder "5.1";
-
-      meta = {
-        homepage = "https://gitlab.com/lua_rocks/alogger";
-        description = "simple logger";
-        license.fullName = "MIT";
-      };
-    }
-  ) { };
-
-  lual = final.callPackage (
-    {
-      buildLuarocksPackage,
-      fetchFromGitHub,
-      fetchurl,
-      luaOlder,
-    }:
-    buildLuarocksPackage {
-      pname = "lual";
-      version = "1.0.15-1";
-      knownRockspec =
-        (fetchurl {
-          url = "mirror://luarocks/lual-1.0.15-1.rockspec";
-          sha256 = "0dnnvw6rvdh3i8qhqknanwwppbcjqd0d43g28v6i8dc34hkgjw54";
-        }).outPath;
-      src = fetchFromGitHub {
-        owner = "arthur-debert";
-        repo = "lual";
-        rev = "a7641c252c4c604b63572a24cdcf2490029a6414";
-        hash = "sha256-JkIYz+h56MTHyFws9h/CbhmDrgGSmLZGTXsbM748Wkg=";
-      };
-
-      disabled = luaOlder "5.1";
-
-      meta = {
-        homepage = "https://github.com/arthur-debert/lual";
-        description = "A focused but powerful and flexible logging library for Lua.";
-        license.fullName = "MIT";
-      };
-    }
-  ) { };
+  # lual = final.callPackage (
+  #   {
+  #     buildLuarocksPackage,
+  #     fetchFromGitHub,
+  #     fetchurl,
+  #     luaOlder,
+  #   }:
+  #   buildLuarocksPackage {
+  #     pname = "lual";
+  #     version = "1.0.15-1";
+  #     knownRockspec =
+  #       (fetchurl {
+  #         url = "mirror://luarocks/lual-1.0.15-1.rockspec";
+  #         sha256 = "0dnnvw6rvdh3i8qhqknanwwppbcjqd0d43g28v6i8dc34hkgjw54";
+  #       }).outPath;
+  #     src = fetchFromGitHub {
+  #       owner = "arthur-debert";
+  #       repo = "lual";
+  #       rev = "a7641c252c4c604b63572a24cdcf2490029a6414";
+  #       hash = "sha256-JkIYz+h56MTHyFws9h/CbhmDrgGSmLZGTXsbM748Wkg=";
+  #     };
+  #
+  #     disabled = luaOlder "5.1";
+  #
+  #     meta = {
+  #       homepage = "https://github.com/arthur-debert/lual";
+  #       description = "A focused but powerful and flexible logging library for Lua.";
+  #       license.fullName = "MIT";
+  #     };
+  #   }
+  # ) { };
 
 }

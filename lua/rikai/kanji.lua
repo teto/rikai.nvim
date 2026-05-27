@@ -18,7 +18,7 @@ local M = {}
 ---@param kanji string
 ---@return table
 function M.format_radicals(kanji)
-	logger.debug("Looking up radicals for kanji : " .. tostring(kanji))
+	logger:debug("Looking up radicals for kanji : " .. tostring(kanji))
 	local res = {}
 
 	local req = query.get_radicals_from_kanji_query(kanji)
