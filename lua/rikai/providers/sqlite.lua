@@ -110,17 +110,17 @@ end
 ---@param expr string
 ---@return string SQL query string
 function M.query_jap_expr(expr)
-	logger.debug("Building SQL query for expr " .. expr)
+	logger:debug("Building SQL query for expr " .. expr)
 	local token_code = vim.fn.char2nr(expr)
 	local token_type = classifier.chartype(token_code)
 	local where = "r_ele.reb"
 	if token_type == types.CharacterType.KANJI then
 		where = "k_ele.keb"
 
-		logger.debug("tokens identified as kanji")
+		logger:debug("tokens identified as kanji")
 	end
 
-	logger.debug("where clause: " .. where)
+	logger:debug("where clause: " .. where)
 	local req = [[
 SELECT
     entry.id AS entry_id,
@@ -166,7 +166,7 @@ WHERE ]] .. where .. [[ = ']] .. expr .. [['
 GROUP BY entry.id, sense.id;
   ]]
 
-	logger.debug(req)
+	logger:debug(req)
 	return req
 end
 
@@ -176,10 +176,10 @@ function M.get_db_handle(db_path)
 	-- TODO check if a handle already exists
 	local con = config._state[db_path]
 	if con then
-		logger.debug("Returning existing handle to db: " .. db_path)
+		logger:debug("Returning existing handle to db: " .. db_path)
 		return con
 	else
-		logger.info("Opening " .. db_path)
+		logger:info("Opening " .. db_path)
 		-- open readonly
 		local errmsg, _errcode
 		con, errmsg, _errcode = sqlite3.open(db_path, sqlite3.OPEN_READONLY)
@@ -205,7 +205,7 @@ function M.lookup_kanji(kanji)
 	assert(con, "could not open db")
 	local req = M.build_kanji_query(kanji)
 
-	logger.info("Looking up kanji: " .. tostring(kanji))
+	logger:info("Looking up kanji: " .. tostring(kanji))
 	---@diagnostic disable-next-line: need-check-nil
 	for a in con:nrows(req) do
 		table.insert(res, a)
@@ -213,7 +213,7 @@ function M.lookup_kanji(kanji)
 
 	vim.uv.update_time()
 	local end_time = vim.uv.now()
-	logger.info("Kanji search took " .. tostring(end_time - start) .. " ms")
+	logger:info("Kanji search took " .. tostring(end_time - start) .. " ms")
 	return res
 end
 
@@ -229,7 +229,7 @@ function M.lookup_kanji_radicals(kanji)
 	assert(con, "could not open db")
 	local req = M.get_radicals_from_kanji_query(kanji)
 
-	logger.info("Looking up kanji radicals: " .. tostring(kanji))
+	logger:info("Looking up kanji radicals: " .. tostring(kanji))
 	---@diagnostic disable-next-line: need-check-nil
 	for a in con:nrows(req) do
 		res[#res + 1] = a
@@ -242,7 +242,7 @@ end
 ---@param word string
 ---@return table
 function M.lookup_expr(word)
-	-- logger.info("Opening " .. jmdictdb)
+	-- logger:info("Opening " .. jmdictdb)
 	print("opening ", config.dictionaries.jmdictdb)
 	local db = M.get_db_handle(config.dictionaries.jmdictdb)
 	assert(db)
@@ -250,9 +250,9 @@ function M.lookup_expr(word)
 
 	local req = M.query_jap_expr(word)
 
-	logger.info("Looking up expr " .. tostring(word))
-	logger.set_level(logger.levels.TRACE)
-	logger.debug("Ran request" .. req)
+	logger:info("Looking up expr " .. tostring(word))
+	logger:set_level(logger.levels.TRACE)
+	logger:debug("Ran request" .. req)
 	---@diagnostic disable-next-line: need-check-nil
 	for a in db:nrows(req) do
 		res[#res + 1] = a

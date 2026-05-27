@@ -56,7 +56,7 @@
 
         # TODO I should be able to remove those as they get provided via lux
         luaEnv = lua.withPackages (lp: [
-          lp.alogger
+          lp.mega-logging
           lp.sqlite # lux can't build it
           lp.busted
           lp.nlua

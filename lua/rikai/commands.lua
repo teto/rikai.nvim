@@ -51,13 +51,13 @@ function M.create_command()
 			if vim.tbl_isempty(tokens) then
 				-- todo notify as well
 				utils.notify("No tokens found", vim.log.levels.INFO)
-				-- logger.debug("No tokens found")
+				-- logger:debug("No tokens found")
 				return
 			end
 			-- returns an array of TokenizationResult
 			to_translate = tokens[1][1]
 		else
-			logger.debug("Word " .. to_tokenize .. " is one character: skipping tokenization...")
+			logger:debug("Word " .. to_tokenize .. " is one character: skipping tokenization...")
 			to_translate = to_tokenize
 		end
 
@@ -102,7 +102,7 @@ function M.create_command()
 		local pos = vim.fn.getpos(".")
 
 		if megaargs.hl_command == "clear" then
-			logger.info("clearing hl")
+			logger:info("clearing hl")
 			-- 'RikaiProperNoun'
 			-- hoping it exists ?
 			vim.fn.matchdelete(vim.w.rikai_hl)

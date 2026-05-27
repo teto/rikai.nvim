@@ -14,7 +14,7 @@ successful = false
 
 local function unzip_file(zip_path, output_dir)
 	local cmd = string.format("unzip -u %s -d %s", vim.fn.shellescape(zip_path), vim.fn.shellescape(output_dir))
-	logger.info("Running: ", cmd)
+	logger:info("Running: ", cmd)
 	local result = vim.fn.system(cmd)
 	return result
 end
@@ -40,7 +40,7 @@ local function download(url, dest)
 
 	local timeout_ms = 360 * 1000
 	vim.wait(timeout_ms, function()
-		logger.debug("Checking if download is finished")
+		logger:debug("Checking if download is finished")
 		return done
 	end, 200, true)
 
@@ -52,11 +52,11 @@ local function download(url, dest)
 	if err or status ~= 0 then
 		-- set ERROR level
 		msg = "Downloading rikai DB failed:\n" .. err
-		logger.error(msg)
+		logger:error(msg)
 		print("Downloading rikai DB failed:\n" .. err)
 	else
 		msg = "Finished downloading rikai dictionary."
-		logger.info(msg)
+		logger:info(msg)
 
 		successful = true
 		-- vim.notify("Finished downloading rikai dictionary.")
