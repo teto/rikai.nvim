@@ -1,11 +1,6 @@
 -- command parser generated https://github.com/ColinKennedy/mega.cmdparse
 local cmdparse = require("mega.cmdparse")
-local lookup = require("rikai.commands.lookup")
-local livehl = require("rikai.commands.live_hl")
-local utils = require("rikai.utils")
 local logger = require("rikai.log")
-local tokenizer = require("rikai.tokenizer")
-local utf8 = require("utf8")
 
 local M = {}
 
@@ -19,6 +14,10 @@ function M.create_command()
 
 	-- move this to its own file ?
 	lookup_parser:set_execute(function(args)
+		local utils = require("rikai.utils")
+		local tokenizer = require("rikai.tokenizer")
+		local lookup = require("rikai.commands.lookup")
+		local utf8 = require("utf8")
 		local megaargs = args.namespace
 		local to_translate, to_tokenize
 		-- number of items in range
@@ -76,7 +75,10 @@ function M.create_command()
 		required = true,
 		help = "Autoupdate text highlights depending on their type: names, verbs, ...",
 	})
-	livehl_parser:set_execute(livehl.setup_hl_autocmds)
+	livehl_parser:set_execute(function()
+		local livehl = require("rikai.commands.live_hl")
+		livehl.setup_hl_autocmds()
+	end)
 
 	local hl_parser = top_subparsers:add_parser({
 		name = "hl",
