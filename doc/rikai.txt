@@ -1,0 +1,10 @@
+M.create_command()                                            *M.create_command*
+
+    Returns: ~
+        (nil)
+
+
+logger:set_level()                                            *logger:set_level*
+
+
+vim:tw=78:ts=8:noet:ft=help:norl:
