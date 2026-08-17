@@ -28,7 +28,7 @@ function M.create_popup(focus_id, lines, opts)
 		focus_id = focus_id,
 	})
 
-	local _bufnr, winid = util.open_floating_preview(lines, "markdown", popupOptionsFinal)
+	local _bufnr, winid = util.open_floating_preview(lines, "markdown,rikai", popupOptionsFinal)
 
 	return winid
 end
