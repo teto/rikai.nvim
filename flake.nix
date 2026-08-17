@@ -213,6 +213,7 @@
                 };
               in
 
+              # export SHELL=${pkgs.bashInteractive}/bin/bash
               ''
                 mkdir -p .luarocks
                 # todo change the lux test folder instead

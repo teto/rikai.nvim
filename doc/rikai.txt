@@ -1,3 +1,16 @@
+==============================================================================
+Rikai                                                               *rikai.nvim*
+
+
+rikai.nvim aims at providing offline translations either on-demand and/or automatically when hovering asian (japanese for now) characters.
+
+The name is inspired by the great browser [rikaitan][rikaitan] plugin.
+理解 ("rikai") [translates][jisho-rikai] to "understanding", "comprehension".
+
+                                                            *rikai-installation*
+==============================================================================
+Usage                                                              *rikai-usage*
+
 M.create_command()                                            *M.create_command*
 
     Returns: ~

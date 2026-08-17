@@ -1,16 +1,16 @@
 ---@mod rikai.nvim Rikai
----@brief
+---@brief [[
 ---
 ---rikai.nvim aims at providing offline translations either on-demand and/or automatically when hovering asian (japanese for now) characters.
 ---
 ---The name is inspired by the great browser [rikaitan][rikaitan] plugin.
 ---理解 ("rikai") [translates][jisho-rikai] to "understanding", "comprehension".
-
+---@brief ]]
 ---@tag rikai-installation
 ---
 ---
 ---System Dependencies:
----- [sudachi_rs][sudachi-rs] as a tokenizer (ie., split words), use the full version 
+---- [sudachi_rs][sudachi-rs] as a tokenizer (ie., split words), use the full version
 ---- [unzip][unzip] to unpack dictionaries
 ---
 ---Lua dependencies:
@@ -20,7 +20,7 @@
 ---
 ---
 ---@mod rikai-usage Usage
----@brief 
+---@brief
 ---
 ---Setup a mapping
 --->
@@ -30,5 +30,6 @@
 ---To enable a more rikaichamp/yomitan-like experience, run `:Rikai live_hl enable`
 ---to enable automatic translation and hilighting of current token. It's quite
 ---experimental and not as polished as its inspiration though.
-
-
+error("can't require this module")
+local meta = {}
+return meta
