@@ -39,20 +39,19 @@ end
 ---@return boolean is_valid
 ---@return string|nil error_message
 function validateCfg(cfg)
-    local ok, err = validate("tokenizer", cfg.tokenizer, "string")
-    if not ok then
-        return false, err
-    end
-    ok, err = validate("dictionaries", cfg.dictionaries, "table")
-    if not ok then
-        return false, err
-    end
-    ok, err = validate("popup_options", cfg.popup_options, "table")
-    if not ok then
-        return false, err
-    end
+	local ok, err = validate("tokenizer", cfg.tokenizer, "string")
+	if not ok then
+		return false, err
+	end
+	ok, err = validate("dictionaries", cfg.dictionaries, "table")
+	if not ok then
+		return false, err
+	end
+	ok, err = validate("popup_options", cfg.popup_options, "table")
+	if not ok then
+		return false, err
+	end
 end
-
 
 -- expose bits of it to test validation
 ---@@param table
@@ -63,7 +62,7 @@ local function check_config(cfg)
 	local ok, err = validateCfg(cfg)
 	-- TODO check the file exists ! and if it's outdated ?
 	if not ok then
-        -- TODO error
+		-- TODO error
 		h.error(err or "" .. vim.g.rikai and "" or " This looks like a plugin bug!")
 		return false, err
 	else
@@ -82,22 +81,22 @@ local function check_config(cfg)
 end
 
 function M.check()
-	local merged_cfg = require'rikai.config'
+	local merged_cfg = require("rikai.config")
 
 	check_config(merged_cfg)
 
 	h.start("Checking external dependencies")
-    if check_installed("sudachi") then
-        h.ok("Tokenizer  'sudachi' is executable")
-    else
-        h.error("The tokenizer 'sudachi' must be available")
-    end
+	if check_installed("sudachi") then
+		h.ok("Tokenizer  'sudachi' is executable")
+	else
+		h.error("The tokenizer 'sudachi' must be available")
+	end
 
-    if check_installed("rsvg-convert") then
-        h.ok("svg to image kanji converter 'rsvg-converter' is executable")
-    else
-        h.warn("Make available the program 'rsvg-convert' to display kanji as images")
-    end
+	if check_installed("rsvg-convert") then
+		h.ok("svg to image kanji converter 'rsvg-converter' is executable")
+	else
+		h.warn("Make available the program 'rsvg-convert' to display kanji as images")
+	end
 
 	-- { "kanjivg", "kanjidb",
 	-- local default_config = require'rikai.config.default'
