@@ -1,5 +1,4 @@
 local logger = require("rikai.log")
--- local config = require'rikai.config'
 
 local dict_version = "v0.0.5"
 
@@ -73,7 +72,7 @@ end
 
 -- todo one should be able to download only one of the dicts
 ---@param _args any
-function cmd_download(_args)
+local function cmd_download(_args)
 	local out_dir = vim.fn.stdpath("data") .. "/rikai"
 	download(kanji_url, vim.g.rikai.dictionaries.kanjidb)
 	download(expression_url, vim.g.rikai.dictionaries.jmdictdb)

@@ -13,7 +13,7 @@ lint-check:
 
 test-install-dictionaries:
     nvim --headless --clean --cmd 'set rtp^=.' +'Rikai download' -e +quitall!
-    [ -d ~/.local/share/nvim/rikai/kanjivg ]
+    [ -d ~/.local/share/nvim/rikai/kanji ]
     [ -f ~/.local/share/nvim/rikai/kanji.db ]
     [ -f ~/.local/share/nvim/rikai/expression.db ]
 
