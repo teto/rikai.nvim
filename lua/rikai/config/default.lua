@@ -16,7 +16,7 @@ local image = require("rikai.image")
 ---@field popup_options RikaiConfigPopupOptions
 ---@field dictionaries RikaiConfigDictionaries
 ---@field tokenizer string
----@field _state table internal dont use
+---@field private _state table internal dont use
 
 ---@type RikaiConfig
 local JapDefaultConfig = {

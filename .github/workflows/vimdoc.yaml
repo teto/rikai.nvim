@@ -1,0 +1,41 @@
+name: Vimdoc
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "lua/**/*.lua"
+      - "Makefile"
+      - doc/rikai.txt
+      - ".github/workflows/vimdoc.yaml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "lua/**/*.lua"
+      - "Makefile"
+      - "doc/rikai.txt"
+      - ".github/workflows/vimdoc.yaml"
+  workflow_dispatch:
+
+jobs:
+  check-docgen:
+    name: Check generated docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: DeterminateSystems/nix-installer-action@v22
+
+      - name: Generate docs
+        run: nix develop .#ci --command just docgen
+
+      - name: Check docs are up to date
+        run: |
+          if ! git diff --quiet -- doc/avante.txt; then
+            echo "::error doc/rikai.txt is out of date. Run 'just docgen' and commit the result."
+            git --no-pager diff -- doc/rikai.txt
+            exit 1
+          fi
+

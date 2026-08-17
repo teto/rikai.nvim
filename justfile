@@ -21,8 +21,6 @@ test-install-dictionaries:
 test:
     # we need to setup the environment so it can find the dictionaries
     # @busted --lua=nlua
-    # can use impure
-    # cp 
     lx test
 
 # check types
@@ -38,7 +36,9 @@ test-lx:
 
 docgen:
     mkdir -p doc
-    vimcats lua/rikai/{init,commands,config/init,meta,api/{init,hooks},log}.lua > doc/rikai.txt
+    # --prefix-func
+    vimcats lua/rikai/{init,commands,config,log}.lua > doc/rikai.txt
+    nvim -u NONE -i NONE --headless +'helptags doc' +'quit!'
 
 kokoro-test:
     # pipe it into mpv ?
