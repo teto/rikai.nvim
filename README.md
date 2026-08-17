@@ -25,7 +25,6 @@ System Dependencies:
 - [unzip][unzip] to unpack dictionaries
 
 Lua dependencies:
-<!-- - [lual for logging][lual-luarocks] -->
 - [mega.logging][mega-logging-luarocks] for logging
 - [official sqlite bindings][lsqlite-luarocks] for lua 'sqlite'
 - [utf8][luautf8-github] to get utf8
