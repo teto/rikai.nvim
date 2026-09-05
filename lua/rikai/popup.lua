@@ -28,8 +28,11 @@ function M.create_popup(focus_id, lines, opts)
 		focus_id = focus_id,
 	})
 
-	local _bufnr, winid = util.open_floating_preview(lines, "markdown,rikai", popupOptionsFinal)
-
+	local bufnr, winid = util.open_floating_preview(lines, "markdown", popupOptionsFinal)
+    vim.api.nvim_buf_call(bufnr, function()
+        -- V
+        vim.opt_local.ft:append(".RikaiPopup")
+    end)
 	return winid
 end
 
