@@ -8,7 +8,7 @@ local M = {}
 -- _state.current_token
 
 ---@class LiveHlState
----@field current_token integer|table same type as vim.fn.addpos
+---@field current_token? integer match ID returned by vim.fn.matchaddpos
 -- cache some state
 local _state = {}
 
@@ -53,6 +53,8 @@ M.highlight_current_token = function()
 			},
 		}
 	)
+	-- matchaddpos returns a match ID; Neovim's annotation also includes table.
+	---@cast res integer
 	if res < 0 then
 		logger:error("Could not create position")
 	else

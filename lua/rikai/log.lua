@@ -11,6 +11,10 @@ local levels = {
 	FATAL = "fatal",
 }
 
+---@class RikaiLogger: mega.logging.Logger
+---@field levels table<string, string>
+---@field set_level fun(self: RikaiLogger, level: string)
+
 local logger = logging.get_logger({
 	name = "rikai",
 	level = is_busted and levels.FATAL or levels.TRACE,
@@ -19,6 +23,7 @@ local logger = logging.get_logger({
 	use_file = not is_busted,
 	use_highlights = false,
 })
+---@cast logger RikaiLogger
 
 logger.levels = levels
 

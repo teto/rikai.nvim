@@ -6,7 +6,7 @@ local image = require("rikai.image")
 ---@field kanjivg string
 
 ---@class RikaiConfigPopupOptions
----@field generate_image_cmd fun(string): string
+---@field generate_image_cmd fun(string): string you can import one from 'rikai.image'
 ---@field render_images boolean convert kanjis into images to make them easier to read/bigger
 ---@field max_height integer
 ---@field max_width integer
@@ -15,8 +15,8 @@ local image = require("rikai.image")
 ---@field log_level vim.log.levels logging level
 ---@field popup_options RikaiConfigPopupOptions
 ---@field dictionaries RikaiConfigDictionaries
----@field tokenizer string
----@field private _state table internal dont use
+---@field tokenizer string for now only "sudachi" is supported
+---@field _state table internal state shared with the database provider
 
 ---@type RikaiConfig
 local JapDefaultConfig = {

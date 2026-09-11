@@ -2,6 +2,24 @@
   "version": "1.0.0",
   "dependencies": {
     "rocks": {
+      "178bf5624276a96d04b20ceea358c92d7f7baf8a02d1f8765ef801319a8762cd": {
+        "name": "luautf8",
+        "version": "0.2.1-1",
+        "pinned": false,
+        "opt": false,
+        "dependencies": [],
+        "constraint": "==0.2.1",
+        "binaries": [],
+        "source": "luarocks_rockspec+https://luarocks.org/",
+        "source_url": {
+          "type": "url",
+          "url": "https://github.com/starwing/luautf8/archive/refs/tags/0.2.1.tar.gz"
+        },
+        "hashes": {
+          "rockspec": "sha256-XrBqH09Ea7CIJTRxX7SJdK2g0mxLLpqZTla0PiObnTw=",
+          "source": "sha256-6lIHXNlgrtjDdRKrMc3BZqp3pkWFBNKfM65AuT0thZQ="
+        }
+      },
       "392c069ca7154cb446b52b0f9c6be33de04e6a6f0a7c9ff762b30c5b9db1bdc7": {
         "name": "mega.logging",
         "version": "1.1.6-1",
@@ -18,25 +36,6 @@
         "hashes": {
           "rockspec": "sha256-b/UNBHzASov3C1Tp3B43NfCtejHOBc3FjYNZHAndRu0=",
           "source": "sha256-xz8Btm9bYc+VR5jcgdzVSmnhFaVzi7pj6NkoBXd0FFQ="
-        }
-      },
-      "45ae6ddbb8453b514dc9b68c3c382d794db39dc9629b81792aeb37e6523a0cf1": {
-        "name": "utf8",
-        "version": "1.3-0",
-        "pinned": false,
-        "opt": false,
-        "dependencies": [],
-        "constraint": "==1.3",
-        "binaries": [],
-        "source": "luarocks_rockspec+https://luarocks.org/",
-        "source_url": {
-          "type": "git",
-          "url": "https://github.com/dannote/luautf8",
-          "ref": "f36cc914ae9015cd3045987abadd83bbcfae98f0"
-        },
-        "hashes": {
-          "rockspec": "sha256-V4otUR+uDIHTIBgfdgmdgMG4Y3knZ+w5ztv7EhbP+us=",
-          "source": "sha256-xLWqglAzqcxY+R8GOC+D3uzL2+9ZriEx8Kj41LkI5vU="
         }
       },
       "51bf4213185eb717b01ff54a89e0363be1a69e9450eb04673469c530dfe56a28": {
@@ -97,7 +96,7 @@
       }
     },
     "entrypoints": [
-      "45ae6ddbb8453b514dc9b68c3c382d794db39dc9629b81792aeb37e6523a0cf1",
+      "178bf5624276a96d04b20ceea358c92d7f7baf8a02d1f8765ef801319a8762cd",
       "51bf4213185eb717b01ff54a89e0363be1a69e9450eb04673469c530dfe56a28",
       "7e53044b4486d7fa5bbcf1011cc634de7470d5302c208559faa32d987886c52a",
       "f884ed08025badba954e55cc5720ef0b283c1b2260645c0b1e60ea28c43f4cbe"

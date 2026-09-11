@@ -15,7 +15,7 @@ local utf8 = require("utf8")
 
 local M = {}
 
----@class KanjiResult
+---@alias KanjiResult KanjiDesc[]
 
 ---@param kanji string the kanji to look for
 ---@return string SQL query string

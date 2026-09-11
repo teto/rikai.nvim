@@ -1,3 +1,6 @@
+---
+include_toc: true
+---
 
 This plugin aims at providing offline translations either on-demand and/or automatically when hovering asian (japanese for now) characters.
 

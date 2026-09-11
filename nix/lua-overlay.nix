@@ -9,7 +9,7 @@ final: prev: {
         mega-cmdparse,
         mega-logging,
         sqlite,
-        utf8,
+        luautf8,
       }:
       buildLuarocksPackage {
         pname = "rikai.nvim";
@@ -26,7 +26,8 @@ final: prev: {
           mega-cmdparse
           mega-logging
           sqlite
-          utf8
+          luautf8 # installed by nx
+
         ];
 
         runtimeDeps = [
