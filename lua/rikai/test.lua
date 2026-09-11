@@ -7,7 +7,7 @@ local function get_current_sentence()
 	local row, col = cursor_pos[1] - 1, cursor_pos[2] -- Convert to 0-based indexing
 
 	-- Get the current line
-	local line = vim.api.nvim_buf_get_lines(bufnr, row, row + 1, false)[1]
+	local line = vim.api.nvim_buf_get_lines(bufnr, row, row + 1, false)[1] or ""
 
 	-- Define sentence delimiters
 	local delimiters = { ["."] = true, ["。"] = true, ["！"] = true, ["？"] = true, ["?"] = true, ["!"] = true }

@@ -7,8 +7,7 @@
       "need-check-nil"
     ],
     "globals": [
-      "setup",
-      "vim"
+      "setup"
     ],
     "groupFileStatus": {
       "strict": "Opened",
@@ -29,6 +28,7 @@
   "workspace": {
     "ignoreDir": [
       ".luarocks",
+      ".lux",
       "result"
     ],
     "ignoreGlobs": [
@@ -36,11 +36,11 @@
     ],
     "useGitIgnore": true,
     "library": [
-      "/nix/store/nrfmz96d34kawi604mlk0f92khs6ym2q-neovim-unwrapped-7720e52/share/nvim/runtime/lua",
-      "${3rd}/busted/library",
-      "${3rd}/luv/library",
+      "$NIX_VIMRUNTIME/lua",
+      "$RIKAI_LUA_LIBRARY",
+      "types",
+      ".lux/5.1/178bf5624276a96d04b20ceea358c92d7f7baf8a02d1f8765ef801319a8762cd-luautf8@0.2.1-1/src",
       ".lux/5.1/392c069ca7154cb446b52b0f9c6be33de04e6a6f0a7c9ff762b30c5b9db1bdc7-mega.logging@1.1.6-1/src",
-      ".lux/5.1/45ae6ddbb8453b514dc9b68c3c382d794db39dc9629b81792aeb37e6523a0cf1-utf8@1.3-0/src",
       ".lux/5.1/51bf4213185eb717b01ff54a89e0363be1a69e9450eb04673469c530dfe56a28-mega.cmdparse@1.2.0-1/src",
       ".lux/5.1/7e53044b4486d7fa5bbcf1011cc634de7470d5302c208559faa32d987886c52a-lsqlite3@0.9.6-1/src",
       ".lux/5.1/f884ed08025badba954e55cc5720ef0b283c1b2260645c0b1e60ea28c43f4cbe-mega.logging@1.1.6-1/src",

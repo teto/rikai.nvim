@@ -4,11 +4,6 @@
 
 local M = {}
 
-local external_dependencies = {
-	"sudachi",
-	"rsvg-convert",
-}
-
 local h = vim.health
 
 -- ideally we would return the version
@@ -51,6 +46,7 @@ function validateCfg(cfg)
 	if not ok then
 		return false, err
 	end
+	return true, nil
 end
 
 -- expose bits of it to test validation
