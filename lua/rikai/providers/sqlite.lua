@@ -174,6 +174,7 @@ end
 ---@return any|boolean database connection handle or false on error
 function M.get_db_handle(db_path)
 	-- TODO check if a handle already exists
+	logger:debug("Getting db handle for " .. db_path)
 	local con = config._state[db_path]
 	if con then
 		logger:debug("Returning existing handle to db: " .. db_path)
@@ -242,8 +243,6 @@ end
 ---@param word string
 ---@return table
 function M.lookup_expr(word)
-	-- logger:info("Opening " .. jmdictdb)
-	print("opening ", config.dictionaries.jmdictdb)
 	local db = M.get_db_handle(config.dictionaries.jmdictdb)
 	assert(db)
 	local res = {}
@@ -264,7 +263,7 @@ end
 --- Smart lookup: can look for a kanji or an expression
 ---@param token string
 ---@return rikai.types.CharacterType
----@return KanjiResult
+---@return KanjiResult | table
 function M.lookup(token)
 	local token_code = vim.fn.char2nr(token)
 	local token_type = classifier.chartype(token_code)
