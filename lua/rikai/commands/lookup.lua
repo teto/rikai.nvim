@@ -102,16 +102,9 @@ M.popup_lookup = function(token)
 		end
 	else
 		-- TODO find a way to sort / limit results ?
-		for i, r in ipairs(results) do
-			-- add a separator if not first result
-			if i > 1 then
-				table.insert(formatted_results, separator)
-			end
-
-			local new_result = expr.format_expression(token, r)
-			for j = 1, #new_result do
-				table.insert(formatted_results, new_result[j])
-			end
+		local new_results = expr.format_expression_list(results, separator)
+		for _, line in ipairs(new_results) do
+			table.insert(formatted_results, line)
 		end
 		table.insert(formatted_results, utils.jisho_link(token, false))
 	end
