@@ -35,8 +35,37 @@ function M.format_expression(original_token, res)
 	return lines
 end
 
---@param exps ExpressionDesc[]
--- function M.format_expression_list(exps)
--- end
+---@param exps ExpressionDesc[]
+---@param separator string
+---@return string[]
+function M.format_expression_list(exps, separator)
+	local groups = {}
+	local group_order = {}
+
+	for _, res in ipairs(exps) do
+		local heading = res["keb_reb_group"]
+		if not groups[heading] then
+			groups[heading] = {}
+			table.insert(group_order, heading)
+		end
+		table.insert(groups[heading], res)
+	end
+
+	local lines = {}
+	for group_index, heading in ipairs(group_order) do
+		if group_index > 1 then
+			table.insert(lines, separator)
+		end
+
+		table.insert(lines, heading)
+		table.insert(lines, "")
+		for _, res in ipairs(groups[heading]) do
+			table.insert(lines, res["gloss_group"])
+		end
+		table.insert(lines, "")
+	end
+
+	return lines
+end
 
 return M
