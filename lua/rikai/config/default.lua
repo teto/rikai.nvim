@@ -24,7 +24,7 @@ local JapDefaultConfig = {
 	dictionaries = {
 		kanjidb = vim.fn.stdpath("data") .. "/rikai/kanji.db",
 		jmdictdb = vim.fn.stdpath("data") .. "/rikai/expression.db",
-		kanjivg = vim.fn.stdpath("data") .. "/rikai/kanjivg",
+		kanjivg = vim.fn.stdpath("data") .. "/rikai/kanji",
 	},
 	log_level = vim.log.levels.WARN,
 	tokenizer = "sudachi",
