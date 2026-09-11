@@ -56,13 +56,9 @@
 
         # TODO I should be able to remove those as they get provided via lux
         luaEnv = lua.withPackages (lp: [
-          lp.mega-logging
-          lp.sqlite # lux can't build it
           lp.busted
           lp.nlua
-          # lp.lsqlite3 # official bindings
-          lp.utf8 # installed by nx
-        ]);
+        ] ++ lua.pkgs.rikai-nvim.propagatedBuildInputs);
 
         # for text-to-speech, e.g., to read japanese out loud
         fugashi-unidic =
@@ -153,6 +149,10 @@
 
           default = pkgs.mkShell {
             name = "rikai.nvim";
+
+            # we dont name it VIMRUNTIME to avoid clash with user nvim
+            NIX_VIMRUNTIME = "${pkgs.neovim-unwrapped}/share/nvim/runtime";
+            RIKAI_LUA_LIBRARY = "${luaEnv}/share/lua/${lua.luaversion}";
 
             buildInputs = [
               treefmtEval.config.build.wrapper
