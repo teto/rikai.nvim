@@ -28,10 +28,6 @@ local separator = " ---------- "
 ---@class PopupLookupOpts
 ---
 
--- Accept a TokenizationResult ?
--- we should tokenize and based on what we find lookup kanji or not ?
--- でる
---
 -- How to translate "日高" from our sqlite dbs ?
 -- 1. first we tokenize
 -- 2. For the first tokenized item
