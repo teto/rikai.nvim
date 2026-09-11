@@ -1,4 +1,7 @@
 ---@mod rikai.nvim Rikai
+---
+---@toc
+---
 ---@brief [[
 ---
 ---rikai.nvim aims at providing offline translations either on-demand and/or automatically when hovering asian (japanese for now) characters.

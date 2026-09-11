@@ -1,7 +1,7 @@
 --
 local M = {}
 -- local kanji = require 'rikai.kanji'
-local utf8 = require("utf8")
+local utf8 = require("lua-utf8")
 
 local types = require("rikai.types")
 local logger = require("rikai.log")

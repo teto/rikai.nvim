@@ -36,23 +36,12 @@ end
 ---@param radicals table
 ---@return table (as expected by 'open_floating_preview')
 function M.format_kanji(res, radicals)
-	-- {
-	--   freq = 139,
-	--   id = "多",
-	--   jlpt = 4,
-	--   kun_reading = "おお.い,まさ.に,まさ.る",
-	--   meanings = "frequent,many,much",
-	--   on_reading = "タ",
-	--   radicals = "夕",
-	--   stroke_count = 6
-	-- }
-
+	-- "Stroke count: " .. (res["stroke_count"] or "unknown"),
 	local lines = {
 		res["id"] .. " (jlpt " .. (res["jlpt"] or "unknown") .. ")",
 		"freq: " .. (res["freq"] or "None"),
 		"kun reading: " .. (res["kun_reading"] or "None"),
 		"on reading: " .. res["on_reading"],
-		"Stroke count: " .. (res["stroke_count"] or "unknown"),
 		"",
 		res["meanings"],
 		"",
