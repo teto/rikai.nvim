@@ -14,7 +14,7 @@ description = {
 dependencies = {
 	"lua==5.1",
 	"lsqlite3",
-	"utf8==1.3",
+	"luautf8",
 	"mega.cmdparse",
 	"mega.logging",
 }
