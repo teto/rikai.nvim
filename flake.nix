@@ -19,6 +19,7 @@
     };
 
     treefmt-nix.url = "github:numtide/treefmt-nix";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -55,10 +56,14 @@
         lua = pkgs.lua5_1;
 
         # TODO I should be able to remove those as they get provided via lux
-        luaEnv = lua.withPackages (lp: [
-          lp.busted
-          lp.nlua
-        ] ++ lua.pkgs.rikai-nvim.propagatedBuildInputs);
+        luaEnv = lua.withPackages (
+          lp:
+          [
+            lp.busted
+            lp.nlua
+          ]
+          ++ lua.pkgs.rikai-nvim.propagatedBuildInputs
+        );
 
         # for text-to-speech, e.g., to read japanese out loud
         fugashi-unidic =
