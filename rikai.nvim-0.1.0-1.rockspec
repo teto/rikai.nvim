@@ -4,7 +4,7 @@ version = "0.1.0-1"
 
 description = {
 	summary = "Neovim plugin that helps with japanese translation",
-	license = "GPL-2.0",
+	license = "GPL-3.0",
 	maintainer = "teto",
 	labels = {
 		"neovim",
