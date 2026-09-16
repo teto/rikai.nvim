@@ -43,17 +43,14 @@
 
         };
 
-        # python3.pkgs.python.pkgs exists and
-        # p is probably python3.pkgs
         mojimoji =
           p:
           pkgs.callPackage ./default.nix {
-            # builtins.trace p.pkgs.python.version
             python = p.pkgs.python3;
           };
 
         # make sure the luaPkgOverlay was applied to the interpreter
-        lua = pkgs.lua5_1;
+        lua = pkgs.luajit;
 
         # TODO I should be able to remove those as they get provided via lux
         luaEnv = lua.withPackages (
@@ -69,7 +66,6 @@
         fugashi-unidic =
           p: p.fugashi
         #   p.toPythonModule (p.fugashi.overridePythonAttrs(oa: {
-        #
         #   # tests succeed with unidic-lite but fail with unidic :/
         #   nativeBuildInputs = oa.optional-dependencies.unidic ++ oa.nativeBuildInputs;
         #   dependencies = (oa.dependencies or []) ++ oa.optional-dependencies.unidic;
@@ -85,9 +81,9 @@
             # TODO override fugashi to use a fugashi with optional-dependencies.unidic ?
             misaki-jp =
               p:
-              (p.misaki.override ({
+              (p.misaki.override {
                 fugashi = fugashi-unidic p;
-              })).overridePythonAttrs
+              }).overridePythonAttrs
                 (oa: {
                   dependencies =
                     oa.dependencies
@@ -103,10 +99,10 @@
             kokoro_jp =
               p:
               p.toPythonModule (
-                (p.kokoro.override ({
+                (p.kokoro.override {
                   misaki = misaki-jp p;
-                })).overridePythonAttrs
-                  ({
+                }).overridePythonAttrs
+                  {
 
                     #  'pyopenjtalk' is apparently the newest version
                     patchPhase = ''
@@ -114,7 +110,7 @@
                         --replace-fail "ja.JAG2P()" "ja.JAG2P(version= 'pyopenjtalk')"
                     '';
 
-                  })
+                  }
               );
 
           in
@@ -183,7 +179,7 @@
               let
                 # soon not needed anymore once we get
                 luarocksConfContent = pkgs.lib.generators.toLua { asBindings = true; } luarocksConfig;
-                luarocksConfig = pkgs.lua.pkgs.luaLib.generateLuarocksConfig {
+                luarocksConfig = lua.pkgs.luaLib.generateLuarocksConfig {
 
                   externalDeps = [
                     {
@@ -247,6 +243,10 @@
       overlays = {
         luaOverlay = final: prev: {
           lua5_1 = prev.lua5_1.override {
+            packageOverrides = import ./nix/lua-overlay.nix { pkgs = final; };
+          };
+
+          luajit = prev.luajit.override {
             packageOverrides = import ./nix/lua-overlay.nix { pkgs = final; };
           };
         };
