@@ -8,26 +8,21 @@ final: prev: {
         lua,
         mega-cmdparse,
         mega-logging,
-        sqlite,
+        lsqlite3,
         luautf8,
       }:
       buildLuarocksPackage {
         pname = "rikai.nvim";
         version = "0.1.0-1";
-        knownRockspec = pkgs.runCommand "rikai.nvim-0.1.0-1.rockspec" { } ''
-          substitute ${../rikai.nvim-0.1.0-1.rockspec} $out \
-            --replace-fail '"lsqlite3",' '"sqlite",'
-        '';
-        # clean
+        knownRockspec = ../rikai.nvim-0.1.0-1.rockspec;
         src = pkgs.lib.cleanSource ../.;
 
         disabled = lua.luaversion != "5.1";
         propagatedBuildInputs = [
           mega-cmdparse
           mega-logging
-          sqlite
-          luautf8 # installed by nx
-
+          lsqlite3
+          luautf8
         ];
 
         runtimeDeps = [
@@ -37,7 +32,8 @@ final: prev: {
         meta = {
           homepage = "https://github.com/teto/rikai.nvim";
           description = "rikaitan for neovim, i.e., japanese translation integrated ";
-          license.fullName = "LGPL-3.0";
+          license = pkgs.lib.licenses.gpl3Only;
+
         };
       }
     ))
