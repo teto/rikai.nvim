@@ -131,5 +131,3 @@ Run `:Rikai download`.
 [sudachi-rs]: https://github.com/WorksApplications/sudachi.rs
 [rendermarkdown-github]: https://github.com/MeanderingProgrammer/render-markdown.nvim
 [gh-snacks]: https://github.com/folke/snacks.nvim
-<!-- - [lsqlite3](https://luarocks.org/modules/javierguerragiraldez/lsqlite3) ? -->
-<!-- - https://github.com/uga-rosa/utf8.nvim (last commit 2 years ago) -->
