@@ -25,10 +25,6 @@ final: prev: {
           luautf8
         ];
 
-        runtimeDeps = [
-          pkgs.librsvg
-        ];
-
         meta = {
           homepage = "https://github.com/teto/rikai.nvim";
           description = "rikaitan for neovim, i.e., japanese translation integrated ";
