@@ -126,20 +126,28 @@
 
       {
 
-        packages = {
-          default = lua.pkgs.rikai-nvim;
-          # TODO call pkgs.vimUtils.toVimPlugin  on it ?
-          inherit (lua.pkgs) rikai-nvim;
+        packages =
+          let
+            rikaiPlugin = (pkgs.vimUtils.toVimPlugin lua.pkgs.rikai-nvim).overrideAttrs {
+              runtimeDeps = [
+                pkgs.librsvg
+              ];
+            };
+          in
+          {
+            default = rikaiPlugin;
+            # TODO call pkgs.vimUtils.toVimPlugin  on it ?
+            rikai-nvim = rikaiPlugin;
 
-          pyEnv = pyEnv;
-          fugashi = fugashi-unidic pkgs.python3.pkgs;
-          mojimoji = mojimoji pkgs.python3.pkgs;
+            pyEnv = pyEnv;
+            fugashi = fugashi-unidic pkgs.python3.pkgs;
+            mojimoji = mojimoji pkgs.python3.pkgs;
 
-          sudachi-rs-full = pkgs.sudachi-rs.override {
-            sudachidict = pkgs.python3Packages.sudachidict-full;
+            sudachi-rs-full = pkgs.sudachi-rs.override {
+              sudachidict = pkgs.python3Packages.sudachidict-full;
+            };
+
           };
-
-        };
 
         devShells = {
           ci = self.devShells.${system}.default.overrideAttrs (oa: {
