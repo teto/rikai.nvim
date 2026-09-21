@@ -10,7 +10,12 @@ package = 'rikai.nvim'
 -- to know if the rockspec is running in actual release mode
 local release_mode = '$summary' == "USED_AS_TEMPLATE"
 
-dependencies = { 'lua == 5.1', 'lsqlite3', 'luautf8', 'mega.cmdparse' }
+dependencies = {
+    'lua == 5.1',
+    'lsqlite3',
+    'luautf8',
+    'mega.cmdparse'
+}
 
 test_dependencies = { }
 
@@ -20,7 +25,7 @@ if release_mode then
 
 
     url = repo_url .. '/archive/' .. git_ref .. '.zip',
-    dir = 'avante.nvim-' .. git_ref,
+    dir = 'rikai.nvim-' .. git_ref,
   }
 else
   version = "scm-".. specrev
@@ -31,14 +36,14 @@ end
 
 build = {
   type = 'builtin',
-  copy_directories = { 'plugin' } ,
+  copy_directories = { 'doc', 'ftplugin', 'plugin' },
 }
 
 description = {
   summary = 'rikaitan for neovim, i.e., japanese translation integrated ',
   detailed = [[
 rikai.nvim]],
-  labels = { 'neovim' } ,
+  labels = { 'japanese', 'neovim' } ,
   homepage = 'https://github.com/teto/rikai.nvim',
   license = 'GPL-3.0'
 }

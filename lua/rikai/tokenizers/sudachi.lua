@@ -18,12 +18,13 @@ local _state = {}
 local PROPER_NOUN = "固有名詞"
 local PUNCTUATION = "補助記号"
 
--- PART of SPEECH
--- "固有名詞" lastname might appear as a subtype
--- so we mix both together
----@param pos table
+---Parses the part of speech (POS) of sudachi
+---"固有名詞" lastname might appear as a subtype
+---so we mix both together
+---@param pos_full string The full pos returned by sudachi
 ---@return rikai.types.LexiconType
-function M.lexicon_type(pos)
+function M.lexicon_type(pos_full)
+	local pos = vim.split(tostring(pos_full) or "", ",")
 	local pos1 = pos[1]
 	-- TODO 地名 = > nom de lieu, utiliser un bitfield ?
 
@@ -67,8 +68,8 @@ end
 --- - Normalized Form
 ---@param content string
 ---@param enable_pos_processing boolean enable part of speech processing
----@return [TokenizationResult]
-M.tokenize = function(content, enable_pos_processing)
+---@return TokenizationResult[]
+M.tokenize = function(content)
 	local tokens = {}
 
 	logger:info(string.format("Tokenizer called with content '%s'", content))
@@ -87,14 +88,9 @@ M.tokenize = function(content, enable_pos_processing)
 				---@type string[]
 				local pieces = vim.split(line, "	")
 				local surface = pieces[1]
-				---@type rikai.types.LexiconType|string?
-				local pos = pieces[2]
+				local part_of_speech = pieces[2]
 				local normal_form = pieces[3]
-
-				if enable_pos_processing then
-					local res = vim.split(tostring(pos) or "", ",")
-					pos = M.lexicon_type(res)
-				end
+				local pos = M.lexicon_type(part_of_speech)
 
 				-- iskeyword doesn't accept non-ascii ranges :'(
 				-- https://groups.google.com/g/vim_dev/c/XrRP7Gcb9uc
