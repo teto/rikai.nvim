@@ -62,7 +62,7 @@ function M.create_command()
 		lookup.popup_lookup(to_translate)
 	end)
 
-	local livehl_parser = top_subparsers:add_parser({ name = "live_hl", help = "Highlight current token" })
+	local livehl_parser = top_subparsers:add_parser({ name = "live", help = "Highlight current token" })
 	livehl_parser:add_parameter({
 		name = "hl_command",
 		choices = {
@@ -71,6 +71,7 @@ function M.create_command()
 			"enable",
 			"disable",
 		},
+        -- doesn't complain even though it is required ?
 		required = true,
 		help = "Autoupdate text highlights depending on their type: names, verbs, ...",
 	})
@@ -96,7 +97,7 @@ function M.create_command()
 		},
 		help = "Choose behavior",
 	})
-	hl_parser:add_parameter({ name = "--name", help = "highlight names ?" })
+	hl_parser:add_parameter({ name = "--name", help = "highlight names" })
 	-- args vim.api.keyset.create_user_command.command_args
 	hl_parser:set_execute(function(args)
 		local megaargs = args.namespace
