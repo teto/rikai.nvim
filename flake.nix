@@ -75,9 +75,6 @@
         # lacks mojimoji for now
         pyEnv =
           let
-            # TODO use toPythonModule
-            # the default uses unidic-lite
-
             # TODO override fugashi to use a fugashi with optional-dependencies.unidic ?
             misaki-jp =
               p:
@@ -165,7 +162,7 @@
               pkgs.librsvg # for rsvg-convert executable
               pkgs.sudachi-rs
 
-              # pyEnv
+              pyEnv
               pkgs.sqlite.dev # to install lsqlite3 via luarocks
               pkgs.cmake # needed for luv install ?
               pkgs.sqlite.dev # for sqlite3.h

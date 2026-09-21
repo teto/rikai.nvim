@@ -16,7 +16,7 @@ M.highlight_current_token = function()
 	local token, line, coloffset, width_in_bytes = tokenizer.get_current_token()
 
 	if not token then
-		utils.notify("Could not find current token")
+		utils.notify("Could not find current token.")
 		return
 	end
 	-- highlight token for current line
@@ -33,7 +33,7 @@ M.highlight_current_token = function()
 		coloffset,
 		width_in_bytes
 	)
-	utils.notify(msg)
+	logger:debug(msg)
 	-- higlighting current token at pos {0, 14, 2 }
 	-- TODO clear up previous highlight
 	if _state.current_token then
@@ -58,7 +58,6 @@ M.highlight_current_token = function()
 	if res < 0 then
 		logger:error("Could not create position")
 	else
-		vim.print("live_hl res", res)
 		_state.current_token = res
 	end
 end
