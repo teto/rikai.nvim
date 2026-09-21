@@ -1,5 +1,4 @@
 local git_ref = '$git_ref'
-local modrev = '0.0.2'
 local specrev = '1'
 
 local repo_url = 'https://github.com/teto/rikai.nvim'
@@ -11,18 +10,20 @@ package = 'rikai.nvim'
 -- to know if the rockspec is running in actual release mode
 local release_mode = '$summary' == "USED_AS_TEMPLATE"
 
-version = modrev ..'-'.. specrev
-
-dependencies = { 'lua == 5.1', 'sqlite', 'utf8', 'mega.cmdparse' } 
+dependencies = { 'lua == 5.1', 'lsqlite3', 'luautf8', 'mega.cmdparse' }
 
 test_dependencies = { }
 
 if release_mode then
+  version = git_ref ..'-'.. specrev
   source = {
+
+
     url = repo_url .. '/archive/' .. git_ref .. '.zip',
     dir = 'avante.nvim-' .. git_ref,
   }
 else
+  version = "scm-".. specrev
   source = {
     url = repo_url:gsub('https', 'git')
   }

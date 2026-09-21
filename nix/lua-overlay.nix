@@ -13,8 +13,8 @@ final: prev: {
       }:
       buildLuarocksPackage {
         pname = "rikai.nvim";
-        version = "0.1.0-1";
-        knownRockspec = ../rikai.nvim-0.1.0-1.rockspec;
+        version = "nightly";
+        knownRockspec = ../rikai.nvim-scm-1.rockspec;
         src = pkgs.lib.cleanSource ../.;
 
         disabled = lua.luaversion != "5.1";
