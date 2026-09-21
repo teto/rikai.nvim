@@ -37,7 +37,7 @@ test-lx:
 docgen:
     mkdir -p doc
     # --prefix-func
-    vimcats lua/rikai/{init,commands,config,log}.lua > doc/rikai.txt
+    vimcats lua/rikai/{init,commands,config,log,tokenizer}.lua lua/rikai/commands/lookup.lua > doc/rikai.txt
     nvim -u NONE -i NONE --headless +'helptags doc' +'quit!'
 
 kokoro-test:
