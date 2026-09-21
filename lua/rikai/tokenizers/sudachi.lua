@@ -1,5 +1,8 @@
--- Using  sudachi-rs tokenizer https://github.com/WorksApplications/sudachi.rs
---
+---@brief [[
+---Using  sudachi-rs tokenizer https://github.com/WorksApplications/sudachi.rs
+---
+---@brief ]]
+---
 --  echo 日高屋 | sudachi
 -- 日高	名詞,固有名詞,人名,姓,*,*	日高
 -- 屋	接尾辞,名詞的,一般,*,*,*	屋
@@ -26,7 +29,7 @@ function M.lexicon_type(pos)
 
 	if pos[2] == PROPER_NOUN then -- last name
 		return types.LexiconType.PROPER_NOUN
-	elseif pos[1] == "名詞" then -- last name
+	elseif pos1 == "名詞" then
 		return types.LexiconType.NAME
 	elseif pos1 == "形状詞" then
 		return types.LexiconType.NA_ADJECTIVE
@@ -54,26 +57,26 @@ function M.lexicon_to_str(lex_type)
 	return map[lex_type] or "unknown"
 end
 
---- Returns a table of TokenizationResult
+---Calls sudachi and returns result in structured format
+---Sudachi output format described at:
+--- https://github.com/WorksApplications/sudachi.rs?tab=readme-ov-file#output
+---
+--- Tab separated are:
+--- - Surface
+--- - Part-of-Speech Tags (comma separated)
+--- - Normalized Form
 ---@param content string
 ---@param enable_pos_processing boolean enable part of speech processing
----@return table of TokenizationResult
+---@return [TokenizationResult]
 M.tokenize = function(content, enable_pos_processing)
 	local tokens = {}
-	-- Use format strings
-	-- TODO dont log the whole thing,
+
 	logger:info(string.format("Tokenizer called with content '%s'", content))
 
 	---@param _ number
 	---@param data table
 	---@param name string
 	local handle_line = function(_, data, name)
-		-- output format described at:
-		-- https://github.com/WorksApplications/sudachi.rs?tab=readme-ov-file#output
-		-- Tab separated are:
-		-- - Surface
-		-- - Part-of-Speech Tags (comma separated)
-		-- - Normalized Form
 		-- Part of speech starts with word type
 
 		logger:debug("Handle_line called for event " .. name)
@@ -82,9 +85,11 @@ M.tokenize = function(content, enable_pos_processing)
 			if line ~= "" and line ~= "EOS" then
 				-- tab separated results
 				local pieces = vim.split(line, "	")
-				-- local line_start = pieces[1]
+                local surface = pieces[1]
 				---@type rikai.types.LexiconType|string?
 				local pos = pieces[2]
+                local normal_form = pieces[3]
+				-- local line_start = pieces[1]
 
 				if enable_pos_processing then
 					local res = vim.split(tostring(pos) or "", ",")
@@ -100,8 +105,9 @@ M.tokenize = function(content, enable_pos_processing)
 				-- else
 				-- logger:debug("Inserting description of token ".. line_start)
 				table.insert(tokens, {
-					pieces[1],
+					surface,
 					pos, -- processed or not
+                    normal_form
 				})
 			end
 		end

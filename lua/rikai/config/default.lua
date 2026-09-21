@@ -18,7 +18,7 @@ local image = require("rikai.image")
 ---@field log_level vim.log.levels logging level
 ---@field popup_options RikaiConfigPopupOptions
 ---@field dictionaries RikaiConfigDictionaries
----@field tokenizer string for now only "sudachi" is supported
+---@field tokenizer "sudachi" for now only "sudachi" is supported
 ---@field _state table internal state shared with the database provider
 
 ---@type RikaiConfig
