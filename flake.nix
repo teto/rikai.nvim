@@ -122,6 +122,7 @@
       in
 
       {
+        formatter = treefmtEval.config.build.wrapper;
 
         packages = {
           default = lua.pkgs.rikai-nvim;
@@ -235,8 +236,6 @@
       }
     )
     // {
-      # formatter = treefmtEval.config.build.wrapper;
-
       overlays = {
         luaOverlay = final: prev: {
           lua5_1 = prev.lua5_1.override {
