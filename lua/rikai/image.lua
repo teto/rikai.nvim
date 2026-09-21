@@ -31,9 +31,9 @@ function M.from_magick(token)
 	return output_filename
 end
 
-function M.from_kanjivg(token)
+function M.from_kanjivg(kanjivg_dir, token)
 	-- TODO get 'Normal' instead as background color
-	local kanjivg_dir = vim.fn.stdpath("data") .. "/rikai/kanjivg"
+	local = 
 
 	local cmd_generate_image
 	local unicode_value = vim.fn.char2nr(token)

@@ -89,7 +89,7 @@ M.popup_lookup = function(token)
 			end
 
 			-- TODO we should implement some caching
-			local output_filename = config.popup_options.generate_image_cmd(token)
+			local output_filename = config.popup_options.generate_image_cmd(cfg.dictionaries.kanjivg, token)
 
 			table.insert(formatted_results, "![kanji](" .. output_filename .. ")")
 		end
