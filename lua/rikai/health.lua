@@ -94,8 +94,6 @@ function M.check()
 		h.warn("Make available the program 'rsvg-convert' to display kanji as images")
 	end
 
-	-- { "kanjivg", "kanjidb",
-	-- local default_config = require'rikai.config.default'
 	for _k, key in ipairs({ "kanjidb", "jmdictdb" }) do
 		-- kanjivg is a folder though
 		local dep = merged_cfg.dictionaries[key]

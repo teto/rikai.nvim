@@ -5,8 +5,11 @@ local image = require("rikai.image")
 ---@field jmdictdb string
 ---@field kanjivg string
 
+---@alias RikaiImageGeneratorFn fun(kanjivg_folder: string, kanji: string): string
+---returns path to image
+
 ---@class RikaiConfigPopupOptions
----@field generate_image_cmd fun(string): string you can import one from 'rikai.image'
+---@field generate_image_cmd RikaiImageGeneratorFn string you can import one from 'rikai.image'
 ---@field render_images boolean convert kanjis into images to make them easier to read/bigger
 ---@field max_height integer
 ---@field max_width integer
