@@ -88,28 +88,31 @@ end
 function M.setup_hl_autocmds(autocomd_args)
 	local curbuf = vim.api.nvim_get_current_buf()
 
-	vim.api.nvim_create_autocmd("CursorMoved", vim.tbl_deep_extend("keep", {
-		buffer = curbuf,
-		desc = "Highlights current token with RikaiCurrentToken",
-		callback = function()
-			-- TODO
-			-- 1. check if line changed tokenization exists in cache
-			-- if it didn't tokenize current line and save it in cache
-			-- use vim.ringbuf ?
-			M.highlight_current_token()
-		end,
-	}, autocomd_args or {}))
+	vim.api.nvim_create_autocmd(
+		"CursorMoved",
+		vim.tbl_deep_extend("keep", {
+			buffer = curbuf,
+			desc = "Highlights current token with RikaiCurrentToken",
+			callback = function()
+				-- TODO
+				-- 1. check if line changed tokenization exists in cache
+				-- if it didn't tokenize current line and save it in cache
+				-- use vim.ringbuf ?
+				M.highlight_current_token()
+			end,
+		}, autocomd_args or {})
+	)
 
 	-- disabled during testing, this works fine
 	vim.api.nvim_create_autocmd({ "CursorHold" }, {
-	    -- group = "rikai",
-	    buffer = curbuf,
-	    desc = "Display translations on hover",
-	    -- inspired by "hover"
-	    callback = function ()
-	        M.live_lookup()
-	        -- todo update highlight
-	    end,
+		-- group = "rikai",
+		buffer = curbuf,
+		desc = "Display translations on hover",
+		-- inspired by "hover"
+		callback = function()
+			M.live_lookup()
+			-- todo update highlight
+		end,
 	})
 
 	-- if megaargs.hl_command == "clear" then

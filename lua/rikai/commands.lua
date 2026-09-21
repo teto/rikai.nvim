@@ -71,7 +71,7 @@ function M.create_command()
 			"enable",
 			"disable",
 		},
-        -- doesn't complain even though it is required ?
+		-- doesn't complain even though it is required ?
 		required = true,
 		help = "Autoupdate text highlights depending on their type: names, verbs, ...",
 	})

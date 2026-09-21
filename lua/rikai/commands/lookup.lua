@@ -41,7 +41,7 @@ local separator = " ---------- "
 M.popup_lookup = function(token)
 	logger:info("Looking into token: " .. token.surface)
 
-    local normal_form = token.normal_form
+	local normal_form = token.normal_form
 	local focus_id = normal_form
 	local bufnr = api.nvim_get_current_buf()
 

@@ -84,17 +84,15 @@ M.tokenize = function(content, enable_pos_processing)
 			-- sudachi prints 'EOS' too. can sudachi be configured differently ?
 			if line ~= "" and line ~= "EOS" then
 				-- tab separated results
-                ---@type string[]
+				---@type string[]
 				local pieces = vim.split(line, "	")
-                local surface = pieces[1]
+				local surface = pieces[1]
 				---@type rikai.types.LexiconType|string?
 				local pos = pieces[2]
-                local normal_form = pieces[3]
-				-- local line_start = pieces[1]
+				local normal_form = pieces[3]
 
 				if enable_pos_processing then
 					local res = vim.split(tostring(pos) or "", ",")
-
 					pos = M.lexicon_type(res)
 				end
 
@@ -105,7 +103,7 @@ M.tokenize = function(content, enable_pos_processing)
 				--     logger:debug("Skipping non-japanese token", line_start)
 				-- else
 				-- logger:debug("Inserting description of token ".. line_start)
-				table.insert(tokens, types.TokenResult (surface, pos, normal_form))
+				table.insert(tokens, types.TokenResult(surface, pos, normal_form))
 			end
 		end
 	end
