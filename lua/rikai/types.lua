@@ -1,5 +1,21 @@
 local M = {}
 
+---@class TokenizationResult
+---@field surface string the string appearing in text
+---@field pos string part of speech tag
+---@field normal_form string normal form
+
+---Create a named tuple
+---@return TokenizationResult
+M.TokenResult = function(surface, pos, normal_form)
+    return {
+        surface = surface,
+        pos = pos,
+        normal_form = normal_form
+    }
+end
+
+
 ---@enum rikai.types.CharacterType
 M.CharacterType = {
 	OTHER = 1,

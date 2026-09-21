@@ -32,12 +32,12 @@ Lua dependencies:
 - [official sqlite bindings][lsqlite-luarocks] for lua 'sqlite'
 - [utf8][luautf8-github] to get utf8
 
-I recommand using the neovim package manager [rocks.nvim][rocks.nvim] since it
+I recommend using the neovim package manager [rocks.nvim][rocks.nvim] since it
 automatically installs the lua dependencies.
 
 `:Rocks install rikai.nvim`
 
-Once the plugin is installed, you will need to download the japanese
+Once the plugin is installed, you will need to download the Japanese
 dictionaries with `:Rikai download` (needed just once):
 - [edict_database][edict-as-sqlite] as sqlite databases
 
@@ -67,11 +67,23 @@ for the available options.
 
 You can tweak the highlights starting with `Rikai*` as well.
 
+## Highlight groups
+
+<!-- todo add link -->
+Highlights used are visible in plugin/rikai.lua:
+- RikaiHighlightWordGroup
+- RikaiProperNoun
+- RikaiCurrentToken
+<!-- RikaiNames -->
+
 You can finally check your installation/configuration with `:checkhealth rikai`
 
 # How to use ?
 
-There are no default keymaps so you need to set one
+## Search dictionary
+
+There are no default keymaps so you need to set one. For instance to search the
+dictionary for visual selection or character under cursor:
 
 ```lua
 vim.keymap.set({'n', 'v'}, '<D-j>', function() vim.cmd([[ Rikai lookup ]]) end, { buffer = false, desc = 'Japanese lookup' })
@@ -80,16 +92,11 @@ vim.keymap.set({'n', 'v'}, '<D-j>', function() vim.cmd([[ Rikai lookup ]]) end, 
 
 You can also call `:Rikai lookup 見` to see the translation.
 
-To enable a more rikaichamp/yomitan-like experience, run `:Rikai live_hl enable`
-to enable automatic translation and hilighting of current token. It's quite
-experimental and not as polished as its inspiration though.
+## Live highlighting
 
-<!-- todo add link -->
-Highlights used are visible in plugin/rikai.lua:
-- RikaiHighlightWordGroup
-- RikaiProperNoun
-- RikaiCurrentToken
-<!-- RikaiNames -->
+To enable a more rikaichamp/yomitan-like experience, run `:Rikai live enable`
+to enable automatic translation and highlighting of current token.
+It's experimental and not as polished as its inspiration though.
 
 
 # Roadmap 
@@ -105,16 +112,11 @@ Highlights used are visible in plugin/rikai.lua:
 See [wiki][rikai-nvim-wiki] for more reference.
 
 
-# How to get the various dictionaries used by rikai.nvim ?
-
-Run `:Rikai download`.
-
 # Related software
 
 - [rikaitan][rikaitan]
 - [tagainjisho](https://github.com/Gnurou/tagainijisho/)
-- On android, I love [Kanji
-  study](https://play.google.com/store/apps/details?id=com.mindtwisted.kanjistudy&pli=1)
+- On android, I love [Kanji study](https://play.google.com/store/apps/details?id=com.mindtwisted.kanjistudy&pli=1)
 - [ichiran][ichiran-github]
 
 [rocks.nvim]: https://github.com/lumen-oss/rocks.nvim
