@@ -1,4 +1,4 @@
-name: Push to Luarocks
+name: Luarocks release
 
 on:
   push:
@@ -7,13 +7,12 @@ on:
   release:
     types:
       - created
-  pull_request: # Will test a local install without uploading to luarocks.org
 
 jobs:
   luarocks-upload:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # Required to count the commits
       - name: Get Version
@@ -23,18 +22,20 @@ jobs:
         env:
           LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
         with:
+          template: ./rikai.nvim-scm-1.rockspec
           version: ${{ env.LUAROCKS_VERSION }}
+          summary: USED_AS_TEMPLATE
           # ideally this would be fetched from the lockfile/rockspec
-          dependencies: |
-            lua == 5.1
-            sqlite
-            utf8
-            mega.cmdparse
-            alogger
-          copy_directories: |
-            {{ neovim.plugin.dirs }}
-          labels: |
-            neovim
-          detailed_description: |
-            Translate japanese words on demand, or automatically on CursorHold.
-            Can highlight tokens as well.
+          # dependencies: |
+          #   lua == 5.1
+          #   sqlite
+          #   utf8
+          #   mega.cmdparse
+          #   luautf8
+          # copy_directories: |
+          #   {{ neovim.plugin.dirs }}
+          # labels: |
+          #   neovim
+          # detailed_description: |
+          #   Translate japanese words on demand, or automatically on CursorHold.
+          #   Can highlight tokens as well.
