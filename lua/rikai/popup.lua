@@ -1,9 +1,14 @@
+---@mod rikai-popup
+---@brief [[
+---Creates a popup
+---]]
 local config = require("rikai.config")
 
 local M = {}
 
 local util = vim.lsp.util
 
+---Display popup that disappears upon moving cursor
 ---@param focus_id string Popup identifier to focus or create
 ---@param lines table Content lines to display in popup
 ---@param opts table forwarded to create popup

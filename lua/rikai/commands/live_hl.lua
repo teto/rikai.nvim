@@ -1,3 +1,7 @@
+---@mod rikai-live
+---@brief [[
+---Creates a yomitan-like experience where current word gets highlighted as you move the cursor along
+---@brief ]]
 local lookup = require("rikai.commands.lookup")
 local tokenizer = require("rikai.tokenizer")
 local utils = require("rikai.utils")
@@ -74,14 +78,17 @@ M.live_lookup = function()
 	end
 end
 
-function M.setup_hl_autocmds(_args)
-	-- local update_tokenizer_cache = function ()
-	-- vim.ringbuf()
+---Setups autocommands that
+---1. highlight current word
+---2. Creates popup on current word
+---TODO shall we limit it to special filetypes ?
+---@param autocmd_args table merged into nvim_create_autocmd args
+---   for instance to limit the autocmd to certain filetypes do
+---   'pattern = { "*.md", "*.txt", "*.org" }'
+function M.setup_hl_autocmds(autocomd_args)
 	local curbuf = vim.api.nvim_get_current_buf()
 
-	vim.api.nvim_create_autocmd("CursorMoved", {
-		-- all 			-- pattern = { "*.md", "*.txt", "*.org" },
-		-- pattern = "*",
+	vim.api.nvim_create_autocmd("CursorMoved", vim.tbl_deep_extend("keep", {
 		buffer = curbuf,
 		desc = "Highlights current token with RikaiCurrentToken",
 		callback = function()
@@ -91,19 +98,19 @@ function M.setup_hl_autocmds(_args)
 			-- use vim.ringbuf ?
 			M.highlight_current_token()
 		end,
-	})
+	}, autocomd_args or {}))
 
 	-- disabled during testing, this works fine
-	-- vim.api.nvim_create_autocmd({ "CursorHold" }, {
-	--     -- group = "rikai",
-	--     buffer = curbuf,
-	--     desc = "Display translations on hover",
-	--     -- inspired by "hover"
-	--     callback = function ()
-	--         M.live_lookup()
-	--         -- todo update highlight
-	--     end,
-	-- })
+	vim.api.nvim_create_autocmd({ "CursorHold" }, {
+	    -- group = "rikai",
+	    buffer = curbuf,
+	    desc = "Display translations on hover",
+	    -- inspired by "hover"
+	    callback = function ()
+	        M.live_lookup()
+	        -- todo update highlight
+	    end,
+	})
 
 	-- if megaargs.hl_command == "clear" then
 	--     logger:info("clearing hl")
