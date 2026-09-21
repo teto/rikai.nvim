@@ -32,7 +32,7 @@ end
 
 --- we might want to return its lenght for matchaddpos ?
 ---@return string token value
---@return any value returned by getcurpos, i.e: [0, lnum, col, off, curswant]
+--any value returned by getcurpos, i.e: [0, lnum, col, off, curswant]
 ---@return number line
 ---@return number current token start offset
 ---@return number token width
@@ -59,11 +59,11 @@ function M.get_current_token()
 		nextoffset = curcoloffset + vim.fn.strlen(tok[1])
 		-- logger:info(string.format("Round %d, inspecting token %s. Comparing cursor offset %d with nextoffset %d", i, tok[1], cursorcoloffset, nextoffset))
 		if cursorcoloffset < nextoffset then
-			current_token = tok[1]
+			current_token = tok[3]
 			break
 		else
 			curcoloffset = nextoffset
-			current_token = tok[1]
+			current_token = tok[3]
 		end
 	end
 

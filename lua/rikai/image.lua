@@ -31,9 +31,11 @@ function M.from_magick(token)
 	return output_filename
 end
 
+---Generates an image for the token
+---@param kanjivg_dir string 
+---@param token string 
+---@return string path towards the generated image
 function M.from_kanjivg(kanjivg_dir, token)
-	-- TODO get 'Normal' instead as background color
-	local = 
 
 	local cmd_generate_image
 	local unicode_value = vim.fn.char2nr(token)
@@ -43,6 +45,7 @@ function M.from_kanjivg(kanjivg_dir, token)
 
 	local input_filename = vim.fs.joinpath(kanjivg_dir, hex_value .. ".svg")
 
+    -- TODO we shall check if file exists before regenerating the image
 	cmd_generate_image = {
 		"rsvg-convert", -- available in "librsvg"
 		"-w",
