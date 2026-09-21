@@ -134,7 +134,7 @@ function M.create_command()
 
 	local log = top_subparsers:add_parser({ name = "log", help = "" })
 	log:set_execute(function(_data)
-		vim.cmd.edit(vim.fn.fnameescape(vim.fn.stdpath("log") .. "/rikai.log"))
+		vim.cmd("log rikai")
 	end)
 
 	cmdparse.create_user_command(parser, nil, { range = true })
