@@ -44,20 +44,16 @@ function M.add_furigana(_args)
 		logger:warning("Nothing to tokenize")
 		return
 	end
-	local res = tokenizer.tokenize(line2, true)
+	local res = tokenizer.tokenize(line2)
 	local column = 1
 	for _i, j in ipairs(res) do
-		local token = j[1]
+		local token = j.normal_form
 
-		local lexicon_type = j[2]
+		local lexicon_type = j.pos
 		local highlight = "Comment"
+
 		if lexicon_type == types.LexiconType.PROPER_NOUN then
 			highlight = "RikaiProperNoun"
-		elseif lexicon_type == types.LexiconType.NOUN then
-			highlight = "RikaiName"
-		end
-
-		if lexicon_type == types.LexiconType.PROPER_NOUN then
 			-- for now let's assume it's an expression
 			local results = provider.lookup_expr(token)
 
@@ -68,9 +64,9 @@ function M.add_furigana(_args)
 			end
 			table.insert(virt_line, { virtual_text, highlight })
 		else
-			-- column = column + token_len
-			-- virtual_text = "toto"
-			-- add an empty
+			if lexicon_type == types.LexiconType.NOUN then
+				highlight = "RikaiName"
+			end
 
 			local display_len = vim.fn.strdisplaywidth(token)
 			-- print(string.format("token %s of display width %d of type %s", token, display_len, tokenizer.lexicon_to_str(lexicon_type)))
@@ -79,7 +75,6 @@ function M.add_furigana(_args)
 		end
 	end
 
-	--
 	vim.api.nvim_buf_set_extmark(
 		bufnr,
 		namespace_id,
