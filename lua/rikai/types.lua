@@ -8,13 +8,12 @@ local M = {}
 ---Create a named tuple
 ---@return TokenizationResult
 M.TokenResult = function(surface, pos, normal_form)
-    return {
-        surface = surface,
-        pos = pos,
-        normal_form = normal_form
-    }
+	return {
+		surface = surface,
+		pos = pos,
+		normal_form = normal_form,
+	}
 end
-
 
 ---@enum rikai.types.CharacterType
 M.CharacterType = {

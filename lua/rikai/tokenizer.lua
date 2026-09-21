@@ -44,7 +44,7 @@ function M.get_current_token()
 	local tokens = M.tokenize(content)
 	-- find the matching token under current pos
 	local curcoloffset = 1 -- current starts at 1
-    ---@type TokenizationResult
+	---@type TokenizationResult
 	local current_token
 	local nextoffset = 1
 
@@ -62,7 +62,6 @@ function M.get_current_token()
 		end
 	end
 
-    assert(current_token)
 	return current_token, cursorpos[2], curcoloffset, vim.fn.strlen(current_token.surface)
 end
 
