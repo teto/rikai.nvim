@@ -67,7 +67,6 @@ end
 --- - Part-of-Speech Tags (comma separated)
 --- - Normalized Form
 ---@param content string
----@param enable_pos_processing boolean enable part of speech processing
 ---@return TokenizationResult[]
 M.tokenize = function(content)
 	local tokens = {}
