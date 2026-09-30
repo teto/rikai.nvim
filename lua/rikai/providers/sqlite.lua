@@ -11,7 +11,6 @@ local config = require("rikai.config")
 local logger = require("rikai.log")
 local classifier = require("rikai.classifier")
 local types = require("rikai.types")
-local utf8 = require("utf8")
 
 local M = {}
 
@@ -263,10 +262,12 @@ end
 --- Smart lookup: can look for a kanji or an expression
 ---@param token string
 ---@return rikai.types.CharacterType
----@return KanjiResult | table
+---@return KanjiResult[]
 function M.lookup(token)
+    local utf8 = require("utf8")
 	local token_code = vim.fn.char2nr(token)
 	local token_type = classifier.chartype(token_code)
+    ---@type number
 	local token_len = utf8.len(token)
 
 	local results
