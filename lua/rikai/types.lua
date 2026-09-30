@@ -3,7 +3,7 @@ local M = {}
 ---@class TokenizationResult
 ---@field surface string the string appearing in text
 ---@field pos string part of speech tag
----@field normal_form string normal form
+---@field normal_form string normal form (for instance, removing kana pronunciation from surface text)
 
 ---Create a named tuple
 ---@return TokenizationResult

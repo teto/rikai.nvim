@@ -14,18 +14,19 @@ local M = {}
 ---@param content string
 --@param enable_pos_processing boolean enable part of speech processing
 --@param force boolean ignore cache
----@return table of TokenizationResult
+---@return TokenizationResult[]
 M.tokenize = function(content, ...)
 	-- TODO we should add a cache depending on content
 	local exists, tokenizer = pcall(require, "rikai.tokenizers." .. config.tokenizer)
 	if not exists then
-		vim.notify("Could not load the " .. config.tokenizer)
+		vim.notify("Could not load the tokenizer " .. config.tokenizer)
 	end
 	local tokens = utils.timeit("tokenize", tokenizer.tokenize, content, ...)
 	return tokens
 end
 
 --- we might want to return its lenght for matchaddpos ?
+---Get the current token under cursor
 ---@return TokenizationResult token value
 --any value returned by getcurpos, i.e: [0, lnum, col, off, curswant]
 ---@return number line

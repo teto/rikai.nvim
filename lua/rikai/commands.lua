@@ -1,11 +1,12 @@
 -- command parser generated https://github.com/ColinKennedy/mega.cmdparse
-local cmdparse = require("mega.cmdparse")
 local logger = require("rikai.log")
+local types = require("rikai.log")
 
 local M = {}
 
 ---@return nil
 function M.create_command()
+    local cmdparse = require("mega.cmdparse")
 	local parser = cmdparse.ParameterParser.new({ name = "Rikai", help = "Nested Subparsers" })
 	local top_subparsers = parser:add_subparsers({ destination = "commands" })
 
@@ -17,35 +18,45 @@ function M.create_command()
 		local utils = require("rikai.utils")
 		local tokenizer = require("rikai.tokenizer")
 		local lookup = require("rikai.commands.lookup")
+        ---@type packagelib
 		local utf8 = require("utf8")
+        ---@type table
 		local megaargs = args.namespace
-		local to_translate, to_tokenize
+        ---@type string
+		local to_tokenize_str = ""
+
+        -- check if we are in visual mode
+        vim.print(args)
 		-- number of items in range
+        -- if token was on command line
 		if megaargs.expression then
-			to_tokenize = megaargs.expression
+			to_tokenize_str = megaargs.expression
 		elseif args.options.range ~= 0 then
 			-- splits between kanas and kanjis
 			-- https://github.com/neovim/neovim/discussions/35081
 			-- todo use get_selection instead ?
 			local visual_selection = utils.get_visual_selection()
 			-- take first line of visual selection
-			to_tokenize = visual_selection[1]
+			to_tokenize_str = visual_selection[1]
 		else
-			-- cto_tokenize implementation is based on \k
+			-- cto_tokenize_str implementation is based on \k
 			-- let's tokenize the whole line
 			-- advantage of cword is that it doesn't care about
 			-- local cursor_pos = vim.api.nvim_win_get_cursor(0)
-			to_tokenize = vim.fn.expand("<cword>")
-			-- to_tokenize = vim.api.nvim_get_current_line()
-			-- line = cursor_pos
-			-- TODO replace with get_current_token()
-			-- vim.g.rikai._state._current_line =
+			-- TODO replace with get_current_token() ?
+            local token = tokenizer.get_current_token()
+			-- to_tokenize_str = vim.fn.expand("<cword>")
+            lookup.popup_lookup(token)
+            return
 		end
 
-		if utf8.len(to_tokenize) > 1 then
+        ---@type TokenizationResult
+        local to_translate
+		if utf8.len(to_tokenize_str) > 1 then
 			-- todo get first element
 			-- TODO tokenize should be called in caller instead
-			local tokens = utils.timeit("tokenize", tokenizer.tokenize, to_tokenize, true)
+            ---@type TokenizationResult[]
+			local tokens = utils.timeit("tokenize", tokenizer.tokenize, to_tokenize_str, true)
 			if vim.tbl_isempty(tokens) then
 				-- todo notify as well
 				utils.notify("No tokens found", vim.log.levels.INFO)
@@ -53,10 +64,13 @@ function M.create_command()
 				return
 			end
 			-- returns an array of TokenizationResult
-			to_translate = tokens[1][1]
+            -- TODO match against cursor position, for instance
+            -- 'によると'
+			to_translate = tokens[1]
 		else
-			logger:debug("Word " .. to_tokenize .. " is one character: skipping tokenization...")
-			to_translate = to_tokenize
+			logger:debug("Word " .. to_tokenize_str .. " is one character: skipping tokenization...")
+            -- create a pseudo TokenizationResult
+			to_translate = types.TokenResult(to_tokenize_str, nil, to_tokenize_str)
 		end
 
 		lookup.popup_lookup(to_translate)
