@@ -6,6 +6,7 @@ local lookup = require("rikai.commands.lookup")
 local tokenizer = require("rikai.tokenizer")
 local utils = require("rikai.utils")
 local logger = require("rikai.log")
+local config = require("rikai.config")
 
 local M = {}
 
@@ -15,6 +16,7 @@ local M = {}
 ---@field current_token? integer match ID returned by vim.fn.matchaddpos
 -- cache some state
 local _state = {}
+local pending_lookups = {}
 
 M.highlight_current_token = function()
 	local token, line, coloffset, width_in_bytes = tokenizer.get_current_token()
@@ -87,11 +89,43 @@ end
 ---   'pattern = { "*.md", "*.txt", "*.org" }'
 function M.setup_hl_autocmds(autocomd_args)
 	local curbuf = vim.api.nvim_get_current_buf()
+	local delay = config.live_popup_delay
+	assert(type(delay) == "number" and delay >= 0 and delay % 1 == 0, "live_popup_delay must be a non-negative integer")
+	local group = vim.api.nvim_create_augroup("RikaiLive_" .. curbuf, { clear = true })
+	pending_lookups[curbuf] = nil
+
+	local function cancel_lookup()
+		pending_lookups[curbuf] = nil
+	end
+
+	local function schedule_lookup()
+		local request = {}
+		pending_lookups[curbuf] = request
+		local win = vim.api.nvim_get_current_win()
+		local cursor = vim.api.nvim_win_get_cursor(win)
+		local changedtick = vim.api.nvim_buf_get_changedtick(curbuf)
+		vim.defer_fn(function()
+			if pending_lookups[curbuf] ~= request then
+				return
+			end
+			cancel_lookup()
+			if
+				vim.api.nvim_get_current_buf() == curbuf
+				and vim.api.nvim_get_current_win() == win
+				and vim.api.nvim_get_mode().mode == "n"
+				and vim.api.nvim_buf_get_changedtick(curbuf) == changedtick
+				and vim.deep_equal(vim.api.nvim_win_get_cursor(win), cursor)
+			then
+				M.live_lookup()
+			end
+		end, delay)
+	end
 
 	vim.api.nvim_create_autocmd(
 		"CursorMoved",
 		vim.tbl_deep_extend("keep", {
 			buffer = curbuf,
+			group = group,
 			desc = "Highlights current token with RikaiCurrentToken",
 			callback = function()
 				-- TODO
@@ -99,21 +133,20 @@ function M.setup_hl_autocmds(autocomd_args)
 				-- if it didn't tokenize current line and save it in cache
 				-- use vim.ringbuf ?
 				M.highlight_current_token()
+				schedule_lookup()
 			end,
 		}, autocomd_args or {})
 	)
 
-	-- disabled during testing, this works fine
-	vim.api.nvim_create_autocmd({ "CursorHold" }, {
-		-- group = "rikai",
+	vim.api.nvim_create_autocmd({ "BufLeave", "WinLeave", "InsertEnter", "BufWipeout", "TextChanged" }, {
 		buffer = curbuf,
-		desc = "Display translations on hover",
-		-- inspired by "hover"
-		callback = function()
-			M.live_lookup()
-			-- todo update highlight
-		end,
+		group = group,
+		desc = "Cancel pending Rikai hover lookup",
+		callback = cancel_lookup,
 	})
+
+	-- Also translate when live mode is enabled without moving the cursor.
+	schedule_lookup()
 
 	-- if megaargs.hl_command == "clear" then
 	--     logger:info("clearing hl")

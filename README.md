@@ -2,7 +2,7 @@
 include_toc: true
 ---
 
-This plugin aims at providing offline translations either on-demand and/or automatically when hovering asian (japanese for now) characters.
+This plugin aims at providing offline translations either on-demand and/or automatically when hovering Asian (Japanese for now) characters.
 
 The name is inspired by the great browser [rikaitan][rikaitan] plugin.
 理解 ("rikai") [translates][jisho-rikai] to "understanding", "comprehension".
@@ -82,7 +82,7 @@ You can finally check your installation/configuration with `:checkhealth rikai`
 
 ## Search dictionary
 
-There are no default keymaps so you need to set one. For instance to search the
+There are no default key mappings so you need to set one. For instance to search the
 dictionary for visual selection or character under cursor:
 
 ```lua
@@ -97,6 +97,18 @@ You can also call `:Rikai lookup 見` to see the translation.
 To enable a more rikaichamp/yomitan-like experience, run `:Rikai live enable`
 to enable automatic translation and highlighting of current token.
 It's experimental and not as polished as its inspiration though.
+
+Set the popup delay in milliseconds before loading the plugin (default: 500):
+
+```lua
+vim.g.rikai = {
+  live_popup_delay = 750,
+}
+```
+
+The delay restarts on cursor movement and is independent of Neovim's
+`updatetime`. Leaving the window or buffer, entering Insert mode, or editing
+text cancels a pending popup. Use `0` for a popup on the next event-loop turn.
 
 
 # Roadmap 

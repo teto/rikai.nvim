@@ -26,7 +26,6 @@ function M.create_command()
 		local to_tokenize_str = ""
 
         -- check if we are in visual mode
-        vim.print(args)
 		-- number of items in range
         -- if token was on command line
 		if megaargs.expression then

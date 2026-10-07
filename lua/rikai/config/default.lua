@@ -19,6 +19,7 @@ local image = require("rikai.image")
 ---@field popup_options RikaiConfigPopupOptions
 ---@field dictionaries RikaiConfigDictionaries
 ---@field tokenizer "sudachi" for now only "sudachi" is supported
+---@field live_popup_delay integer idle delay in milliseconds before showing a live popup
 ---@field _state table internal state shared with the database provider
 
 ---@type RikaiConfig
@@ -31,6 +32,7 @@ local JapDefaultConfig = {
 	},
 	log_level = vim.log.levels.WARN,
 	tokenizer = "sudachi",
+	live_popup_delay = 500,
 
 	--- TODO vim.lsp.util.open_floating_preview.Opts
 	popup_options = {
