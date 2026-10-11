@@ -1,6 +1,6 @@
 -- command parser generated https://github.com/ColinKennedy/mega.cmdparse
 local logger = require("rikai.log")
-local types = require("rikai.log")
+local types = require("rikai.types")
 
 local M = {}
 
