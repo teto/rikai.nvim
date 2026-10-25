@@ -264,10 +264,10 @@ end
 ---@return rikai.types.CharacterType
 ---@return KanjiResult[]
 function M.lookup(token)
-    local utf8 = require("utf8")
+	local utf8 = require("utf8")
 	local token_code = vim.fn.char2nr(token)
 	local token_type = classifier.chartype(token_code)
-    ---@type number
+	---@type number
 	local token_len = utf8.len(token)
 
 	local results
