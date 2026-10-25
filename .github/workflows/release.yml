@@ -18,24 +18,9 @@ jobs:
       - name: Get Version
         run: echo "LUAROCKS_VERSION=$(git describe --abbrev=0 --tags)" >> $GITHUB_ENV
       - name: LuaRocks Upload
-        uses: lumen-oss/luarocks-tag-release@v7
+        uses: lumen-oss/luarocks-tag-release@v9
         env:
           LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
         with:
-          template: ./rikai.nvim-scm-1.rockspec
           version: ${{ env.LUAROCKS_VERSION }}
           summary: USED_AS_TEMPLATE
-          # ideally this would be fetched from the lockfile/rockspec
-          # dependencies: |
-          #   lua == 5.1
-          #   sqlite
-          #   utf8
-          #   mega.cmdparse
-          #   luautf8
-          # copy_directories: |
-          #   {{ neovim.plugin.dirs }}
-          # labels: |
-          #   neovim
-          # detailed_description: |
-          #   Translate japanese words on demand, or automatically on CursorHold.
-          #   Can highlight tokens as well.
