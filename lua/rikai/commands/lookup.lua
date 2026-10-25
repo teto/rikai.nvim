@@ -91,13 +91,13 @@ M.popup_lookup = function(token)
 			table.insert(formatted_results, "![kanji](" .. output_filename .. ")")
 		end
 
-        local kanji = require("rikai.kanji")
+		local kanji = require("rikai.kanji")
 		local new_result = kanji.format_kanji(results[1], radicals)
 		for j = 1, #new_result do
 			table.insert(formatted_results, new_result[j])
 		end
 	else
-        local expr = require("rikai.expression")
+		local expr = require("rikai.expression")
 		-- TODO find a way to sort / limit results ?
 		local new_results = expr.format_expression_list(results, separator)
 		for _, line in ipairs(new_results) do

@@ -6,7 +6,7 @@ local M = {}
 
 ---@return nil
 function M.create_command()
-    local cmdparse = require("mega.cmdparse")
+	local cmdparse = require("mega.cmdparse")
 	local parser = cmdparse.ParameterParser.new({ name = "Rikai", help = "Nested Subparsers" })
 	local top_subparsers = parser:add_subparsers({ destination = "commands" })
 
@@ -18,16 +18,16 @@ function M.create_command()
 		local utils = require("rikai.utils")
 		local tokenizer = require("rikai.tokenizer")
 		local lookup = require("rikai.commands.lookup")
-        ---@type packagelib
+		---@type packagelib
 		local utf8 = require("utf8")
-        ---@type table
+		---@type table
 		local megaargs = args.namespace
-        ---@type string
+		---@type string
 		local to_tokenize_str = ""
 
-        -- check if we are in visual mode
+		-- check if we are in visual mode
 		-- number of items in range
-        -- if token was on command line
+		-- if token was on command line
 		if megaargs.expression then
 			to_tokenize_str = megaargs.expression
 		elseif args.options.range ~= 0 then
@@ -43,18 +43,18 @@ function M.create_command()
 			-- advantage of cword is that it doesn't care about
 			-- local cursor_pos = vim.api.nvim_win_get_cursor(0)
 			-- TODO replace with get_current_token() ?
-            local token = tokenizer.get_current_token()
+			local token = tokenizer.get_current_token()
 			-- to_tokenize_str = vim.fn.expand("<cword>")
-            lookup.popup_lookup(token)
-            return
+			lookup.popup_lookup(token)
+			return
 		end
 
-        ---@type TokenizationResult
-        local to_translate
+		---@type TokenizationResult
+		local to_translate
 		if utf8.len(to_tokenize_str) > 1 then
 			-- todo get first element
 			-- TODO tokenize should be called in caller instead
-            ---@type TokenizationResult[]
+			---@type TokenizationResult[]
 			local tokens = utils.timeit("tokenize", tokenizer.tokenize, to_tokenize_str, true)
 			if vim.tbl_isempty(tokens) then
 				-- todo notify as well
@@ -63,12 +63,12 @@ function M.create_command()
 				return
 			end
 			-- returns an array of TokenizationResult
-            -- TODO match against cursor position, for instance
-            -- 'によると'
+			-- TODO match against cursor position, for instance
+			-- 'によると'
 			to_translate = tokens[1]
 		else
 			logger:debug("Word " .. to_tokenize_str .. " is one character: skipping tokenization...")
-            -- create a pseudo TokenizationResult
+			-- create a pseudo TokenizationResult
 			to_translate = types.TokenResult(to_tokenize_str, nil, to_tokenize_str)
 		end
 
