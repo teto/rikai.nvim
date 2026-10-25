@@ -12,15 +12,17 @@ jobs:
   luarocks-upload:
     runs-on: ubuntu-24.04
     steps:
+      - uses: DeterminateSystems/nix-installer-action@v23
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # Required to count the commits
       - name: Get Version
         run: echo "LUAROCKS_VERSION=$(git describe --abbrev=0 --tags)" >> $GITHUB_ENV
+      - name: add SQLITE_LIBDIR
+        run: echo "SQLITE_LIBDIR=$(nix build .#sqlite^out --print-out-paths)/lib" >> $GITHUB_ENV
       - name: LuaRocks Upload
         uses: lumen-oss/luarocks-tag-release@v9
         env:
           LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
         with:
           version: ${{ env.LUAROCKS_VERSION }}
-          summary: USED_AS_TEMPLATE

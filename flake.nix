@@ -127,6 +127,7 @@
           default = lua.pkgs.rikai-nvim;
           # TODO call pkgs.vimUtils.toVimPlugin  on it ?
           inherit (lua.pkgs) rikai-nvim;
+          inherit (pkgs) sqlite;
 
           pyEnv = pyEnv;
           fugashi = fugashi-unidic pkgs.python3.pkgs;
@@ -156,9 +157,8 @@
 
                 pkgs.librsvg # for rsvg-convert executable
                 pkgs.sudachi-rs
-                pkgs.sqlite.dev # to install lsqlite3 via luarocks
+                pkgs.sqlite.dev # for sqlite3.h/to install lsqlite3 via luarocks
                 pkgs.cmake # needed for luv install ?
-                pkgs.sqlite.dev # for sqlite3.h
 
                 pkgs.emmylua-check
                 pkgs.pkg-config # required by lux ?
