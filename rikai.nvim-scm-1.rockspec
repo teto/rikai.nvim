@@ -1,49 +1,28 @@
-local git_ref = '$git_ref'
-local specrev = '1'
-
-local repo_url = 'https://github.com/teto/rikai.nvim'
-
-rockspec_format = '3.0'
-package = 'rikai.nvim'
-
--- in the luarocks-tag-release action, we set $summary to "USED_AS_TEMPLATE"
--- to know if the rockspec is running in actual release mode
-local release_mode = '$summary' == "USED_AS_TEMPLATE"
-
-dependencies = {
-    'lua == 5.1',
-    'lsqlite3',
-    'luautf8',
-    'mega.cmdparse'
-}
-
-test_dependencies = { }
-
-if release_mode then
-  version = git_ref ..'-'.. specrev
-  source = {
-
-
-    url = repo_url .. '/archive/' .. git_ref .. '.zip',
-    dir = 'rikai.nvim-' .. git_ref,
-  }
-else
-  version = "scm-".. specrev
-  source = {
-    url = repo_url:gsub('https', 'git')
-  }
-end
-
-build = {
-  type = 'builtin',
-  copy_directories = { 'doc', 'ftplugin', 'plugin' },
-}
+rockspec_format = "3.0"
+package = "rikai.nvim"
+version = "dev-1"
 
 description = {
-  summary = 'rikaitan for neovim, i.e., japanese translation integrated ',
-  detailed = [[
-rikai.nvim]],
-  labels = { 'japanese', 'neovim' } ,
-  homepage = 'https://github.com/teto/rikai.nvim',
-  license = 'GPL-3.0'
+	summary = "Neovim plugin that helps with japanese translation",
+	license = "GPL-2.0",
+	maintainer = "teto",
+	labels = {
+		"neovim",
+	},
+}
+
+dependencies = {
+	"lua>=5.1",
+	"mega.logging==1.1.6",
+	"luautf8==0.2.1",
+	"lsqlite3==0.9.6",
+	"mega.cmdparse==1.2.0",
+}
+
+source = {
+    url = 'git+https://github.com/teto/rikai.nvim'
+}
+
+build = {
+	type = "builtin",
 }
