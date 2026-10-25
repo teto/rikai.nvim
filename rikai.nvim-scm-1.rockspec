@@ -13,14 +13,14 @@ description = {
 
 dependencies = {
 	"lua>=5.1",
+	"lsqlite3==0.9.7",
+	"mega.cmdparse==1.2.1",
 	"mega.logging==1.1.6",
 	"luautf8==0.2.1",
-	"lsqlite3==0.9.6",
-	"mega.cmdparse==1.2.0",
 }
 
 source = {
-    url = 'git+https://github.com/teto/rikai.nvim'
+	url = "https://github.com/teto/rikai.nvim/archive/refs/tags/8c19bcab9fbe3b8bebcfd88fa2342376e79986bb.zip",
 }
 
 build = {
