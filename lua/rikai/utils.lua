@@ -24,11 +24,14 @@ end
 --- aint it weird that nvim commands dont pass columns ?
 ---@return table
 function M.get_visual_selection()
-	-- does not handle rectangular selection
-	local s_start = vim.fn.getpos("'<")
-	-- in visual mode returns the other end of the connections
-	local s_end = vim.fn.getpos("'>")
-	local lines = vim.fn.getregion(s_start, s_end)
+	local mode = vim.fn.mode()
+	local active = mode:match("^[vV\022]") ~= nil
+	local s_start = vim.fn.getpos(active and "v" or "'<")
+	local s_end = vim.fn.getpos(active and "." or "'>")
+	local lines = vim.fn.getregion(s_start, s_end, {
+		type = active and mode or vim.fn.visualmode(),
+		exclusive = vim.o.selection == "exclusive",
+	})
 	return lines
 end
 
