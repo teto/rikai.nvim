@@ -1,5 +1,6 @@
 -- command parser generated https://github.com/ColinKennedy/mega.cmdparse
 local logger = require("rikai.log")
+local config = require("rikai.config")
 local types = require("rikai.types")
 
 local M = {}
@@ -137,7 +138,7 @@ function M.create_command()
 	local dl_parser = top_subparsers:add_parser({ name = "download", help = "download the necessary dictionaries" })
 	dl_parser:add_parameter({
 		name = "--name",
-		choices = vim.tbl_keys(vim.g.rikai.dictionaries),
+		choices = vim.tbl_keys(config.dictionaries),
 		help = "Dictionary name",
 	})
 	dl_parser:set_execute(function(_data)
