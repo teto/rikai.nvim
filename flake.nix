@@ -138,100 +138,111 @@
 
         };
 
-        devShells = {
-          ci = self.devShells.${system}.default.overrideAttrs (oa: {
-            buildInputs = oa.buildInputs ++ [
-              pkgs.neovim-unwrapped
-            ];
-          });
+        devShells =
+          let
+            base = pkgs.mkShell {
+              name = "rikai.nvim";
 
-          default = pkgs.mkShell {
-            name = "rikai.nvim";
+              # we dont name it VIMRUNTIME to avoid clash with user nvim
+              NIX_VIMRUNTIME = "${pkgs.neovim-unwrapped}/share/nvim/runtime";
+              RIKAI_LUA_LIBRARY = "${luaEnv}/share/lua/${lua.luaversion}";
 
-            # we dont name it VIMRUNTIME to avoid clash with user nvim
-            NIX_VIMRUNTIME = "${pkgs.neovim-unwrapped}/share/nvim/runtime";
-            RIKAI_LUA_LIBRARY = "${luaEnv}/share/lua/${lua.luaversion}";
+              buildInputs = [
+                treefmtEval.config.build.wrapper
+                luaEnv
+                pkgs.just # for 'just'
+                # lx can autoinstall busted
+                pkgs.lux-cli # lux
 
-            buildInputs = [
-              treefmtEval.config.build.wrapper
-              luaEnv
-              pkgs.just # for 'just'
-              # lx can autoinstall busted
-              pkgs.lux-cli # lux
+                pkgs.librsvg # for rsvg-convert executable
+                pkgs.sudachi-rs
+                pkgs.sqlite.dev # to install lsqlite3 via luarocks
+                pkgs.cmake # needed for luv install ?
+                pkgs.sqlite.dev # for sqlite3.h
 
-              pkgs.librsvg # for rsvg-convert executable
-              pkgs.sudachi-rs
+                pkgs.emmylua-check
+                pkgs.pkg-config # required by lux ?
+                pkgs.vimcats
+              ];
 
-              pyEnv
-              pkgs.sqlite.dev # to install lsqlite3 via luarocks
-              pkgs.cmake # needed for luv install ?
-              pkgs.sqlite.dev # for sqlite3.h
+              shellHook =
+                let
+                  # soon not needed anymore once we get
+                  luarocksConfContent = pkgs.lib.generators.toLua { asBindings = true; } luarocksConfig;
+                  luarocksConfig = lua.pkgs.luaLib.generateLuarocksConfig {
 
-              pkgs.emmylua-check
-              pkgs.pkg-config # required by lux ?
-              pkgs.vimcats
-            ];
+                    externalDeps = [
+                      {
+                        name = "SQLITE";
+                        dep = pkgs.sqlite;
+                      }
+                    ];
+                  };
+                  configFile = pkgs.writeTextFile {
+                    name = "rikai-dev-luarocks-config.lua";
+                    text = luarocksConfContent;
+                  };
 
-            shellHook =
-              let
-                # soon not needed anymore once we get
-                luarocksConfContent = pkgs.lib.generators.toLua { asBindings = true; } luarocksConfig;
-                luarocksConfig = lua.pkgs.luaLib.generateLuarocksConfig {
+                  # this should be bone automatically wtf
+                  exposeLib =
+                    { name, dep }:
+                    [
+                      ''${name}_INCDIR="${lib.getDev dep}/include"''
+                      ''${name}_LIBDIR="${lib.getLib dep}/lib"''
+                      ''${name}_BINDIR="${lib.getBin dep}/bin"''
+                    ];
 
-                  externalDeps = [
-                    {
-                      name = "SQLITE";
-                      dep = pkgs.sqlite;
-                    }
-                  ];
-                };
-                configFile = pkgs.writeTextFile {
-                  name = "rikai-dev-luarocks-config.lua";
-                  text = luarocksConfContent;
-                };
+                  # passed to the tests
+                  dictionariesFolder = pkgs.symlinkJoin {
+                    name = "rikai-data";
+                    paths = [
+                      self.inputs.edict-kanji-db
+                      self.inputs.edict-expression-db
+                      # ln -sf "${self.inputs.edict-expression-db}/expression.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
+                    ];
 
-                # this should be bone automatically wtf
-                exposeLib =
-                  { name, dep }:
-                  [
-                    ''${name}_INCDIR="${lib.getDev dep}/include"''
-                    ''${name}_LIBDIR="${lib.getLib dep}/lib"''
-                    ''${name}_BINDIR="${lib.getBin dep}/bin"''
-                  ];
+                  };
+                in
 
-                # passed to the tests
-                dictionariesFolder = pkgs.symlinkJoin {
-                  name = "rikai-data";
-                  paths = [
-                    self.inputs.edict-kanji-db
-                    self.inputs.edict-expression-db
-                    # ln -sf "${self.inputs.edict-expression-db}/expression.db" .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
-                  ];
+                # export SHELL=${pkgs.bashInteractive}/bin/bash
+                ''
+                  mkdir -p .luarocks
+                  # todo change the lux test folder instead
+                  #  /home/runner/work/rikai.nvim/rikai.nvim/
+                  export RIKAI_DICTIONARIES_FOLDER="${dictionariesFolder}"
 
-                };
-              in
+                  cat ${configFile} >> .luarocks/config-5.1.lua
+                  ${lib.concatMapStringsSep "\n" (val: "export ${val}") (exposeLib {
+                    name = "SQLITE";
+                    dep = pkgs.sqlite;
+                  })}
+                  export LUA_PATH="$LUA_PATH;lua/?.lua"
+                  # this is used by `lx shell` but for some reason SHELL still points to the older one
+                  export SHELL=${pkgs.bashInteractive}/bin/bash
+                  echo "export LUA_PATH='$(lx path lua)'" > .lua.env
+                  echo "export LUA_CPATH='$(lx path c)'" >> .lua.env
+                  source .lua.env
+                '';
+            };
 
-              # export SHELL=${pkgs.bashInteractive}/bin/bash
-              ''
-                mkdir -p .luarocks
-                # todo change the lux test folder instead
-                #  /home/runner/work/rikai.nvim/rikai.nvim/
-                export RIKAI_DICTIONARIES_FOLDER="${dictionariesFolder}"
+          in
+          {
+            inherit base;
+            ci = base.overrideAttrs (oa: {
+              name = "rikai-CI";
+              buildInputs = oa.buildInputs ++ [
+                pkgs.neovim-unwrapped
+              ];
+            });
 
-                cat ${configFile} >> .luarocks/config-5.1.lua
-                ${lib.concatMapStringsSep "\n" (val: "export ${val}") (exposeLib {
-                  name = "SQLITE";
-                  dep = pkgs.sqlite;
-                })}
-                export LUA_PATH="$LUA_PATH;lua/?.lua"
-                # this is used by `lx shell` but for some reason SHELL still points to the older one
-                export SHELL=${pkgs.bashInteractive}/bin/bash
-                echo "export LUA_PATH='$(lx path lua)'" > .lua.env
-                echo "export LUA_CPATH='$(lx path c)'" >> .lua.env
-                source .lua.env
-              '';
+            default = base.overrideAttrs (oa: {
+              buildInputs = oa.buildInputs ++ [
+                # to use with just kokoro-test
+                pyEnv
+              ];
+
+            });
           };
-        };
       }
     )
     // {

@@ -19,12 +19,12 @@ jobs:
       - name: Lint
         shell: bash
         run: |
-          nix develop . --command just lint-check
+          nix develop .#ci --command just lint-check
       - name: Run neovim with rikai
         shell: bash
         run: |
           echo "Running emmylua checks"
-          nix develop . --command just emmylua_check
+          nix develop .#ci --command just emmylua_check
           # ls .lux/5.1/test_dependencies/5.1/home/xdg/local/share/nvim/rikai/
           echo "Running testsuite"
           # just test-busted
