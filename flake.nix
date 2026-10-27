@@ -100,7 +100,6 @@
                   misaki = misaki-jp p;
                 }).overridePythonAttrs
                   {
-
                     #  'pyopenjtalk' is apparently the newest version
                     patchPhase = ''
                       substituteInPlace kokoro/pipeline.py \

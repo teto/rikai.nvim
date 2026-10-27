@@ -42,4 +42,4 @@ docgen:
 
 kokoro-test:
     # pipe it into mpv ?
-    python3 -m kokoro --text "The sky above the port was the color of television, tuned to a dead channel." -o file.wav --debug
+    python3 -m kokoro --text "GMOインターネットグループは、会社のサーバーへ不正アクセスがあったと言っています。外国の通貨を、自動で売ったり買ったりするサービスです." -o file.wav --debug --language j --voice jf_alpha
