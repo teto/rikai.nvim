@@ -52,13 +52,13 @@ local function download(url, dest)
 		-- set ERROR level
 		msg = "Downloading rikai DB failed:\n" .. err
 		logger:error(msg)
-		print("Downloading rikai DB failed:\n" .. err)
+		vim.notify("Downloading rikai DB failed:\n" .. err)
 	else
 		msg = "Finished downloading rikai dictionary."
 		logger:info(msg)
 
 		successful = true
-		-- vim.notify("Finished downloading rikai dictionary.")
+		vim.notify("Finished downloading rikai dictionary.")
 	end
 
 	if not successful then
@@ -74,6 +74,8 @@ end
 ---@param _args any
 local function cmd_download(_args)
 	local out_dir = vim.fn.stdpath("data") .. "/rikai"
+
+    vim.notify("Downloading rikai dictionaries, please wait...")
 	download(kanji_url, vim.g.rikai.dictionaries.kanjidb)
 	download(expression_url, vim.g.rikai.dictionaries.jmdictdb)
 
