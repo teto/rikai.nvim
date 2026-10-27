@@ -9,7 +9,7 @@ dev = "https://github.com/teto/rikai.nvim/archive/main.zip"
 [description]
 summary = "Neovim plugin that helps with japanese translation"
 maintainer = "teto"
-labels = [ "neovim" ]
+labels = [ "neovim", "japanese" ]
 license = "GPL-2.0"
 
 [dependencies]
