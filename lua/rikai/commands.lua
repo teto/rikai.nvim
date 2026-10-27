@@ -7,10 +7,10 @@ local M = {}
 ---Check if we are in one visual mode
 ---@return boolean
 local function visual_mode_enabled()
-    -- - v: characterwise
-    -- - V: linewise
-    -- - \022: blockwise (\022 is Lua’s decimal escape for ASCII 22, Ctrl-V)
-    return vim.fn.mode():match("^[vV\022]")
+	-- - v: characterwise
+	-- - V: linewise
+	-- - \022: blockwise (\022 is Lua’s decimal escape for ASCII 22, Ctrl-V)
+	return vim.fn.mode():match("^[vV\022]")
 end
 
 ---@return nil
