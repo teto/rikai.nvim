@@ -8,19 +8,20 @@ description = {
 	maintainer = "teto",
 	labels = {
 		"neovim",
+		"japanese",
 	},
 }
 
 dependencies = {
 	"lua>=5.1",
-	"luautf8==0.2.1",
-	"mega.cmdparse==1.2.1",
 	"mega.logging==1.1.6",
+	"luautf8==0.2.1",
 	"lsqlite3==0.9.7",
+	"mega.cmdparse==1.2.1",
 }
 
 source = {
-	url = "https://github.com/teto/rikai.nvim/archive/refs/tags/3adaf39a26b69f46b2a6ce83b577b7826dbca223.zip",
+	url = "https://github.com/teto/rikai.nvim/archive/refs/tags/2e179886d2bcbdd2e9839424c7437018228d3f95.zip",
 }
 
 build = {

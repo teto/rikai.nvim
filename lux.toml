@@ -3,7 +3,7 @@ version = "0.0.4"
 lua = ">=5.1"
 
 [source]
-url = "https://github.com/teto/$(PACKAGE)/archive/refs/tags/$(REF).zip"
+url = "https://github.com/teto/$(PACKAGE)/archive/refs/tags/$(VERSION).zip"
 dev = "https://github.com/teto/rikai.nvim/archive/main.zip"
 
 [description]
