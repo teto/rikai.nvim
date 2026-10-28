@@ -130,6 +130,7 @@
           inherit (pkgs) sqlite;
 
           pyEnv = pyEnv;
+          kokoro = pyEnv;
           fugashi = fugashi-unidic pkgs.python3.pkgs;
           mojimoji = mojimoji pkgs.python3.pkgs;
 

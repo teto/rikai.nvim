@@ -113,11 +113,16 @@ text cancels a pending popup. Use `0` for a popup on the next event-loop turn.
 
 # Roadmap 
 
-- lux packaging
 - romaji to kana and vice-versa
 - let users customize display (support https://jpdb.io/)
 - add rikai translate
 
+
+# Tricks 
+
+## Read out-loud the search entry
+
+Rikai's popup sets buffer local variables for users to be able to tweak their experience.
 
 <!-- Lua dependencies: -->
 
