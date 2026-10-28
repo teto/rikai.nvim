@@ -1,4 +1,5 @@
 local logger = require("rikai.log")
+local config = require("rikai.config")
 
 local dict_version = "v0.0.5"
 
@@ -19,12 +20,14 @@ local function unzip_file(zip_path, output_dir)
 end
 
 -- runs in fast context
+---@param name string dict name, used to notify user
 ---@param url string where to install from
 ---@param dest string where to install file
-local function download(url, dest)
+local function download(name, url, dest)
 	local tmp = os.tmpname() .. ".zip"
 
 	local done, err, res = false, nil, nil
+	vim.notify("Downloading rikai dictionary [" .. name .. "], please wait...")
 
 	---@param e string|nil
 	---@param r any
@@ -52,13 +55,13 @@ local function download(url, dest)
 		-- set ERROR level
 		msg = "Downloading rikai DB failed:\n" .. err
 		logger:error(msg)
-		print("Downloading rikai DB failed:\n" .. err)
+		vim.notify("Downloading rikai DB failed:\n" .. err)
 	else
 		msg = "Finished downloading rikai dictionary."
 		logger:info(msg)
 
 		successful = true
-		-- vim.notify("Finished downloading rikai dictionary.")
+		vim.notify("Finished downloading [" .. name .. "] dictionary.")
 	end
 
 	if not successful then
@@ -74,12 +77,13 @@ end
 ---@param _args any
 local function cmd_download(_args)
 	local out_dir = vim.fn.stdpath("data") .. "/rikai"
-	download(kanji_url, vim.g.rikai.dictionaries.kanjidb)
-	download(expression_url, vim.g.rikai.dictionaries.jmdictdb)
 
-	local cfg = vim.g.rikai
+	download("edict-kanji", kanji_url, vim.fs.dirname(config.dictionaries.kanjidb))
+	download("edict-expr", expression_url, vim.fs.dirname(config.dictionaries.jmdictdb))
+
+	local cfg = config
 	if cfg.popup_options.render_images then
-		download(kanjivg_url, out_dir)
+		download("kanjivg", kanjivg_url, out_dir)
 	end
 end
 
