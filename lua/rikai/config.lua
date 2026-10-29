@@ -1,9 +1,12 @@
 local JapDefaultConfig = require("rikai.config.default")
 
 ---@type RikaiConfig
-RikaiConfig = vim.tbl_deep_extend("force", JapDefaultConfig, vim.g.rikai or {})
+local overrides = vim and vim.g.rikai or {}
+RikaiConfig = vim and vim.tbl_deep_extend("force", JapDefaultConfig, overrides) or JapDefaultConfig
 
 -- vim.g.rikai._internal / _state is used internally to save some state
-vim.g.rikai = RikaiConfig
+if vim then
+	vim.g.rikai = RikaiConfig
+end
 
 return RikaiConfig

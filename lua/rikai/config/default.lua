@@ -1,5 +1,18 @@
 local image = require("rikai.image")
 
+local function data_dir()
+	if vim then
+		return vim.fn.stdpath("data")
+	end
+	local xdg_data_home = os.getenv("XDG_DATA_HOME")
+	if xdg_data_home and xdg_data_home ~= "" then
+		return xdg_data_home .. "/nvim"
+	end
+	return (os.getenv("HOME") or ".") .. "/.local/share/nvim"
+end
+
+local rikai_data_dir = os.getenv("RIKAI_DATA_DIR") or (data_dir() .. "/rikai")
+
 ---@class RikaiConfigDictionaries
 ---@field kanjidb string path towards a https://github.com/odrevet/edict_database's compatible db
 ---@field jmdictdb string
@@ -26,11 +39,11 @@ local image = require("rikai.image")
 local JapDefaultConfig = {
 
 	dictionaries = {
-		kanjidb = vim.fn.stdpath("data") .. "/rikai/kanji.db",
-		jmdictdb = vim.fn.stdpath("data") .. "/rikai/expression.db",
-		kanjivg = vim.fn.stdpath("data") .. "/rikai/kanji",
+		kanjidb = os.getenv("RIKAI_KANJI_DB") or (rikai_data_dir .. "/kanji.db"),
+		jmdictdb = os.getenv("RIKAI_EXPRESSION_DB") or (rikai_data_dir .. "/expression.db"),
+		kanjivg = rikai_data_dir .. "/kanji",
 	},
-	log_level = vim.log.levels.WARN,
+	log_level = vim and vim.log.levels.WARN or "warning",
 	tokenizer = "sudachi",
 	live_popup_delay = 500,
 

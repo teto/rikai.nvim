@@ -1,25 +1,45 @@
-#!/usr/bin/env bash
-# Run the Rikai lookup command from a terminal and print its popup contents.
-set -euo pipefail
+#!/usr/bin/env lua
 
-if [[ ${1-} != lookup ]]; then
-  printf 'Usage: rikai lookup TEXT\n' >&2
-  exit 2
-fi
-shift
-if (( $# == 0 )); then
-  printf 'rikai: lookup requires text\n' >&2
-  exit 2
-fi
+local function usage()
+	io.stderr:write("Usage: rikai lookup TEXT\n")
+	os.exit(2)
+end
 
-# Isolate Neovim's runtime and state files for a clean headless invocation.
-work_dir=$(mktemp -d "${TMPDIR:-/tmp}/rikai.XXXXXXXX")
-trap 'rm -rf "$work_dir"' EXIT
-mkdir -m 700 "$work_dir/runtime"
-export XDG_RUNTIME_DIR="$work_dir/runtime"
-export XDG_STATE_HOME="$work_dir/state"
-export NVIM_LOG_FILE="$work_dir/nvim.log"
+if arg[1] ~= "lookup" or not arg[2] then
+	usage()
+end
 
-# Hex-encode input so arbitrary text is safe to embed in the Lua command.
-text_hex=$(printf '%s' "$*" | od -An -v -tx1 | tr -d ' \n')
-nvim --headless -c "lua local ok, err = pcall(function() local text = ('$text_hex'):gsub('..', function(byte) return string.char(tonumber(byte, 16)) end); vim.api.nvim_cmd({cmd='Rikai', args={'lookup', text}}, {}); for _, win in ipairs(vim.api.nvim_list_wins()) do local cfg = vim.api.nvim_win_get_config(win); if cfg.relative ~= '' then for _, line in ipairs(vim.api.nvim_buf_get_lines(vim.api.nvim_win_get_buf(win), 0, -1, false)) do print(line) end; vim.cmd('qa!'); return end end; error('Rikai lookup did not open a popup') end); if not ok then print(err); vim.cmd('cquit 1') end"
+local script = arg[0]:gsub("^@", "")
+local root = script:match("^(.*)/contrib/[^/]+$") or "."
+package.path = root .. "/lua/?.lua;" .. root .. "/lua/?/init.lua;" .. package.path
+
+local function run()
+	local expression = table.concat(arg, " ", 2)
+	local utf8 = require("lua-utf8")
+	local token
+	if utf8.len(expression) > 1 then
+		local tokens = require("rikai.tokenizer").tokenize(expression, true)
+		if #tokens == 0 then
+			print("No tokens found")
+			return
+		end
+		token = tokens[1]
+	else
+		token = require("rikai.types").TokenResult(expression, nil, expression)
+	end
+
+	local lines, details = require("rikai.lookup").format(token, { render_images = false })
+	if not lines then
+		print(details)
+		return
+	end
+	for _, line in ipairs(lines) do
+		print(line)
+	end
+end
+
+local ok, err = pcall(run)
+if not ok then
+	io.stderr:write("rikai: " .. tostring(err) .. "\n")
+	os.exit(1)
+end

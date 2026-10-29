@@ -5,7 +5,11 @@ local M = {}
 ---@param msg string
 function M.notify(msg, level)
 	logger:debug("notify:" .. msg)
-	vim.notify(msg, level)
+	if vim then
+		vim.notify(msg, level)
+	else
+		io.stderr:write(msg .. "\n")
+	end
 end
 
 --- You may need to unpack the result
@@ -13,10 +17,15 @@ end
 ---@param op function
 ---@return any
 function M.timeit(name, op, ...)
-	local start = vim.uv.now()
+	local start = vim and vim.uv.now() or os.clock() * 1000
 	local res = { op(...) }
-	vim.uv.update_time()
-	local end_time = vim.uv.now()
+	local end_time
+	if vim then
+		vim.uv.update_time()
+		end_time = vim.uv.now()
+	else
+		end_time = os.clock() * 1000
+	end
 	logger:debug(name .. " operation took " .. tostring(end_time - start) .. "ms")
 	return unpack(res)
 end

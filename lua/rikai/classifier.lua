@@ -25,6 +25,13 @@ function M.chartype(code)
 	return ctype.OTHER
 end
 
+function M.first_codepoint(text)
+	for _, codepoint in utf8.codes(text) do
+		return codepoint
+	end
+	return nil
+end
+
 --- returns false for punctuation: 、and 。for instance
 ---@param code number
 ---@return boolean
