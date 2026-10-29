@@ -16,7 +16,6 @@ local M = {}
 ---@field keb_reb_group string
 ---@field gloss_group string
 
----@diagnostic disable-next-line: unused
 ---@param original_token string The original search
 ---@param res ExpressionDesc
 ---@return table (as expected by 'open_floating_preview')

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Run the Rikai lookup command from a terminal and print its popup contents.
+set -euo pipefail
+
+if [[ ${1-} != lookup ]]; then
+  printf 'Usage: rikai lookup TEXT\n' >&2
+  exit 2
+fi
+shift
+if (( $# == 0 )); then
+  printf 'rikai: lookup requires text\n' >&2
+  exit 2
+fi
+
+# Isolate Neovim's runtime and state files for a clean headless invocation.
+work_dir=$(mktemp -d "${TMPDIR:-/tmp}/rikai.XXXXXXXX")
+trap 'rm -rf "$work_dir"' EXIT
+mkdir -m 700 "$work_dir/runtime"
+export XDG_RUNTIME_DIR="$work_dir/runtime"
+export XDG_STATE_HOME="$work_dir/state"
+export NVIM_LOG_FILE="$work_dir/nvim.log"
+
+# Hex-encode input so arbitrary text is safe to embed in the Lua command.
+text_hex=$(printf '%s' "$*" | od -An -v -tx1 | tr -d ' \n')
+nvim --headless -c "lua local ok, err = pcall(function() local text = ('$text_hex'):gsub('..', function(byte) return string.char(tonumber(byte, 16)) end); vim.api.nvim_cmd({cmd='Rikai', args={'lookup', text}}, {}); for _, win in ipairs(vim.api.nvim_list_wins()) do local cfg = vim.api.nvim_win_get_config(win); if cfg.relative ~= '' then for _, line in ipairs(vim.api.nvim_buf_get_lines(vim.api.nvim_win_get_buf(win), 0, -1, false)) do print(line) end; vim.cmd('qa!'); return end end; error('Rikai lookup did not open a popup') end); if not ok then print(err); vim.cmd('cquit 1') end"
