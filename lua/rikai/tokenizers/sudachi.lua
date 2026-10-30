@@ -12,7 +12,17 @@ local types = require("rikai.types")
 
 local M = {}
 
-local _state = {}
+local function split(text, delimiter)
+	local parts = {}
+	for part in (text .. delimiter):gmatch("(.-)" .. delimiter) do
+		parts[#parts + 1] = part
+	end
+	return parts
+end
+
+local function shell_quote(text)
+	return "'" .. text:gsub("'", "'\\''") .. "'"
+end
 
 -- local NUMERAL = "数詞"
 local PROPER_NOUN = "固有名詞"
@@ -24,7 +34,7 @@ local PUNCTUATION = "補助記号"
 ---@param pos_full string The full pos returned by sudachi
 ---@return rikai.types.LexiconType
 function M.lexicon_type(pos_full)
-	local pos = vim.split(tostring(pos_full) or "", ",")
+	local pos = split(tostring(pos_full) or "", ",")
 	local pos1 = pos[1]
 	-- TODO 地名 = > nom de lieu, utiliser un bitfield ?
 
@@ -73,65 +83,23 @@ M.tokenize = function(content)
 	local tokens = {}
 
 	logger:info(string.format("Tokenizer called with content '%s'", content))
-
-	---@param _ number
-	---@param data table
-	---@param name string
-	local handle_line = function(_, data, name)
-		-- Part of speech starts with word type
-
-		logger:debug("Handle_line called for event " .. name)
-		for _, line in ipairs(data) do
-			-- sudachi prints 'EOS' too. can sudachi be configured differently ?
-			if line ~= "" and line ~= "EOS" then
-				-- tab separated results
-				---@type string[]
-				local pieces = vim.split(line, "	")
-				local surface = pieces[1]
-				local part_of_speech = pieces[2]
-				local normal_form = pieces[3]
-				local pos = M.lexicon_type(part_of_speech)
-
-				-- iskeyword doesn't accept non-ascii ranges :'(
-				-- https://groups.google.com/g/vim_dev/c/XrRP7Gcb9uc
-				-- so till then we can't count on <cword> and have to classify stuff ourself
-				-- if not classifier.is_japanese(line_start) then
-				--     logger:debug("Skipping non-japanese token", line_start)
-				-- else
-				-- logger:debug("Inserting description of token ".. line_start)
-				table.insert(tokens, types.TokenResult(surface, pos, normal_form))
+	local command = "printf '%s\\n' " .. shell_quote(content) .. " | sudachi"
+	local pipe = io.popen(command, "r")
+	if not pipe then
+		error("could not start sudachi")
+	end
+	local output = pipe:read("*a")
+	local ok, reason, code = pipe:close()
+	if not ok then
+		error(string.format("sudachi failed (%s: %s)", tostring(reason), tostring(code)))
+	end
+	for line in output:gmatch("[^\r\n]+") do
+		if line ~= "EOS" then
+			local surface, part_of_speech, normal_form = line:match("^([^\t]*)\t([^\t]*)\t(.*)$")
+			if surface then
+				table.insert(tokens, types.TokenResult(surface, M.lexicon_type(part_of_speech), normal_form))
 			end
 		end
-	end
-
-	local chan = vim.fn.jobstart({ "sudachi" }, {
-		on_stdout = handle_line,
-		on_stderr = handle_line,
-		on_exit = function() end,
-	})
-
-	if chan == 0 then
-		error("Invalid arguments")
-	elseif chan == -1 then
-		error("not executable")
-	else
-	end
-
-	local _sendres = vim.fn.chansend(chan, {
-		content,
-		"",
-	})
-	-- maybe we dont even need that ?
-	local _res = vim.fn.chanclose(chan, "stdin")
-
-	local timeout_ms = 1000
-
-	local resarr = vim.fn.jobwait({ chan }, timeout_ms)
-
-	if resarr[1] < 0 then
-		print("An error happened for sudachi")
-		-- resarr[1]
-		-- local reskill = vim.fn.jobstop( chan )
 	end
 
 	logger:debug("Found " .. tostring(#tokens) .. " different tokens")

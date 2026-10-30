@@ -29,7 +29,7 @@ function M.create_command()
 		local tokenizer = require("rikai.tokenizer")
 		local lookup = require("rikai.commands.lookup")
 		---@type packagelib
-		local utf8 = require("utf8")
+		local utf8 = require("lua-utf8")
 		---@type table
 		local megaargs = args.namespace
 		---@type string

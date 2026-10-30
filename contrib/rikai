@@ -1,0 +1,45 @@
+#!/usr/bin/env lua
+
+local function usage()
+	io.stderr:write("Usage: rikai lookup TEXT\n")
+	os.exit(2)
+end
+
+if arg[1] ~= "lookup" or not arg[2] then
+	usage()
+end
+
+local script = arg[0]:gsub("^@", "")
+local root = script:match("^(.*)/contrib/[^/]+$") or "."
+package.path = root .. "/lua/?.lua;" .. root .. "/lua/?/init.lua;" .. package.path
+
+local function run()
+	local expression = table.concat(arg, " ", 2)
+	local utf8 = require("lua-utf8")
+	local token
+	if utf8.len(expression) > 1 then
+		local tokens = require("rikai.tokenizer").tokenize(expression, true)
+		if #tokens == 0 then
+			print("No tokens found")
+			return
+		end
+		token = tokens[1]
+	else
+		token = require("rikai.types").TokenResult(expression, nil, expression)
+	end
+
+	local lines, details = require("rikai.lookup").format(token, { render_images = false })
+	if not lines then
+		print(details)
+		return
+	end
+	for _, line in ipairs(lines) do
+		print(line)
+	end
+end
+
+local ok, err = pcall(run)
+if not ok then
+	io.stderr:write("rikai: " .. tostring(err) .. "\n")
+	os.exit(1)
+end

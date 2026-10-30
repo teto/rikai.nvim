@@ -19,7 +19,12 @@ M.tokenize = function(content, ...)
 	-- TODO we should add a cache depending on content
 	local exists, tokenizer = pcall(require, "rikai.tokenizers." .. config.tokenizer)
 	if not exists then
-		vim.notify("Could not load the tokenizer " .. config.tokenizer)
+		local message = "Could not load the tokenizer " .. config.tokenizer
+		if vim then
+			vim.notify(message)
+		else
+			error(message)
+		end
 	end
 	local tokens = utils.timeit("tokenize", tokenizer.tokenize, content, ...)
 	return tokens
