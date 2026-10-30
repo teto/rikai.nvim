@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: DeterminateSystems/nix-installer-action@v23
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0 # Required to count the commits
       - name: Get Version
@@ -21,7 +21,7 @@ jobs:
       - name: add SQLITE_LIBDIR
         run: echo "SQLITE_LIBDIR=$(nix build .#sqlite^out --print-out-paths)/lib" >> $GITHUB_ENV
       - name: LuaRocks Upload
-        uses: lumen-oss/luarocks-tag-release@v9
+        uses: lumen-oss/luarocks-tag-release@v9.9.0
         env:
           LUX_API_KEY: ${{ secrets.LUX_API_KEY }}
         with:
