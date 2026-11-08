@@ -14,6 +14,12 @@ local types = require("rikai.types")
 
 local M = {}
 
+---@param value string
+---@return string
+local function sql_literal(value)
+	return "'" .. value:gsub("'", "''") .. "'"
+end
+
 ---@alias KanjiResult KanjiDesc[]
 
 ---@param kanji string the kanji to look for
@@ -92,7 +98,7 @@ WHERE
       sense
       JOIN gloss ON gloss.id_sense = sense.id
     WHERE
-      gloss.content = ']] .. expr .. [['
+      gloss.content = ]] .. sql_literal(expr) .. [[
   )
 GROUP BY
   sense.id;
@@ -161,7 +167,7 @@ FROM entry
     LEFT JOIN field ON sense_field.id_field = field.id
     LEFT JOIN sense_xref ON sense.id = sense_xref.id_sense
     LEFT JOIN sense_ant ON sense.id = sense_ant.id_sense
-WHERE ]] .. where .. [[ = ']] .. expr .. [['
+WHERE ]] .. where .. [[ = ]] .. sql_literal(expr) .. [[
 GROUP BY entry.id, sense.id;
   ]]
 

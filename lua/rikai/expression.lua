@@ -16,25 +16,6 @@ local M = {}
 ---@field keb_reb_group string
 ---@field gloss_group string
 
----@diagnostic disable-next-line: unused
----@param original_token string The original search
----@param res ExpressionDesc
----@return table (as expected by 'open_floating_preview')
-function M.format_expression(original_token, res)
-	local lines = {
-		-- annoyingly it contains the prefix / request
-		res["keb_reb_group"], -- .. " (k_ele_id) ",
-		-- "kun reading: ".. res["kun_reading"],
-		-- "on reading: ".. res["on_reading"],
-		-- "pos_group ?"..res["pos_group"],
-		"",
-		res["gloss_group"],
-		"",
-	}
-
-	return lines
-end
-
 ---@param exps ExpressionDesc[]
 ---@param separator string
 ---@return string[]
@@ -57,7 +38,8 @@ function M.format_expression_list(exps, separator)
 			table.insert(lines, separator)
 		end
 
-		table.insert(lines, heading)
+		local formatted_heading = heading:gsub(":", ": ")
+		table.insert(lines, formatted_heading)
 		table.insert(lines, "")
 		for _, res in ipairs(groups[heading]) do
 			table.insert(lines, res["gloss_group"])

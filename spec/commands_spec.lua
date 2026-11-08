@@ -52,6 +52,10 @@ describe("is_japanese function", function()
 		vim.cmd("Rikai lookup 最初")
 	end)
 
+	it("lookup specified multi-character word", function()
+		vim.cmd("Rikai lookup 東京都")
+	end)
+
 	-- lookup visual mode
 	it("lookup specified word", function()
 		vim.cmd("Rikai lookup 最初")
