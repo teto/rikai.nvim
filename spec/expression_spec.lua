@@ -9,7 +9,7 @@ describe("expression formatting", function()
 		}
 
 		assert.are.same({
-			"相手:あいて",
+			"相手: あいて",
 			"",
 			"companion,company,partner",
 			"addressee,counterparty,other party",
@@ -26,13 +26,13 @@ describe("expression formatting", function()
 		}
 
 		assert.are.same({
-			"今日:きょう",
+			"今日: きょう",
 			"",
 			"today",
 			"at the present day",
 			"",
 			" ---------- ",
-			"今日:こんにち",
+			"今日: こんにち",
 			"",
 			"these days",
 			"",

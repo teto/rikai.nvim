@@ -34,6 +34,12 @@ describe("lookup command", function()
 		assert.are.same({ surface = "起", normal_form = "起" }, captured_token)
 	end)
 
+	it("passes 東京都 to the popup", function()
+		vim.cmd("Rikai lookup 東京都")
+		assert.are.equal("東京都", captured_token.surface)
+		assert.are.equal("東京都", captured_token.normal_form)
+	end)
+
 	it("looks up the active visual selection without an Ex range", function()
 		vim.api.nvim_win_set_cursor(0, { 1, 3 })
 		vim.cmd.normal({ args = { "v" }, bang = true })

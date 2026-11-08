@@ -54,6 +54,10 @@ function M.create_command()
 			-- local cursor_pos = vim.api.nvim_win_get_cursor(0)
 			-- TODO replace with get_current_token() ?
 			local token = tokenizer.get_current_token()
+			if not token then
+				utils.notify("No token under cursor", vim.log.levels.INFO)
+				return
+			end
 			-- to_tokenize_str = vim.fn.expand("<cword>")
 			lookup.popup_lookup(token)
 			return
