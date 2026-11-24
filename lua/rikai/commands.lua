@@ -137,7 +137,7 @@ function M.create_command()
 
 	local dl_parser = top_subparsers:add_parser({ name = "download", help = "download the necessary dictionaries" })
 	dl_parser:add_parameter({
-		name = "--name",
+		name = "name",
 		choices = vim.tbl_keys(config.dictionaries),
 		help = "Dictionary name",
 	})
