@@ -138,11 +138,12 @@ function M.create_command()
 	local dl_parser = top_subparsers:add_parser({ name = "download", help = "download the necessary dictionaries" })
 	dl_parser:add_parameter({
 		name = "name",
+		required = false,
 		choices = vim.tbl_keys(config.dictionaries),
 		help = "Dictionary name",
 	})
-	dl_parser:set_execute(function(_data)
-		require("rikai.commands.download")()
+	dl_parser:set_execute(function(args)
+		require("rikai.commands.download")(args.namespace.name)
 	end)
 
 	local speak = top_subparsers:add_parser({ name = "speak", help = "read selection out loud" })
