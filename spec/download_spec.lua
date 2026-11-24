@@ -26,7 +26,7 @@ describe("download command #mock", function()
 	end)
 
 	it("runs :Rikai download", function()
-		vim.cmd("Rikai download")
+		vim.cmd("Rikai download kanjidb")
 
 		assert.are.equal(2, request_count)
 	end)
