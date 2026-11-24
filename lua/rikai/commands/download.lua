@@ -1,3 +1,9 @@
+---@mod rikai-download-dict Download dictionaries
+---@brief [[
+--- Download:
+--- - edict as SQL database https://github.com/odrevet/edict_database, for kanji and expression
+--- - https://github.com/KanjiVG/kanjivg for kanji image generation
+---@brief ]]
 local logger = require("rikai.log")
 local config = require("rikai.config")
 
