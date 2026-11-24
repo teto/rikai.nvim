@@ -1,6 +1,6 @@
 describe("download command #mock", function()
 	local original_request
-	local request_count
+	local requested_urls
 
 	setup(function()
 		require("rikai.config")
@@ -9,9 +9,9 @@ describe("download command #mock", function()
 
 	before_each(function()
 		original_request = vim.net.request
-		request_count = 0
-		vim.net.request = function(_url, _options, callback)
-			request_count = request_count + 1
+		requested_urls = {}
+		vim.net.request = function(url, _options, callback)
+			requested_urls[#requested_urls + 1] = url
 			callback("mock download failure", nil)
 			return 0
 		end
@@ -25,10 +25,24 @@ describe("download command #mock", function()
 		vim.api.nvim_del_user_command("Rikai")
 	end)
 
-	it("runs :Rikai download", function()
-		vim.cmd("Rikai download kanjidb")
+	it("downloads only the requested dictionary", function()
+		local dictionaries = {
+			kanjidb = "https://github.com/odrevet/edict_database/releases/download/v0.0.7/sqlite_kanji_en.zip",
+			jmdictdb = "https://github.com/odrevet/edict_database/releases/download/v0.0.7/sqlite_expression_eng.zip",
+			kanjivg = "https://github.com/KanjiVG/kanjivg/releases/download/r20250816/kanjivg-20250816-all.zip",
+		}
 
-		assert.are.equal(2, request_count)
+		for name, url in pairs(dictionaries) do
+			requested_urls = {}
+			vim.cmd("Rikai download " .. name)
+			assert.are.same({ url }, requested_urls)
+		end
+	end)
+
+	it("downloads all dictionaries when none is specified", function()
+		vim.cmd("Rikai download")
+
+		assert.are.equal(3, #requested_urls)
 	end)
 end)
 

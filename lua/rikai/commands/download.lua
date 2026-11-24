@@ -4,16 +4,19 @@ local config = require("rikai.config")
 local dict_version = "v0.0.7"
 local kanjivg_version = "20250816"
 
-local kanji_url = "https://github.com/odrevet/edict_database/releases/download/" .. dict_version .. "/sqlite_kanji_en.zip"
+local kanji_url = "https://github.com/odrevet/edict_database/releases/download/"
+	.. dict_version
+	.. "/sqlite_kanji_en.zip"
 local expression_url = "https://github.com/odrevet/edict_database/releases/download/"
 	.. dict_version
 	.. "/sqlite_expression_eng.zip"
 -- optional, to plot stroke order
 ---@type string
 local kanjivg_url = "https://github.com/KanjiVG/kanjivg/releases/download/r"
-	.. kanjivg_version .. " .. /kanjivg-" .. kanjivg_version .. "-all.zip"
-
-successful = false
+	.. kanjivg_version
+	.. "/kanjivg-"
+	.. kanjivg_version
+	.. "-all.zip"
 
 local function unzip_file(zip_path, output_dir)
 	local cmd = string.format("unzip -u %s -d %s", vim.fn.shellescape(zip_path), vim.fn.shellescape(output_dir))
@@ -53,17 +56,13 @@ local function download(name, url, dest)
 	-- local ok = (not err) and ((status >= 200 and status < 300) or (status == 0 and file_ok(outpath)))
 	-- return not not ok, (status ~= 0 and status or nil), err
 
-	local msg = "placeholder message"
+	local successful = not err and status == 0
 	if err or status ~= 0 then
-		-- set ERROR level
-		msg = "Downloading rikai DB failed:\n" .. err
+		local msg = "Downloading rikai DB failed:\n" .. (err or ("HTTP status " .. status))
 		logger:error(msg)
-		vim.notify("Downloading rikai DB failed:\n" .. err)
+		vim.notify(msg)
 	else
-		msg = "Finished downloading rikai dictionary."
-		logger:info(msg)
-
-		successful = true
+		logger:info("Finished downloading rikai dictionary.")
 		vim.notify("Finished downloading [" .. name .. "] dictionary.")
 	end
 
@@ -76,17 +75,39 @@ local function download(name, url, dest)
 	unzip_file(tmp, dest)
 end
 
--- todo one should be able to download only one of the dicts
----@param _args any
-local function cmd_download(_args)
-	local out_dir = vim.fn.stdpath("data") .. "/rikai"
+local dictionaries = {
+	{
+		key = "kanjidb",
+		name = "edict-kanji",
+		url = kanji_url,
+		destination = function()
+			return vim.fs.dirname(config.dictionaries.kanjidb)
+		end,
+	},
+	{
+		key = "jmdictdb",
+		name = "edict-expr",
+		url = expression_url,
+		destination = function()
+			return vim.fs.dirname(config.dictionaries.jmdictdb)
+		end,
+	},
+	{
+		key = "kanjivg",
+		name = "kanjivg",
+		url = kanjivg_url,
+		destination = function()
+			return vim.fn.stdpath("data") .. "/rikai"
+		end,
+	},
+}
 
-	download("edict-kanji", kanji_url, vim.fs.dirname(config.dictionaries.kanjidb))
-	download("edict-expr", expression_url, vim.fs.dirname(config.dictionaries.jmdictdb))
-
-	local cfg = config
-	if cfg.popup_options.render_images then
-		download("kanjivg", kanjivg_url, out_dir)
+---@param requested_name string|nil
+local function cmd_download(requested_name)
+	for _, dict in ipairs(dictionaries) do
+		if requested_name == nil or requested_name == dict.key then
+			download(dict.name, dict.url, dict.destination())
+		end
 	end
 end
 
