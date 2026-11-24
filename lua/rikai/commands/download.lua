@@ -1,14 +1,18 @@
 local logger = require("rikai.log")
 local config = require("rikai.config")
 
-local dict_version = "v0.0.5"
+local dict_version = "v0.0.7"
+local kanjivg_version = "20250816"
 
 local kanji_url = "https://github.com/odrevet/edict_database/releases/download/" .. dict_version .. "/kanji.zip"
 local expression_url = "https://github.com/odrevet/edict_database/releases/download/"
 	.. dict_version
 	.. "/expression.zip"
 -- optional, to plot stroke order
-local kanjivg_url = "https://github.com/KanjiVG/kanjivg/releases/download/r20250816/kanjivg-20250816-all.zip"
+---@type string
+local kanjivg_url = "https://github.com/KanjiVG/kanjivg/releases/download/r"
+	.. kanjivg_version(" .. /kanjivg-")
+	.. kanjivg_version("-all.zip")
 
 successful = false
 

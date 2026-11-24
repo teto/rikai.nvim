@@ -35,7 +35,7 @@ function M.create_popup(focus_id, lines, opts)
 
 	local bufnr, winid = util.open_floating_preview(lines, "markdown", popupOptionsFinal)
 
-    -- the searched entry, so the user can bind functions and act on it
+	-- the searched entry, so the user can bind functions and act on it
 	vim.api.nvim_buf_set_var(bufnr, "search", focus_id)
 	vim.api.nvim_buf_call(bufnr, function()
 		-- V
