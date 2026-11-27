@@ -40,6 +40,10 @@ docgen:
     vimcats lua/rikai/{init,commands,config,log,tokenizer}.lua lua/rikai/commands/* > doc/rikai.txt
     nvim -u NONE -i NONE --headless +'helptags doc' +'quit!'
 
+# regenerate README's table of content (toc)
+readme-toc:
+    doctoc --title '**Table of Contents**' README.md
+
 kokoro-test:
     # pipe it into mpv ?
     python3 -m kokoro --text "GMOインターネットグループは、会社のサーバーへ不正アクセスがあったと言っています。外国の通貨を、自動で売ったり買ったりするサービスです." -o file.wav --debug --language j --voice jf_alpha
