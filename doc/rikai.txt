@@ -36,7 +36,7 @@ Tokenizer                                                            *Tokenizer*
 M.tokenize()                                                        *M.tokenize*
 
     Returns: ~
-        (table)  TokenizationResult
+        (TokenizationResult[])
 
 
 M.get_current_token()                                      *M.get_current_token*
@@ -45,6 +45,42 @@ M.get_current_token()                                      *M.get_current_token*
         (number)  line
         (number)  token start offset
         (number)  width
+
+
+==============================================================================
+Download dictionaries                                      *rikai-download-dict*
+
+ Download:
+ - edict as SQL database https://github.com/odrevet/edict_database, for kanji and expression
+ - https://github.com/KanjiVG/kanjivg for kanji image generation
+
+==============================================================================
+                                                                    *rikai-live*
+
+Creates a yomitan-like experience where current word gets highlighted as you move the cursor along
+
+LiveHlState                                                        *LiveHlState*
+
+    Fields: ~
+        {current_token?}  (integer)  match ID returned by vim.fn.matchaddpos
+
+
+M.highlight_current_token()                          *M.highlight_current_token*
+
+
+M.live_lookup()                                                  *M.live_lookup*
+
+
+M.setup_hl_autocmds({autocmd_args})                        *M.setup_hl_autocmds*
+    Setups autocommands that
+    1. highlight current word
+    2. Creates popup on current word
+    TODO shall we limit it to special filetypes ?
+
+    Parameters: ~
+        {autocmd_args}  (table)  merged into nvim_create_autocmd args
+                                    for instance to limit the autocmd to certain filetypes do
+                                    'pattern = { "*.md", "*.txt", "*.org" }'
 
 
 ==============================================================================
