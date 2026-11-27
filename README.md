@@ -14,6 +14,7 @@ The name is inspired by the great browser [rikaitan][rikaitan] plugin.
 - [How to use ?](#how-to-use-)
   - [Search dictionary](#search-dictionary)
   - [Live highlighting](#live-highlighting)
+  - [Standalone executable](#standalone-executable)
 - [Roadmap](#roadmap)
 - [Tricks](#tricks)
   - [Read out-loud the search entry](#read-out-loud-the-search-entry)
@@ -123,6 +124,28 @@ vim.g.rikai = {
 The delay restarts on cursor movement and is independent of Neovim's
 `updatetime`. Leaving the window or buffer, entering Insert mode, or editing
 text cancels a pending popup. Use `0` for a popup on the next event-loop turn.
+
+## Standalone executable
+
+The core of rikai does not depend on Neovim, so it also ships a `rikai`
+command line tool (installed in the `bin` folder of the rock):
+
+```console
+$ rikai lookup 見            # print the dictionary entry as markdown
+$ echo 東京都に行きます | rikai lookup   # tokenizes and looks up the first token
+$ rikai tokenize 日高屋に行った
+$ rikai download [kanjidb|jmdictdb|kanjivg]
+$ rikai check                # equivalent of :checkhealth rikai
+```
+
+It runs with any Lua 5.1+/LuaJIT interpreter able to load the Lua dependencies
+(`luajit bin/rikai lookup 見` from a checkout), or via Neovim with
+`nvim -l bin/rikai lookup 見`.
+Dictionaries are shared with the plugin (`$XDG_DATA_HOME/nvim/rikai` by default).
+Since `vim.g.rikai` is not available, the configuration is read from the Lua file
+pointed at by `$RIKAI_CONFIG` (default `$XDG_CONFIG_HOME/rikai/config.lua`),
+which must return a table with the same keys as `vim.g.rikai`.
+Downloading dictionaries requires `curl` and `unzip`.
 
 
 # Roadmap 

@@ -1,7 +1,6 @@
 -- command parser generated https://github.com/ColinKennedy/mega.cmdparse
 local logger = require("rikai.log")
 local config = require("rikai.config")
-local types = require("rikai.types")
 
 local M = {}
 
@@ -28,8 +27,6 @@ function M.create_command()
 		local utils = require("rikai.utils")
 		local tokenizer = require("rikai.tokenizer")
 		local lookup = require("rikai.commands.lookup")
-		---@type packagelib
-		local utf8 = require("utf8")
 		---@type table
 		local megaargs = args.namespace
 		---@type string
@@ -50,40 +47,19 @@ function M.create_command()
 		else
 			-- cto_tokenize_str implementation is based on \k
 			-- let's tokenize the whole line
-			-- advantage of cword is that it doesn't care about
-			-- local cursor_pos = vim.api.nvim_win_get_cursor(0)
-			-- TODO replace with get_current_token() ?
 			local token = tokenizer.get_current_token()
 			if not token then
 				utils.notify("No token under cursor", vim.log.levels.INFO)
 				return
 			end
-			-- to_tokenize_str = vim.fn.expand("<cword>")
 			lookup.popup_lookup(token)
 			return
 		end
 
-		---@type TokenizationResult
-		local to_translate
-		if utf8.len(to_tokenize_str) > 1 then
-			-- todo get first element
-			-- TODO tokenize should be called in caller instead
-			---@type TokenizationResult[]
-			local tokens = utils.timeit("tokenize", tokenizer.tokenize, to_tokenize_str, true)
-			if vim.tbl_isempty(tokens) then
-				-- todo notify as well
-				utils.notify("No tokens found", vim.log.levels.INFO)
-				-- logger:debug("No tokens found")
-				return
-			end
-			-- returns an array of TokenizationResult
-			-- TODO match against cursor position, for instance
-			-- 'によると'
-			to_translate = tokens[1]
-		else
-			logger:debug("Word " .. to_tokenize_str .. " is one character: skipping tokenization...")
-			-- create a pseudo TokenizationResult
-			to_translate = types.TokenResult(to_tokenize_str, nil, to_tokenize_str)
+		local to_translate = require("rikai.lookup").resolve_token(to_tokenize_str)
+		if not to_translate then
+			utils.notify("No tokens found", vim.log.levels.INFO)
+			return
 		end
 
 		lookup.popup_lookup(to_translate)
@@ -147,7 +123,7 @@ function M.create_command()
 		help = "Dictionary name",
 	})
 	dl_parser:set_execute(function(args)
-		require("rikai.commands.download")(args.namespace.name)
+		require("rikai.download").run(args.namespace.name)
 	end)
 
 	local speak = top_subparsers:add_parser({ name = "speak", help = "read selection out loud" })

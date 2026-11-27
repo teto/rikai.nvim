@@ -25,4 +25,9 @@ source = {
 
 build = {
 	type = "builtin",
+	install = {
+		bin = {
+			rikai = "bin/rikai",
+		},
+	},
 }

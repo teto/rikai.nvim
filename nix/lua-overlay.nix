@@ -28,6 +28,12 @@ final: prev: {
           pkgs.librsvg
         ];
 
+        # runtime dependencies of the standalone `rikai` executable
+        postFixup = ''
+          wrapProgram $out/bin/rikai \
+            --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.sudachi-rs pkgs.curl pkgs.unzip pkgs.librsvg ]}
+        '';
+
         meta = {
           broken = lua.luaversion != "5.1";
           homepage = "https://github.com/teto/rikai.nvim";

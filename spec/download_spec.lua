@@ -1,5 +1,6 @@
 describe("download command #mock", function()
-	local original_request
+	local download
+	local original_fetch
 	local requested_urls
 
 	setup(function()
@@ -8,17 +9,17 @@ describe("download command #mock", function()
 	end)
 
 	before_each(function()
-		original_request = vim.net.request
+		download = require("rikai.download")
+		original_fetch = download.fetch
 		requested_urls = {}
-		vim.net.request = function(url, _options, callback)
+		download.fetch = function(url, _outpath)
 			requested_urls[#requested_urls + 1] = url
-			callback("mock download failure", nil)
-			return 0
+			return "mock download failure"
 		end
 	end)
 
 	after_each(function()
-		vim.net.request = original_request
+		download.fetch = original_fetch
 	end)
 
 	teardown(function()

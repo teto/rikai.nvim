@@ -5,8 +5,6 @@
 local config = require("rikai.config")
 local types = require("rikai.types")
 local logger = require("rikai.log")
-local utils = require("rikai.utils")
-local query = require("rikai.providers.sqlite")
 local api = vim.api
 
 local M = {}
@@ -22,8 +20,6 @@ function M.find_window_by_var(name, value)
 		end
 	end
 end
-
-local separator = " ---------- "
 
 ---@class PopupLookupOpts
 ---
@@ -59,52 +55,23 @@ M.popup_lookup = function(token)
 		logger:debug(string.format("Could not find any preexisting popup focus_id=%s", focus_id))
 	end
 
-	-- the chosen token
-	local restype, results = utils.timeit("lookup_expr", query.lookup, normal_form)
-
-	assert(results, "There must be a result")
-	if vim.tbl_isempty(results) then
+	local render_images = config.popup_options.render_images
+	local res, restype = require("rikai.lookup").lookup(normal_form, { render_images = render_images })
+	if not res then
 		print("No results matching " .. types.as_str(restype) .. " " .. normal_form)
 		return
 	end
 
-	local nr_results = #results
-	local formatted_results = {}
-	logger:debug("Found " .. tostring(nr_results) .. " results")
-
-	if restype == types.CharacterType.KANJI then
-		-- TODO check there is one result as least
-		local radicals = query.lookup_kanji_radicals(normal_form)
-
-		if config.popup_options.render_images then
-			logger:debug("displaying image")
-			-- local has_image, _ = vim.fn.has("nvim-0.13")
-			-- TODO replace with native image api
-			local has_image, _ = pcall(require, "snacks.image")
-			if not has_image then
-				vim.notify("Can't preview kanji: Snacks is not available")
-			end
-
-			-- TODO we should implement some caching
-			local output_filename = config.popup_options.generate_image_cmd(config.dictionaries.kanjivg, normal_form)
-
-			table.insert(formatted_results, "![kanji](" .. output_filename .. ")")
+	if render_images and restype == types.CharacterType.KANJI then
+		-- local has_image, _ = vim.fn.has("nvim-0.13")
+		-- TODO replace with native image api
+		local has_image, _ = pcall(require, "snacks.image")
+		if not has_image then
+			vim.notify("Can't preview kanji: Snacks is not available")
 		end
-
-		local kanji = require("rikai.kanji")
-		local new_result = kanji.format_kanji(results[1], radicals)
-		for j = 1, #new_result do
-			table.insert(formatted_results, new_result[j])
-		end
-	else
-		local expr = require("rikai.expression")
-		-- TODO find a way to sort / limit results ?
-		local new_results = expr.format_expression_list(results, separator)
-		for _, line in ipairs(new_results) do
-			table.insert(formatted_results, line)
-		end
-		table.insert(formatted_results, utils.jisho_link(normal_form, false))
 	end
+	local formatted_results = res.lines
+	local nr_results = res.count
 
 	--@type vim.lsp.util.open_floating_preview.Opts?
 	local popupOpts = {

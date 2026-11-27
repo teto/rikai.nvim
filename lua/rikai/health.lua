@@ -2,71 +2,64 @@
 
 -- must return a Lua table containing a `check()`
 
+local platform = require("rikai.platform")
+
 local M = {}
 
-local h = vim.health
-
--- ideally we would return the version
----@param dep string dependency name to check
----@return boolean is_installed
----@return string|nil version
-local check_installed = function(dep)
-	if vim.fn.executable(dep) == 1 then
-		return true
-	end
-	return false
-end
+---@class rikai.health.Reporter
+---@field start fun(msg: string)
+---@field ok fun(msg: string)
+---@field warn fun(msg: string)
+---@field error fun(msg: string)
 
 ---@param name string
 ---@param value any
----@param validator vim.validate.Validator
----@param optional? boolean
----@param message? string
+---@param expected_type string
 ---@return boolean
----@return string
-local function validate(name, value, validator, optional, message)
-	local ok, err = pcall(vim.validate, name, value, validator, optional, message)
-	return ok or false, "Rocks: Invalid config" .. (err and ": " .. err or "")
+---@return string|nil
+local function validate(name, value, expected_type)
+	if type(value) ~= expected_type then
+		return false,
+			string.format("Rikai: Invalid config: %s: expected %s, got %s", name, expected_type, type(value))
+	end
+	return true, nil
 end
 
 ---Validates the config.
 ---@param cfg RikaiConfig
 ---@return boolean is_valid
 ---@return string|nil error_message
-function validateCfg(cfg)
-	local ok, err = validate("tokenizer", cfg.tokenizer, "string")
-	if not ok then
-		return false, err
-	end
-	ok, err = validate("dictionaries", cfg.dictionaries, "table")
-	if not ok then
-		return false, err
-	end
-	ok, err = validate("popup_options", cfg.popup_options, "table")
-	if not ok then
-		return false, err
+function M.validate_config(cfg)
+	for _, check in ipairs({
+		{ "tokenizer", "string" },
+		{ "dictionaries", "table" },
+		{ "popup_options", "table" },
+	}) do
+		local ok, err = validate(check[1], cfg[check[1]], check[2])
+		if not ok then
+			return false, err
+		end
 	end
 	return true, nil
 end
 
--- expose bits of it to test validation
----@@param table
----@return boolean|nil
----@return string|nil
-local function check_config(cfg)
-	-- local cfg = vim.g.rikai
-	local ok, err = validateCfg(cfg)
+-- kept for backwards compatibility
+validateCfg = M.validate_config
+
+---@param h rikai.health.Reporter
+---@param cfg RikaiConfig
+---@return boolean
+local function check_config(h, cfg)
+	local ok, err = M.validate_config(cfg)
 	-- TODO check the file exists ! and if it's outdated ?
 	if not ok then
-		-- TODO error
-		h.error(err or "" .. vim.g.rikai and "" or " This looks like a plugin bug!")
-		return false, err
-	else
-		h.ok("config structure valid")
+		h.error(err or "This looks like a plugin bug!")
+		return false
 	end
+	h.ok("config structure valid")
 
 	if cfg.popup_options.render_images then
-		if vim.fn.isdirectory(cfg.dictionaries.kanjivg) == false then
+		if not platform.is_dir(cfg.dictionaries.kanjivg) then
 			h.error("Could not find the kanjivg directory")
 		else
 			h.ok(string.format("Found the kanjivg directory [%s]", cfg.dictionaries.kanjivg))
@@ -74,35 +67,60 @@ local function check_config(cfg)
 	else
 		h.ok("Rendering kanji stroke order as images disabled")
 	end
+	return true
 end
 
-function M.check()
-	local merged_cfg = require("rikai.config")
+--- Run every check, reporting through `h`
+---@param h rikai.health.Reporter
+---@param cfg? RikaiConfig
+function M.run_checks(h, cfg)
+	local merged_cfg = cfg or require("rikai.config")
 
-	check_config(merged_cfg)
+	h.start("Checking configuration")
+	check_config(h, merged_cfg)
 
 	h.start("Checking external dependencies")
-	if check_installed("sudachi") then
+	if platform.executable("sudachi") then
 		h.ok("Tokenizer  'sudachi' is executable")
 	else
 		h.error("The tokenizer 'sudachi' must be available")
 	end
 
-	if check_installed("rsvg-convert") then
+	if platform.executable("rsvg-convert") then
 		h.ok("svg to image kanji converter 'rsvg-converter' is executable")
 	else
 		h.warn("Make available the program 'rsvg-convert' to display kanji as images")
 	end
 
+	for _, exe in ipairs({ "curl", "unzip" }) do
+		if platform.executable(exe) then
+			h.ok("'" .. exe .. "' (needed to download dictionaries) is executable")
+		else
+			h.warn("Make available the program '" .. exe .. "' to download dictionaries")
+		end
+	end
+
+	h.start("Checking dictionaries")
 	for _k, key in ipairs({ "kanjidb", "jmdictdb" }) do
 		-- kanjivg is a folder though
 		local dep = merged_cfg.dictionaries[key]
-		if vim.fn.filereadable(dep) == 1 then
+		if platform.file_exists(dep) then
 			h.ok("Dictionary file '" .. dep .. "' exists")
 		else
 			h.error("Missing dictionary file '" .. dep .. "'")
 		end
 	end
+end
+
+--- Entrypoint for `:checkhealth rikai`
+function M.check()
+	local h = vim.health
+	M.run_checks({
+		start = h.start,
+		ok = h.ok,
+		warn = h.warn,
+		error = h.error,
+	})
 end
 
 return M

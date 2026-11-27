@@ -2,14 +2,14 @@
 local M = {}
 
 local logger = require("rikai.log")
+local platform = require("rikai.platform")
 
----
+---@param token string
+---@return string path towards the generated image
 function M.from_magick(token)
 	-- TODO get 'Normal' instead as background color
 	local output_filename = "output.png"
-	local cmd_generate_image
-
-	cmd_generate_image = {
+	local cmd_generate_image = {
 		"magick",
 		"-background",
 		"transparent",
@@ -20,12 +20,10 @@ function M.from_magick(token)
 		"label:" .. token,
 		output_filename,
 	}
-	local obj = vim.system(cmd_generate_image, {
-		timeout = 3000,
-	}):wait()
+	local res = platform.run(cmd_generate_image, { timeout = 3000 })
 
-	if obj.code ~= 0 then
-		vim.notify("Could not generate image for kanji:\n" .. obj.stderr, vim.log.levels.ERROR)
+	if res.code ~= 0 then
+		platform.notify("Could not generate image for kanji:\n" .. res.stderr, platform.levels.ERROR)
 	end
 
 	return output_filename
@@ -36,16 +34,20 @@ end
 ---@param token string
 ---@return string path towards the generated image
 function M.from_kanjivg(kanjivg_dir, token)
-	local cmd_generate_image
-	local unicode_value = vim.fn.char2nr(token)
+	local unicode_value = platform.char2nr(token)
 	-- respect kanjivg format
 	local hex_value = string.format("%05x", unicode_value)
-	local output_filename = vim.fn.stdpath("cache") .. "/rikai/" .. hex_value .. ".png"
+	local output_dir = platform.stdpath("cache") .. "/rikai"
+	local output_filename = output_dir .. "/" .. hex_value .. ".png"
 
-	local input_filename = vim.fs.joinpath(kanjivg_dir, hex_value .. ".svg")
+	local input_filename = platform.joinpath(kanjivg_dir, hex_value .. ".svg")
 
-	-- TODO we shall check if file exists before regenerating the image
-	cmd_generate_image = {
+	if platform.file_exists(output_filename) then
+		return output_filename
+	end
+	platform.mkdir_p(output_dir)
+
+	local cmd_generate_image = {
 		"rsvg-convert", -- available in "librsvg"
 		"-w",
 		"512",
@@ -57,21 +59,9 @@ function M.from_kanjivg(kanjivg_dir, token)
 	}
 
 	logger:debug("Running ", cmd_generate_image)
-	local has_job, obj_or_err = pcall(vim.system, cmd_generate_image, {
-		-- timeout = 3000,
-	})
-
-	if not has_job then
-		logger:error("Could not start job to generate kanji picture:\n" .. obj_or_err, vim.log.levels.ERROR)
-	else
-		---@diagnostic disable-next-line: need-check-nil
-		local hdl = obj_or_err
-		---@diagnostic disable-next-line: need-check-nil
-		-- in milliseconds
-		local res = hdl:wait(3000)
-		if res.code ~= 0 then
-			logger:error("Could not generate image for kanji:\n" .. res.stderr, vim.log.levels.ERROR)
-		end
+	local res = platform.run(cmd_generate_image, { timeout = 3000 })
+	if res.code ~= 0 then
+		logger:error("Could not generate image for kanji:\n" .. res.stderr)
 	end
 
 	return output_filename

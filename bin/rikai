@@ -1,0 +1,175 @@
+#!/usr/bin/env lua
+-- Standalone command line interface for rikai.
+--
+-- Runs with any lua 5.1+/luajit interpreter that can find the lua dependencies
+-- (lsqlite3, luautf8), e.g. `lx lua bin/rikai lookup 見`,
+-- or through neovim: `nvim -l bin/rikai lookup 見`.
+
+-- make the modules of this repository available when running from a checkout
+do
+	local script = arg and arg[0] or ""
+	local bindir = script:match("^(.*)/[^/]*$") or "."
+	local root = bindir .. "/.."
+	local f = io.open(root .. "/lua/rikai/platform.lua", "r")
+	if f then
+		f:close()
+		package.path = root .. "/lua/?.lua;" .. root .. "/lua/?/init.lua;" .. package.path
+	end
+end
+
+local usage = [[
+Usage: rikai <command> [options] [args]
+
+Commands:
+  lookup [--images] [TEXT]  Look up TEXT in the dictionaries (reads stdin if no TEXT)
+                            TEXT longer than one character is tokenized and the
+                            first token is looked up.
+  tokenize [TEXT]           Split TEXT into tokens (reads stdin if no TEXT)
+  download [NAME]           Download the dictionaries (kanjidb, jmdictdb, kanjivg)
+  check                     Check the installation
+  help                      Show this help
+
+Environment:
+  RIKAI_CONFIG     path to a lua file returning a config table
+                   (default: $XDG_CONFIG_HOME/rikai/config.lua)
+  RIKAI_LOG_LEVEL  trace|debug|info|warning|error (default: warning)
+  RIKAI_LOG_FILE   log file path
+]]
+
+---@param args string[]
+---@return string
+local function text_from_args(args)
+	if #args > 0 then
+		return table.concat(args, " ")
+	end
+	local content = io.read("*a") or ""
+	return (content:gsub("^%s+", ""):gsub("%s+$", ""))
+end
+
+local commands = {}
+
+---@param args string[]
+---@return integer exit code
+function commands.lookup(args)
+	local opts = { render_images = false }
+	local rest = {}
+	for _, a in ipairs(args) do
+		if a == "--images" then
+			opts.render_images = true
+		else
+			table.insert(rest, a)
+		end
+	end
+
+	local text = text_from_args(rest)
+	if text == "" then
+		io.stderr:write("rikai: nothing to look up\n")
+		return 1
+	end
+
+	local lookup = require("rikai.lookup")
+	local types = require("rikai.types")
+	local token = lookup.resolve_token(text)
+	if not token then
+		io.stderr:write("rikai: no tokens found in '" .. text .. "'\n")
+		return 1
+	end
+
+	local res, restype = lookup.lookup(token.normal_form, opts)
+	if not res then
+		io.stderr:write("No results matching " .. types.as_str(restype) .. " " .. token.normal_form .. "\n")
+		return 1
+	end
+
+	local title = "# " .. token.normal_form
+	if res.count > 1 then
+		title = title .. " (" .. tostring(res.count) .. " results)"
+	end
+	print(title)
+	print("")
+	for _, line in ipairs(res.lines) do
+		print(line)
+	end
+	return 0
+end
+
+---@param args string[]
+---@return integer exit code
+function commands.tokenize(args)
+	local text = text_from_args(args)
+	local tokenizer = require("rikai.tokenizer")
+	local sudachi = require("rikai.tokenizers.sudachi")
+	for _, tok in ipairs(tokenizer.tokenize(text)) do
+		print(string.format("%s\t%s\t%s", tok.surface, sudachi.lexicon_to_str(tok.pos), tok.normal_form))
+	end
+	return 0
+end
+
+---@param args string[]
+---@return integer exit code
+function commands.download(args)
+	local name = args[1]
+	local download = require("rikai.download")
+	if name then
+		local known = {}
+		for _, dict in ipairs(download.dictionaries) do
+			known[dict.key] = true
+		end
+		if not known[name] then
+			io.stderr:write("rikai: unknown dictionary '" .. name .. "', expected one of kanjidb, jmdictdb, kanjivg\n")
+			return 1
+		end
+	end
+	return download.run(name) and 0 or 1
+end
+
+---@return integer exit code
+function commands.check()
+	local failed = false
+	require("rikai.health").run_checks({
+		start = function(msg)
+			print("\n" .. msg)
+		end,
+		ok = function(msg)
+			print("  OK    " .. msg)
+		end,
+		warn = function(msg)
+			print("  WARN  " .. msg)
+		end,
+		error = function(msg)
+			failed = true
+			print("  ERROR " .. msg)
+		end,
+	})
+	return failed and 1 or 0
+end
+
+---@return integer exit code
+function commands.help()
+	io.write(usage)
+	return 0
+end
+
+local function main(argv)
+	local cmd = argv[1]
+	if cmd == nil or cmd == "-h" or cmd == "--help" then
+		cmd = "help"
+	end
+	local fn = commands[cmd]
+	if not fn then
+		io.stderr:write("rikai: unknown command '" .. cmd .. "'\n\n" .. usage)
+		return 2
+	end
+	local rest = {}
+	for i = 2, #argv do
+		table.insert(rest, argv[i])
+	end
+	return fn(rest)
+end
+
+local argv = {}
+for i = 1, (arg and #arg or 0) do
+	argv[i] = arg[i]
+end
+
+os.exit(main(argv))

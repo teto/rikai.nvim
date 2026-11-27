@@ -9,10 +9,9 @@
 -- EOS
 local logger = require("rikai.log")
 local types = require("rikai.types")
+local platform = require("rikai.platform")
 
 local M = {}
-
-local _state = {}
 
 -- local NUMERAL = "数詞"
 local PROPER_NOUN = "固有名詞"
@@ -24,7 +23,7 @@ local PUNCTUATION = "補助記号"
 ---@param pos_full string The full pos returned by sudachi
 ---@return rikai.types.LexiconType
 function M.lexicon_type(pos_full)
-	local pos = vim.split(tostring(pos_full) or "", ",")
+	local pos = platform.split(tostring(pos_full or ""), ",")
 	local pos1 = pos[1]
 	-- TODO 地名 = > nom de lieu, utiliser un bitfield ?
 
@@ -74,64 +73,29 @@ M.tokenize = function(content)
 
 	logger:info(string.format("Tokenizer called with content '%s'", content))
 
-	---@param _ number
-	---@param data table
-	---@param name string
-	local handle_line = function(_, data, name)
-		-- Part of speech starts with word type
+	local res = platform.run({ "sudachi" }, { stdin = content .. "\n", timeout = 5000 })
+	if res.code ~= 0 then
+		local msg = "Could not run the 'sudachi' tokenizer (exit code " .. tostring(res.code) .. "): " .. res.stderr
+		logger:error(msg)
+		platform.notify(msg, platform.levels.ERROR)
+		return tokens
+	end
 
-		logger:debug("Handle_line called for event " .. name)
-		for _, line in ipairs(data) do
-			-- sudachi prints 'EOS' too. can sudachi be configured differently ?
-			if line ~= "" and line ~= "EOS" then
-				-- tab separated results
-				---@type string[]
-				local pieces = vim.split(line, "	")
-				local surface = pieces[1]
-				local part_of_speech = pieces[2]
-				local normal_form = pieces[3]
-				local pos = M.lexicon_type(part_of_speech)
+	for line in res.stdout:gmatch("[^\r\n]+") do
+		-- sudachi prints 'EOS' too. can sudachi be configured differently ?
+		if line ~= "EOS" then
+			-- tab separated results
+			local pieces = platform.split(line, "\t")
+			local surface = pieces[1]
+			local part_of_speech = pieces[2]
+			local normal_form = pieces[3]
+			local pos = M.lexicon_type(part_of_speech)
 
-				-- iskeyword doesn't accept non-ascii ranges :'(
-				-- https://groups.google.com/g/vim_dev/c/XrRP7Gcb9uc
-				-- so till then we can't count on <cword> and have to classify stuff ourself
-				-- if not classifier.is_japanese(line_start) then
-				--     logger:debug("Skipping non-japanese token", line_start)
-				-- else
-				-- logger:debug("Inserting description of token ".. line_start)
-				table.insert(tokens, types.TokenResult(surface, pos, normal_form))
-			end
+			-- iskeyword doesn't accept non-ascii ranges :'(
+			-- https://groups.google.com/g/vim_dev/c/XrRP7Gcb9uc
+			-- so till then we can't count on <cword> and have to classify stuff ourself
+			table.insert(tokens, types.TokenResult(surface, pos, normal_form))
 		end
-	end
-
-	local chan = vim.fn.jobstart({ "sudachi" }, {
-		on_stdout = handle_line,
-		on_stderr = handle_line,
-		on_exit = function() end,
-	})
-
-	if chan == 0 then
-		error("Invalid arguments")
-	elseif chan == -1 then
-		error("not executable")
-	else
-	end
-
-	local _sendres = vim.fn.chansend(chan, {
-		content,
-		"",
-	})
-	-- maybe we dont even need that ?
-	local _res = vim.fn.chanclose(chan, "stdin")
-
-	local timeout_ms = 1000
-
-	local resarr = vim.fn.jobwait({ chan }, timeout_ms)
-
-	if resarr[1] < 0 then
-		print("An error happened for sudachi")
-		-- resarr[1]
-		-- local reskill = vim.fn.jobstop( chan )
 	end
 
 	logger:debug("Found " .. tostring(#tokens) .. " different tokens")

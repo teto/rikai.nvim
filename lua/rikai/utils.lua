@@ -1,11 +1,12 @@
 local logger = require("rikai.log")
+local platform = require("rikai.platform")
 
 local M = {}
 
 ---@param msg string
 function M.notify(msg, level)
 	logger:debug("notify:" .. msg)
-	vim.notify(msg, level)
+	platform.notify(msg, level)
 end
 
 --- You may need to unpack the result
@@ -13,15 +14,15 @@ end
 ---@param op function
 ---@return any
 function M.timeit(name, op, ...)
-	local start = vim.uv.now()
+	local start = platform.now()
 	local res = { op(...) }
-	vim.uv.update_time()
-	local end_time = vim.uv.now()
+	local end_time = platform.now()
 	logger:debug(name .. " operation took " .. tostring(end_time - start) .. "ms")
-	return unpack(res)
+	return (table.unpack or unpack)(res)
 end
 
 --- aint it weird that nvim commands dont pass columns ?
+--- (neovim only)
 ---@return table
 function M.get_visual_selection()
 	local mode = vim.fn.mode()

@@ -26,10 +26,13 @@ lsqlite3 = "0.9.7-1"
 # `busted = ">=2.0"`
 
 [run]
-args = [ "src/main.lua" ]
+args = [ "bin/rikai" ]
 
 [build]
 type = "builtin"
+
+[build.install.bin]
+rikai = "bin/rikai"
 
 [test]
 type = "busted-nlua"

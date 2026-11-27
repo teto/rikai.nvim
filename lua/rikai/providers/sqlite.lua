@@ -11,6 +11,7 @@ local config = require("rikai.config")
 local logger = require("rikai.log")
 local classifier = require("rikai.classifier")
 local types = require("rikai.types")
+local platform = require("rikai.platform")
 
 local M = {}
 
@@ -116,7 +117,7 @@ end
 ---@return string SQL query string
 function M.query_jap_expr(expr)
 	logger:debug("Building SQL query for expr " .. expr)
-	local token_code = vim.fn.char2nr(expr)
+	local token_code = platform.char2nr(expr)
 	local token_type = classifier.chartype(token_code)
 	local where = "r_ele.reb"
 	if token_type == types.CharacterType.KANJI then
@@ -190,7 +191,7 @@ function M.get_db_handle(db_path)
 		local errmsg, _errcode
 		con, errmsg, _errcode = sqlite3.open(db_path, sqlite3.OPEN_READONLY)
 		if not con then
-			vim.notify(string.format("rikai: could not open %s:\n%s", db_path, errmsg))
+			platform.notify(string.format("rikai: could not open %s:\n%s", db_path, errmsg), platform.levels.ERROR)
 			return false
 		end
 		config._state[db_path] = con
@@ -203,7 +204,7 @@ end
 ---@param kanji string Kanji to search for
 ---@return KanjiResult
 function M.lookup_kanji(kanji)
-	local start = vim.uv.now()
+	local start = platform.now()
 
 	local res = {}
 
@@ -217,8 +218,7 @@ function M.lookup_kanji(kanji)
 		table.insert(res, a)
 	end
 
-	vim.uv.update_time()
-	local end_time = vim.uv.now()
+	local end_time = platform.now()
 	logger:info("Kanji search took " .. tostring(end_time - start) .. " ms")
 	return res
 end
@@ -270,8 +270,8 @@ end
 ---@return rikai.types.CharacterType
 ---@return KanjiResult[]
 function M.lookup(token)
-	local utf8 = require("utf8")
-	local token_code = vim.fn.char2nr(token)
+	local utf8 = require("lua-utf8")
+	local token_code = platform.char2nr(token)
 	local token_type = classifier.chartype(token_code)
 	---@type number
 	local token_len = utf8.len(token)

@@ -23,6 +23,12 @@ test:
     # @busted --lua=nlua
     lx test
 
+# smoke test the standalone executable without neovim (run from `nix develop`, requires the dictionaries)
+test-standalone:
+    luajit bin/rikai check
+    luajit bin/rikai lookup 見
+    echo 東京都に行きます | luajit bin/rikai tokenize
+
 # check types
 emmylua_check:
     # VIMRUNTIME=$(nvim --headless +'echo $VIMRUNTIME' -cq)

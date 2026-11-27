@@ -3,6 +3,7 @@
 --- - sudachi
 local config = require("rikai.config")
 local utils = require("rikai.utils")
+local platform = require("rikai.platform")
 -- local logger = require("rikai.log")
 
 local M = {}
@@ -19,14 +20,15 @@ M.tokenize = function(content, ...)
 	-- TODO we should add a cache depending on content
 	local exists, tokenizer = pcall(require, "rikai.tokenizers." .. config.tokenizer)
 	if not exists then
-		vim.notify("Could not load the tokenizer " .. config.tokenizer)
+		platform.notify("Could not load the tokenizer " .. config.tokenizer, platform.levels.ERROR)
+		return {}
 	end
 	local tokens = utils.timeit("tokenize", tokenizer.tokenize, content, ...)
 	return tokens
 end
 
 --- we might want to return its lenght for matchaddpos ?
----Get the current token under cursor
+---Get the current token under cursor (neovim only)
 ---@return TokenizationResult token value
 --any value returned by getcurpos, i.e: [0, lnum, col, off, curswant]
 ---@return number line
@@ -52,7 +54,7 @@ function M.get_current_token()
 	-- Find which token cursor is highlighting by comparing offsets ?
 	-- compute the size of the token
 	for _i, tok in pairs(tokens) do
-		nextoffset = curcoloffset + vim.fn.strlen(tok.surface)
+		nextoffset = curcoloffset + #tok.surface
 		-- logger:info(string.format("Round %d, inspecting token %s. Comparing cursor offset %d with nextoffset %d", i, tok[1], cursorcoloffset, nextoffset))
 		if cursorcoloffset < nextoffset then
 			current_token = tok
@@ -63,7 +65,7 @@ function M.get_current_token()
 		end
 	end
 
-	return current_token, cursorpos[2], curcoloffset, vim.fn.strlen(current_token.surface)
+	return current_token, cursorpos[2], curcoloffset, #current_token.surface
 end
 
 return M

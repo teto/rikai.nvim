@@ -1,4 +1,6 @@
 local image = require("rikai.image")
+local platform = require("rikai.platform")
+local data_dir = platform.stdpath("data") .. "/rikai"
 
 ---@class RikaiConfigDictionaries
 ---@field kanjidb string path towards a https://github.com/odrevet/edict_database's compatible db
@@ -15,7 +17,7 @@ local image = require("rikai.image")
 ---@field max_width integer
 
 ---@class RikaiConfig
----@field log_level vim.log.levels logging level
+---@field log_level integer logging level (see vim.log.levels)
 ---@field popup_options RikaiConfigPopupOptions
 ---@field dictionaries RikaiConfigDictionaries
 ---@field tokenizer "sudachi" for now only "sudachi" is supported
@@ -26,11 +28,11 @@ local image = require("rikai.image")
 local JapDefaultConfig = {
 
 	dictionaries = {
-		kanjidb = vim.fn.stdpath("data") .. "/rikai/kanji.db",
-		jmdictdb = vim.fn.stdpath("data") .. "/rikai/expression.db",
-		kanjivg = vim.fn.stdpath("data") .. "/rikai/kanji",
+		kanjidb = data_dir .. "/kanji.db",
+		jmdictdb = data_dir .. "/expression.db",
+		kanjivg = data_dir .. "/kanji",
 	},
-	log_level = vim.log.levels.WARN,
+	log_level = platform.levels.WARN,
 	tokenizer = "sudachi",
 	live_popup_delay = 500,
 
