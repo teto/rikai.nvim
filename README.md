@@ -1,11 +1,25 @@
----
-include_toc: true
----
 
 This plugin aims at providing offline translations either on-demand and/or automatically when hovering Asian (Japanese for now) characters.
 
 The name is inspired by the great browser [rikaitan][rikaitan] plugin.
 理解 ("rikai") [translates][jisho-rikai] to "understanding", "comprehension".
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [How to install ?](#how-to-install-)
+- [How to configure ?](#how-to-configure-)
+  - [Highlight groups](#highlight-groups)
+- [How to use ?](#how-to-use-)
+  - [Search dictionary](#search-dictionary)
+  - [Live highlighting](#live-highlighting)
+- [Roadmap](#roadmap)
+- [Tricks](#tricks)
+  - [Read out-loud the search entry](#read-out-loud-the-search-entry)
+- [Related software](#related-software)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 Here are some possibly outdated screenshots: 
 - Popup for a kanji

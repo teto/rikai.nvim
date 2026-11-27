@@ -150,6 +150,7 @@
               RIKAI_LUA_LIBRARY = "${luaEnv}/share/lua/${lua.luaversion}";
 
               buildInputs = [
+                pkgs.doctoc
                 treefmtEval.config.build.wrapper
                 luaEnv
                 pkgs.just # for 'just'
